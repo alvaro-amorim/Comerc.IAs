@@ -1,0 +1,109 @@
+/* Estilos personalizados */
+
+body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 75%;
+    max-width: 300px;
+    height: 100%;
+    background-color: #0A3D62;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding-top: 4rem;
+}
+
+.mobile-menu.open {
+    right: 0;
+}
+
+.mobile-menu a {
+    color: white;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: background-color 0.2s ease;
+}
+
+.mobile-menu a:hover {
+    background-color: #005f99;
+}
+
+.mobile-menu .close-menu-button {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+.overlay.active {
+    display: block;
+}
+
+footer .logo-footer {
+    height: 80px;
+    width: 80px;
+}
+
+@media (max-width: 767px) {
+    footer .logo-footer {
+        display: none;
+    }
+}
+
+/* Estilo para o botão de fechar do menu mobile */
+.mobile-menu .close-menu-button {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    color: white; /* Cor do X */
+    font-size: 1.5rem; /* Tamanho do X */
+    cursor: pointer;
+    background-color: #06243d !important; /* Força a cor da bolinha */
+    border-radius: 50%; /* Transforma em bolinha */
+    width: 2.5rem; /* Largura da bolinha */
+    height: 2.5rem; /* Altura da bolinha */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none; /* Remove a borda do botão */
+    z-index: 1001; /* Garante que fique por cima de tudo */
+}
+
+/* Garante que o ícone 'X' seja branco */
+.mobile-menu .close-menu-button svg {
+    color: white !important;
+}
+
+/* Garante que o Navbar.Toggle não tenha borda padrão */
+.navbar-toggler {
+    border: none !important;
+}
+
+/* Cor do ícone padrão do Navbar.Toggle (se ainda estiver visível) */
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
