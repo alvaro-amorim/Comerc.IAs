@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://comercias.com.br/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- Exemplo de páginas internas -->
+  <url><loc>https://comercias.com.br/about</loc></url>
+  <url><loc>https://comercias.com.br/portfolio</loc></url>
+  <url><loc>https://comercias.com.br/contact</loc></url>
+  <!-- acrescente todas as páginas importantes -->
+</urlset>
