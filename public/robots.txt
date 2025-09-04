@@ -1,3 +1,6 @@
-# https://www.robotstxt.org/robotstxt.html
+# Permitir que todos os bots rastreiem o site
 User-agent: *
-Disallow:
+Allow: /
+
+# Informar o sitemap
+Sitemap: https://comercias.com.br/sitemap.xml
