@@ -1,0 +1,80 @@
+/* ===== Rodapé Principal ===== */
+.custom-footer {
+  background-color: #06243d;
+  color: white;
+  padding: 1rem 0;
+  margin-top: 2.5rem; /* mt-5 */
+  width: 100%;
+}
+
+.footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.footer-col {
+  margin-bottom: 5px;
+  width: 230px;
+  margin-top: 5px;
+}
+
+/* ===== Ícones Sociais ===== */
+.footer-socials {
+  display: flex;
+  gap: 1rem;
+  justify-content: right;
+  margin-bottom: -50px;
+  margin-top: -20px;
+  }
+
+.footer-social-link {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.footer-social-link:hover {
+  color: #0dcaf0;
+}
+
+/* ===== Botão de Chat ===== */
+.footer-chat {
+  display: flex;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.5rem;
+  transition: color 0.3s ease-in-out;
+}
+
+.footer-chat:hover {
+  color: #0dcaf0;
+}
+
+.footer-chat span {
+  margin-right: 0.5rem;
+}
+
+/* ===== Responsividade ===== */
+@media (min-width: 768px) {
+  .footer-col {
+    margin-bottom: 0;
+    text-align: center;
+  }
+
+  .footer-socials {
+    justify-content: flex-start;
+    margin-left: -250px;
+    gap: 2rem;
+  }
+
+  .footer-chat {
+    display: flex;
+    justify-content: right;
+    margin-right: -250px;
+  }
+}

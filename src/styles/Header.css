@@ -23,6 +23,8 @@
   background: transparent;
   color: white;
   font-size: 1.5rem;
+  cursor: pointer;
+  display: none; /* escondido no desktop */
 }
 
 /* ===== Links Desktop ===== */
@@ -30,7 +32,6 @@
   display: flex;
   align-items: center;
   margin-left: 1150px;
-  
 }
 
 .navbar-link {
@@ -91,8 +92,9 @@
 /* Links Mobile */
 .mobile-menu .nav-link {
   color: white !important;
-  font-weight: 700;
-  padding: 1rem;
+  font-size: 30px;
+  font-weight: 200;
+  padding: 2rem;
   text-decoration: none;
 }
 
@@ -115,4 +117,25 @@
 
 .overlay.active {
   display: block;
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 991px) {
+  .navbar-links {
+    display: none; /* esconde links desktop */
+  }
+
+  .navbar-toggle {
+    display: block; /* mostra botão hamburguer */
+  }
+
+  .navbar-logo {
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-link {
+    font-size: 1.4rem;
+  }
 }

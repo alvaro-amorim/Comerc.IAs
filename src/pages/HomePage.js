@@ -41,7 +41,7 @@ const HomePage = () => {
                 size="lg" 
                 className="hero-button"
               >
-                SAIBA MAIS!
+                CLIQUE AQUI E SAIBA MAIS!
               </Button>
               
               <Link to="/about">
