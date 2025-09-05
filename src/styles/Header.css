@@ -1,0 +1,118 @@
+/* ===== Navbar Principal ===== */
+.custom-navbar {
+  background-color: #06243d;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15); /* shadow-sm */
+  padding: 10px;
+}
+
+.custom-navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.navbar-logo {
+  height: 80px;
+  border-radius: 0.375rem; /* rounded-md */
+}
+
+/* ===== Toggle Button ===== */
+.navbar-toggle {
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* ===== Links Desktop ===== */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  margin-left: 1150px;
+  
+}
+
+.navbar-link {
+  color: white !important;
+  font-size: 1.7rem;
+  font-weight: 100; /* fw-bold */
+  margin-right: 1rem;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-link:last-child {
+  margin-right: 0;
+}
+
+.navbar-link:hover,
+.navbar-link.active-link {
+  color: #0dcaf0 !important; /* cor destaque ao ativo ou hover */
+}
+
+/* ===== Menu Mobile ===== */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  height: 100vh;
+  width: 75%;
+  max-width: 320px;
+  background-color: #06243d;
+  display: flex;
+  flex-direction: column;
+  padding-top: 4rem;
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.mobile-menu.open {
+  right: 0;
+}
+
+.close-menu-button {
+  background-color: #06243d;
+  color: white;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  z-index: 1001;
+  cursor: pointer;
+}
+
+/* Links Mobile */
+.mobile-menu .nav-link {
+  color: white !important;
+  font-weight: 700;
+  padding: 1rem;
+  text-decoration: none;
+}
+
+.mobile-menu .nav-link:hover,
+.mobile-menu .nav-link.active-link {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== Overlay (fundo escuro no mobile) ===== */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
