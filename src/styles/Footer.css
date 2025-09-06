@@ -77,19 +77,36 @@
   }
 }
 
+/* Telas menores que 768px (mobile) */
 @media (max-width: 767px) {
   .footer-row {
     flex-direction: column;
-    gap: 10px;
+    /* Adicionamos o gap para manter a separação entre os elementos */
+    gap: 20px;
   }
 
+  /* Usamos a propriedade "order" para mudar a ordem de exibição */
+  .footer-row > .footer-col:first-child {
+    order: 2; /* Move a coluna das redes sociais para a segunda posição */
+  }
+
+  .footer-row > .footer-col:nth-child(2) {
+    order: 1; /* Move a coluna do chat para a primeira posição */
+  }
+
+  /* Centralizamos os elementos */
   .footer-socials {
     justify-content: center;
-    margin: 10px 0;
+    gap: 15%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+
   }
 
   .footer-chat {
     justify-content: center;
-    margin: 10px 0;
+    margin: 2% 0 0 0;
+  
+    display: flex;
   }
 }
