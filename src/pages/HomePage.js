@@ -2,7 +2,6 @@ import React from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import escritorio from '../assets/images/escritorio.png';
-import FotoHome from '../assets/images/FotoHome.png';
 import '../styles/HomePage.css'; // Import do CSS
 import saibaMaisImg from "../assets/images/saiba-mais.png"; // caminho da imagem
 
