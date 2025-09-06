@@ -14,7 +14,7 @@ const HomePage = () => {
           <Row className="align-items-center">
             <Col md={7} className="text-center text-md-start">
               <h1 className="hero-title">
-                Vídeos Profissionais para impulsionar seu negócio!
+                VÍDEOS PROFISSIONAIS para impulsionar seu negócio!
               </h1>
               <div className="hero-video-wrapper">
                 <iframe 
