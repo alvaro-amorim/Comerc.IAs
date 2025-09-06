@@ -175,14 +175,14 @@
     width: 70%;
     max-width: 250px;
     margin-top: 5%;
-    margin-right: 35%;
+    margin-right: 25%;
   }
 
   .hero-button-2 {
     width: 70%;
     max-width: 200px;
     margin-left: 55%;
-    margin-bottom: -20%;
+    margin-bottom: -15%;
   }
   .hero-desktop {
     flex-direction: column;
