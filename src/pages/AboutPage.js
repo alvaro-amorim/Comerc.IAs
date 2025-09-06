@@ -15,7 +15,7 @@ const AboutPage = () => {
         <header className="about-hero">
           <h1 className="about-title">Transformamos ideias em vídeos que convertem</h1>
           <p className="about-subtitle">
-            Na <strong>Comerc IAs</strong> criamos comerciais e conteúdos em vídeo que
+            Na <strong>Comerc IA's</strong> criamos comerciais e conteúdos em vídeo que
             contam histórias reais e vendem sem precisar gritar. Unimos roteiro
             estratégico, avatares e narração natural em português com as melhores
             tecnologias de inteligência artificial.
