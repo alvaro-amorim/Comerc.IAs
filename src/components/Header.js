@@ -40,7 +40,7 @@ const Header = () => {
               Sobre
             </Nav.Link>
             <Nav.Link as={NavLink} to="/portfolio" className="navbar-link" activeClassName="active-link">
-              Portifólio
+              Portfólio
             </Nav.Link>
             <Nav.Link as={NavLink} to="/contact" className="navbar-link" activeClassName="active-link">
               Contato
@@ -62,7 +62,7 @@ const Header = () => {
             Sobre
           </Nav.Link>
           <Nav.Link as={NavLink} to="/portfolio" onClick={toggleMenu} className="nav-link" activeClassName="active-link">
-            Portifólio
+            Portfólio
           </Nav.Link>
           <Nav.Link as={NavLink} to="/contact" onClick={toggleMenu} className="nav-link" activeClassName="active-link">
             Contato

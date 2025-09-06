@@ -68,7 +68,7 @@ const PortfolioPage = () => {
     return (
         <section id="portfolio" className="py-5 bg-light">
             <Container className="text-center">
-                <h2 className="text-primary fw-bold mb-5">Portifólio</h2>
+                <h2 className="text-primary fw-bold mb-5">Portfólio</h2>
                 <Row className="g-4">
                     {portfolioItemsData.map((project, index) => (
                         <Col key={index} xs={12} sm={6} lg={3}>
