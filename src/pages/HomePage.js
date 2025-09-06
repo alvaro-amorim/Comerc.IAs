@@ -68,8 +68,8 @@ const HomePage = () => {
           <Button 
             as={Link} 
             to="/portfolio" 
-            variant="primary" 
-            size="lg" 
+            variant="light" 
+            size="md" 
             className="hero-desktop-button"
           >
             CONFIRA NOSSO TRABALHO

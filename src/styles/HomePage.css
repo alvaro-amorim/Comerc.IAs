@@ -12,6 +12,7 @@
   margin: -5% -53% 3% -40%;       /* Espaço em cima e embaixo */
   color: #003366;
   text-align: center;      /* Centralizado por padrão */
+  font-style: oblique;
 }
 
 .hero-video-wrapper {
@@ -62,6 +63,7 @@
   margin-left: -1.5%;
   margin-top: -3%;
   display: block;
+  font-style: oblique;
 }
 
 .hero-button-2 {
@@ -112,6 +114,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+  font-style: oblique;
 }
 
 .hero-desktop-text {
@@ -123,10 +126,11 @@
 .hero-desktop-button {
   border-radius: 50px;
   padding: 2rem 2.5rem;
-  font-size: 1.25rem;
+  font-size: 1rem;
   width: auto;
   margin: 0 auto;
   display: block;
+  font-style: oblique;
 }
 
 /* ===== Ajustes para Mobile ===== */
@@ -136,7 +140,7 @@
 @media (max-width: 767px) {
   .hero-section {
   background: rgb(181, 233, 255);      
-  min-height: 100vh;  
+  min-height: 115vh;  
   padding: 0;
   width: 100%;
   margin: 0;
@@ -145,6 +149,7 @@
     font-size: 2rem;
     margin: 12% 2% 5%; /* Use margens mais controladas */
     text-align: center; /* Garanta que o título está centralizado */
+    font-style: oblique;
   }
 
   .hero-video-wrapper {
@@ -158,8 +163,8 @@
 
   .hero-video {
     max-width: 100%;
-    height: 30%; /* Remova a altura fixa */
-    margin: 0 auto; /* Centralize o vídeo */
+    margin: 0;
+    min-height: 250px;
   }
 
   .hero-description {
@@ -176,6 +181,7 @@
     max-width: 250px;
     margin-top: 4%;
     margin-right: 24%;
+    font-style: oblique;
   }
 
   .hero-button-2 {
@@ -192,6 +198,7 @@
 
   .hero-desktop-title {
     font-size: 1.6rem;
+    font-style: oblique;
   }
 
   .hero-desktop-text {
@@ -200,9 +207,9 @@
   }
 
   .hero-desktop-button {
-    width: 50%;
-    max-width: 200px;
-    font-size: 10px;
+    width: 70%;
+    max-width: 270px;
+    font-style: oblique;
   }
 }
 
