@@ -1,0 +1,243 @@
+/* AboutPage.css
+   Clean responsive styles for AboutPage.js
+   Ajuste cores e fontes conforme identidade da sua marca.
+*/
+
+:root{
+  --blue: #0b57a4;
+  --blue-dark: #08447a;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --panel-bg: #053a78; /* azul do painel à direita */
+  --accent: #ffdd57;
+  --radius: 12px;
+  --container-max: 1100px;
+  --gap: 24px;
+  --text-dark: #0f1724;
+}
+
+*{box-sizing:border-box}
+.about-section{
+  background: var(--bg);
+  color: var(--text-dark);
+  padding: 48px 16px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  margin-top: 2%;
+}
+
+.about-container{
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+/* HERO */
+.about-hero{
+  text-align: left;
+  margin-bottom: 28px;
+}
+.about-title{
+  font-size: 32px;
+  line-height: 1.05;
+  margin: 0 0 10px 0;
+  color: var(--blue-dark);
+  font-weight: 700;
+}
+.about-subtitle{
+  color: var(--muted);
+  margin: 0 0 14px 0;
+  font-size: 18px;
+  text-indent: 20px;
+}
+.about-ctas{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+}
+
+/* GRID: left text / right panel */
+.about-grid{
+  display:grid;
+  grid-template-columns: 1fr 420px;
+  gap: var(--gap);
+  align-items:start;
+}
+
+/* LEFT column */
+.about-text{
+  padding: 8px 4px;
+}
+.section-heading{
+  color: var(--blue);
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+.lead{
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.services-list{
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+  color: var(--text-dark);
+}
+.services-list li{
+  margin: 8px 0;
+  padding-left: 0;
+  line-height: 1.45;
+}
+.summary{
+  color: var(--muted);
+  margin-top: 10px;
+}
+.why-choose h3{
+  margin-top:18px;
+  margin-bottom:8px;
+  color: var(--blue-dark);
+}
+.why-choose ul{
+  margin:0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+.why-choose li{
+  margin-bottom:6px;
+}
+
+/* CTA buttons */
+.btn{
+  display:inline-block;
+  text-decoration: none;
+  padding:10px 16px;
+  border-radius: 10px;
+  font-weight:600;
+  font-size:14px;
+  border:0;
+  cursor:pointer;
+}
+.btn-primary{
+  background: var(--blue);
+  color:#fff;
+  box-shadow: 0 6px 18px rgba(11,87,164,0.18);
+}
+.btn-outline{
+  background: transparent;
+  color: var(--blue-dark);
+  border: 1px solid rgba(11,87,164,0.12);
+}
+.btn-ghost{
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+/* RIGHT panel */
+.about-panel{
+  background: linear-gradient(180deg, var(--panel-bg) 0%, #02407a 100%);
+  color: white;
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(3,24,46,0.25);
+  overflow: hidden;
+}
+.panel-inner{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+  align-items:stretch;
+}
+.panel-image{
+  width:100%;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(2,30,58,0.3);
+  background: rgba(255,255,255,0.03);
+}
+
+/* list inside panel */
+.panel-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.panel-item{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding: 8px;
+  border-radius: 8px;
+}
+.panel-item .icon{
+  width:44px;
+  height:44px;
+  min-width:44px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding:8px;
+  box-sizing:border-box;
+  fill: #fff;
+}
+.panel-item strong{
+  display:block;
+  font-size:15px;
+  line-height:1.1;
+}
+.panel-item span{
+  display:block;
+  font-size:13px;
+  color: rgba(255,255,255,0.85);
+}
+
+/* panel CTA alignment */
+.panel-cta{
+  margin-top:0px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+/* Accessibility / small helpers */
+.visually-hidden{
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* RESPONSIVE rules */
+@media (max-width: 1024px){
+  .about-grid{
+    grid-template-columns: 1fr 360px;
+  }
+  .about-title{ font-size:28px; }
+}
+
+@media (max-width: 768px){
+  .about-grid{
+    grid-template-columns: 1fr;
+  }
+  .about-panel{
+    order: -1;
+    margin-bottom: 14px;
+  }
+  .about-hero{
+    text-align: center;
+  }
+  .about-ctas{
+    justify-content:center;
+  }
+  .panel-image{ height: 160px; object-fit: cover; }
+  .about-title{ font-size:24px; }
+  .section-heading{ text-align:center; }
+  .why-choose h3{ text-align:left; }
+}
+
+@media (max-width: 420px){
+  .about-section{ padding: 22px 12px; }
+  .about-title{ font-size:20px; }
+  .panel-item .icon{ width:40px; height:40px; padding:6px; }
+  .btn{ padding:8px 12px; font-size:13px; }
+}

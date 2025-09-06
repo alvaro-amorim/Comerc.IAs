@@ -3,7 +3,7 @@
   background-color: #06243d;
   color: white;
   padding: 1rem 0;
-  margin-top: 2.5rem;
+  margin-top: 2.9rem;
   width: 100%;
 }
 
@@ -68,14 +68,12 @@
 
   .footer-socials {
     justify-content: flex-start;
-    margin-left: -250px;
     gap: 2rem;
   }
 
   .footer-chat {
     display: flex;
     justify-content: right;
-    margin-right: -250px;
   }
 }
 

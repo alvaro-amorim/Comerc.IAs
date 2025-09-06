@@ -53,14 +53,6 @@ const HomePage = () => {
               </Link>
             </Col>
 
-
-            <Col md={5} className="d-none d-md-block">
-              <img
-                src={FotoHome}
-                alt="Imagem de Fundo Principal"
-                className="hero-image"
-              />
-            </Col>
           </Row>
         </Container>
       </section>
@@ -72,16 +64,16 @@ const HomePage = () => {
       >
         <div className="hero-desktop-overlay"></div>
         <Container className="hero-desktop-container">
-          <h1 className="hero-desktop-title">Impulsione seu negócio com vídeos IA</h1>
-          <p className="hero-desktop-text">Conteúdos rápidos, realistas e totalmente customizados</p>
+          <h1 className="hero-desktop-title">IMPULSIONE SEU NEGÓCIO COM PUBLICIDADE DE QUALIDADE!</h1>
+          <p className="hero-desktop-text">Conteúdo bem feito, entrega rápida e total customização à sua necessidade</p>
           <Button 
             as={Link} 
-            to="/contact" 
+            to="/portfolio" 
             variant="primary" 
             size="lg" 
             className="hero-desktop-button"
           >
-            Fale Conosco
+            CONFIRA NOSSO TRABALHO
           </Button>
         </Container>
       </section>
