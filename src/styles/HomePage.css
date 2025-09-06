@@ -1,6 +1,6 @@
 /* ===== Seção Principal (Hero) ===== */
 .hero-section {
-  background: rgb(181, 233, 255);      
+  background: #b5e9ff;      
   min-height: 80vh;        /* Mais altura */
   padding: 6% 4%;          /* Mais espaço interno */
   width: 100%;
