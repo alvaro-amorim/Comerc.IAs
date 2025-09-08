@@ -23,7 +23,7 @@
 /* ===== Toggle Button (hamburguer) ===== */
 .navbar-toggle {
   border: none;
-  background: transparent;
+  background: blue;
   color: white;
   font-size: 1.8rem;
   cursor: pointer;

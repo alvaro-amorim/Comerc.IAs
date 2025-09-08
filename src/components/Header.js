@@ -27,7 +27,7 @@ const Header = () => {
 
         {/* Botão Toggle */}
         <Navbar.Toggle aria-controls="responsive-navbar-nav" onClick={toggleMenu} className="navbar-toggle">
-          <FontAwesomeIcon icon={faBars} />
+          <FontAwesomeIcon icon={faBars} color="white"/>
         </Navbar.Toggle>
 
         {/* Menu Desktop */}
