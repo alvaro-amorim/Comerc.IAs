@@ -188,7 +188,7 @@
     width: 60%;
     max-width: 230px;
     margin-left: 50%;
-    margin-bottom: -15%;
+    margin-bottom: 15%;
   }
   .hero-desktop {
     flex-direction: column;
