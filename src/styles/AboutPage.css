@@ -216,6 +216,7 @@
 }
 
 @media (max-width: 768px){
+  .about-section{ margin-top: 5%; }
   .about-grid{
     grid-template-columns: 1fr;
   }
