@@ -18,7 +18,7 @@ const HomePage = () => {
               </h1>
               <div className="hero-video-wrapper">
                 <iframe 
-                  src="https://www.youtube.com/embed/XG4BL_I0wYg"
+                  src="https://www.youtube.com/embed/Ee41a_djLX0"
                   title="YouTube video player"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
