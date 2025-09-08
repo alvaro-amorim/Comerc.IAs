@@ -212,11 +212,11 @@
   .about-grid{
     grid-template-columns: 1fr 360px;
   }
-  .about-title{ font-size:28px; }
+  .about-title{ font-size:28px; margin-top: 2%; }
 }
 
 @media (max-width: 768px){
-  .about-section{ margin-top: 4%; margin-bottom: -8%;}
+  .about-section{ margin-top: 4%; margin-bottom: -10%;}
   .about-grid{
     grid-template-columns: 1fr;
   }
