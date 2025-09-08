@@ -56,7 +56,6 @@ const AboutPage = () => {
               <ul>
                 <li>Roteiros orientados a resultado (engajamento → conversão).</li>
                 <li>Produção ágil e escalável sem perder personalidade.</li>
-                <li>Otimização para plataformas sociais e SEO de vídeo (títulos, descrições e tags).</li>
                 <li>Criações que respeitam a identidade da marca — nada que pareça “feito por IA”.</li>
               </ul>
             </div>

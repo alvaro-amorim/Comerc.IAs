@@ -230,8 +230,8 @@
   .about-ctas{
     justify-content:center;
   }
-  .panel-image{ height: 160px; object-fit: cover; }
-  .about-title{ font-size:24px; }
+  .panel-image{ height: 100%; object-fit: cover; }
+  .about-title{ font-size:30px; margin-bottom: 5%; }
   .section-heading{ text-align:center; }
   .why-choose h3{ text-align:left; }
 }
