@@ -1,8 +1,27 @@
 import React, { useState, useRef } from 'react';
-import { Container, Form, Button, Row, Col, Card, Collapse, Alert, Modal } from 'react-bootstrap';
+import {
+  Container,
+  Form,
+  Button,
+  Row,
+  Col,
+  Card,
+  Collapse,
+  Alert,
+  Modal,
+  OverlayTrigger,
+  Tooltip
+} from 'react-bootstrap';
 import precosData from '../data/precos.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp, faPrint, faShareAlt, faDownload } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faChevronUp,
+  faPrint,
+  faShareAlt,
+  faDownload,
+  faInfoCircle
+} from '@fortawesome/free-solid-svg-icons';
 import { useReactToPrint } from 'react-to-print';
 import '../styles/OrcamentoPage.css';
 
@@ -20,20 +39,21 @@ const OrcamentoPage = () => {
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [alert, setAlert] = useState(null);
   const [showResultCard, setShowResultCard] = useState(false);
-  const [agreedToContact, setAgreedToContact] = useState(false); // Adicionado
+  const [agreedToContact, setAgreedToContact] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const componentRef = useRef();
 
   const toggleCategory = (categoryName) => {
-    setOpenCategories(prevState => ({
+    setOpenCategories((prevState) => ({
       ...prevState,
       [categoryName]: !prevState[categoryName]
     }));
   };
 
   const handleServiceSelect = (categoryName, serviceTitle, price) => {
-    setSelectedServices(prevState => {
-      const isSelected = prevState[categoryName] && prevState[categoryName][serviceTitle];
+    setSelectedServices((prevState) => {
+      const isSelected =
+        prevState[categoryName] && prevState[categoryName][serviceTitle];
       const newSelection = { ...prevState };
 
       if (isSelected) {
@@ -56,7 +76,7 @@ const OrcamentoPage = () => {
 
   const handleUserInputChange = (e) => {
     const { name, value } = e.target;
-    setUserData(prevState => ({ ...prevState, [name]: value }));
+    setUserData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleAgreementChange = (e) => {
@@ -72,12 +92,21 @@ const OrcamentoPage = () => {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userData.email)) {
+      setAlert({ variant: 'danger', message: 'Digite um e-mail válido.' });
+      return;
+    }
+
     if (!agreedToContact) {
       setAlert({ variant: 'danger', message: 'Você precisa aceitar ser contactado para gerar o orçamento.' });
       return;
     }
 
-    const selectedCount = Object.keys(selectedServices).reduce((count, category) => count + Object.keys(selectedServices[category]).length, 0);
+    const selectedCount = Object.keys(selectedServices).reduce(
+      (count, category) => count + Object.keys(selectedServices[category]).length,
+      0
+    );
     if (selectedCount === 0) {
       setAlert({ variant: 'danger', message: 'Selecione pelo menos um serviço para gerar o orçamento.' });
       return;
@@ -92,13 +121,13 @@ const OrcamentoPage = () => {
 
     let discount = 0;
     if (userData.cupom.toUpperCase() === 'IA20') {
-      discount = total * 0.20;
+      discount = total * 0.2;
     }
 
     const finalPrice = total - discount;
     setFinalPrice(finalPrice);
     setAppliedDiscount(discount);
-    
+
     sendEmail(finalPrice, discount);
     setShowResultCard(true);
   };
@@ -133,26 +162,26 @@ const OrcamentoPage = () => {
     `;
 
     try {
-      const formspreeUrl = "https://formspree.io/f/xwpnyvba"; 
+      const formspreeUrl = 'https://formspree.io/f/xwpnyvba';
       await fetch(formspreeUrl, {
-        method: "POST",
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          Accept: 'application/json'
         },
         body: JSON.stringify({
-          from: "comerc.ias.prod@gmail.com",
-          to: "comerc.ias.prod@gmail.com",
+          from: 'comerc.ias.prod@gmail.com',
+          to: 'comerc.ias.prod@gmail.com',
           _replyto: userData.email,
-          subject: "Novo Orçamento - Comerc IAs",
+          subject: 'Novo Orçamento - Comerc IAs',
           body: emailContent
         })
       });
 
-      setAlert({ variant: 'success', message: 'Orçamento enviado com sucesso! Verifique seu e-mail.' });
+      setAlert({ variant: 'success', message: 'Orçamento gerado com sucesso! Verifique abaixo!' });
       setShowResultCard(true);
     } catch (error) {
-      setAlert({ variant: 'danger', message: 'Houve um erro ao enviar o orçamento. Tente novamente.' });
+      setAlert({ variant: 'danger', message: 'Houve um erro ao gerar o orçamento. Por favor, tente novamente.' });
     }
   };
 
@@ -170,7 +199,7 @@ const OrcamentoPage = () => {
         return `*${category}*\n${serviceItems}`;
       })
       .join('\n\n');
-    
+
     return `Olá, ${userData.nome}!
 O seu orçamento com a Comerc IAs ficou assim:
 
@@ -201,11 +230,14 @@ Qualquer dúvida, é só nos chamar!`;
       --------------------------------------
 
       Serviços Selecionados:
-      ${Object.entries(selectedServices).map(([category, services]) => 
-          `\n*${category}*\n${Object.entries(services).map(([title, price]) => 
-            `- ${title} (R$ ${price.toFixed(2)})`
-          ).join('\n')}`
-      ).join('\n')}
+      ${Object.entries(selectedServices)
+        .map(
+          ([category, services]) =>
+            `\n*${category}*\n${Object.entries(services)
+              .map(([title, price]) => `- ${title} (R$ ${price.toFixed(2)})`)
+              .join('\n')}`
+        )
+        .join('\n')}
 
       --------------------------------------
 
@@ -226,7 +258,7 @@ Qualquer dúvida, é só nos chamar!`;
     link.click();
     document.body.removeChild(link);
   };
-  
+
   const handleShare = () => {
     setShowShareModal(true);
   };
@@ -234,13 +266,13 @@ Qualquer dúvida, é só nos chamar!`;
   return (
     <Container className="py-5">
       <h2 className="text-primary fw-bold text-center mb-4">Gerador de Orçamento</h2>
-      
+
       <Row className="justify-content-center">
         <Col md={8}>
           <Card className="p-4 shadow">
             <h4 className="mb-3">Selecione os Serviços</h4>
             <div className="orcamento-list mb-4">
-              {precosData.orcamento.categorias.map(categoria => (
+              {precosData.orcamento.categorias.map((categoria) => (
                 <div key={categoria.nome} className="category-item mb-2">
                   <div
                     onClick={() => toggleCategory(categoria.nome)}
@@ -248,19 +280,50 @@ Qualquer dúvida, é só nos chamar!`;
                     style={{ backgroundColor: '#f0f0f0', cursor: 'pointer' }}
                   >
                     <h5 className="mb-0">{categoria.nome}</h5>
-                    <FontAwesomeIcon icon={openCategories[categoria.nome] ? faChevronUp : faChevronDown} />
+                    <FontAwesomeIcon
+                      icon={openCategories[categoria.nome] ? faChevronUp : faChevronDown}
+                    />
                   </div>
                   <Collapse in={openCategories[categoria.nome]}>
                     <div className="services-list p-3 border rounded">
                       {categoria.servicos.map((servico, index) => (
-                        <Form.Check
-                          key={index}
-                          type="checkbox"
-                          id={`${categoria.nome}-${servico.titulo}`}
-                          label={`${servico.titulo} - R$ ${servico.preco.toFixed(2)}`}
-                          onChange={() => handleServiceSelect(categoria.nome, servico.titulo, servico.preco)}
-                          checked={selectedServices[categoria.nome] && selectedServices[categoria.nome][servico.titulo]}
-                        />
+                        <div key={index} className="d-flex align-items-center mb-2">
+                          <Form.Check
+                            type="checkbox"
+                            id={`${categoria.nome}-${servico.titulo}`}
+                            label={`${servico.titulo} - R$ ${servico.preco.toFixed(2)}`}
+                            onChange={() =>
+                              handleServiceSelect(
+                                categoria.nome,
+                                servico.titulo,
+                                servico.preco
+                              )
+                            }
+                            checked={
+                              selectedServices[categoria.nome] &&
+                              selectedServices[categoria.nome][servico.titulo]
+                            }
+                          />
+                          <OverlayTrigger
+                            trigger="click"
+                            placement="right"
+                            overlay={
+                              <Tooltip id={`tooltip-${categoria.nome}-${index}`}>
+                                <strong>{servico.titulo}:</strong> {servico.descricao}
+                                {servico.extras && (
+                                  <div>
+                                    <em>{servico.extras}</em>
+                                  </div>
+                                )}
+                              </Tooltip>
+                            }
+                            rootClose
+                          >
+                            <span className="ms-2 text-primary" style={{ cursor: 'pointer' }}>
+                              <FontAwesomeIcon icon={faInfoCircle} />
+                            </span>
+                          </OverlayTrigger>
+                        </div>
                       ))}
                     </div>
                   </Collapse>
@@ -272,37 +335,69 @@ Qualquer dúvida, é só nos chamar!`;
             <Form>
               <Form.Group className="mb-3">
                 <Form.Label>Nome:</Form.Label>
-                <Form.Control type="text" name="nome" value={userData.nome} onChange={handleUserInputChange} required />
+                <Form.Control
+                  type="text"
+                  name="nome"
+                  value={userData.nome}
+                  onChange={handleUserInputChange}
+                  required
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>E-mail:</Form.Label>
-                <Form.Control type="email" name="email" value={userData.email} onChange={handleUserInputChange} required />
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={userData.email}
+                  onChange={handleUserInputChange}
+                  required
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Nome da Empresa ou Instagram:</Form.Label>
-                <Form.Control type="text" name="empresa" value={userData.empresa} onChange={handleUserInputChange} required />
+                <Form.Control
+                  type="text"
+                  name="empresa"
+                  value={userData.empresa}
+                  onChange={handleUserInputChange}
+                  required
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Telefone (com DDD):</Form.Label>
-                <Form.Control type="tel" name="telefone" value={userData.telefone} onChange={handleUserInputChange} required />
+                <Form.Control
+                  type="tel"
+                  name="telefone"
+                  value={userData.telefone}
+                  onChange={handleUserInputChange}
+                  required
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Cupom de Desconto:</Form.Label>
-                <Form.Control type="text" name="cupom" value={userData.cupom} onChange={handleUserInputChange} />
+                <Form.Control
+                  type="text"
+                  name="cupom"
+                  value={userData.cupom}
+                  onChange={handleUserInputChange}
+                />
               </Form.Group>
-              
-              {/* Checkbox de aceite */}
+
               <Form.Group className="mb-3">
-                <Form.Check 
-                  type="checkbox" 
-                  id="agreedToContact" 
+                <Form.Check
+                  type="checkbox"
+                  id="agreedToContact"
                   label="Aceito ser contactado pelas formas de contato fornecidas."
                   checked={agreedToContact}
                   onChange={handleAgreementChange}
                 />
               </Form.Group>
-              
-              {alert && <Alert variant={alert.variant} className="mb-3">{alert.message}</Alert>}
+
+              {alert && (
+                <Alert variant={alert.variant} className="mb-3">
+                  {alert.message}
+                </Alert>
+              )}
 
               <Button onClick={calculateBudget} className="w-100 rounded-pill mt-3">
                 Calcular Orçamento
@@ -314,50 +409,66 @@ Qualquer dúvida, é só nos chamar!`;
               <p>{precosData.orcamento.observacoes}</p>
             </div>
           </Card>
-          
+
           {showResultCard && (
-            <Card className="p-4 shadow mt-4" ref={componentRef}>
-              <h4 className="text-center">Seu Orçamento Final</h4>
-              <hr />
-              <div className="orcamento-detalhes">
-                <p><strong>Nome:</strong> {userData.nome}</p>
-                <p><strong>E-mail:</strong> {userData.email}</p>
-                <p><strong>Empresa:</strong> {userData.empresa}</p>
-                <p><strong>Telefone:</strong> {userData.telefone}</p>
-                <h5 className="mt-4">Serviços Selecionados:</h5>
-                <ul className="list-unstyled">
-                  {Object.entries(selectedServices).map(([category, services]) => (
-                    <li key={category}>
-                      <strong>{category}</strong>
-                      <ul>
-                        {Object.entries(services).map(([title, price]) => (
-                          <li key={title}>{title} - R$ {price.toFixed(2)}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <hr />
-              <div className="orcamento-valores text-end">
-                <p><strong>Total Bruto:</strong> R$ {(finalPrice + appliedDiscount).toFixed(2)}</p>
-                <p><strong>Desconto Aplicado:</strong> R$ {appliedDiscount.toFixed(2)}</p>
-                <h5 className="text-primary fw-bold">Preço Final: R$ {finalPrice.toFixed(2)}</h5>
-              </div>
-              
-              <div className="mt-4 d-flex justify-content-center gap-3">
-                <Button variant="outline-primary" onClick={handlePrint}>
-                  <FontAwesomeIcon icon={faPrint} className="me-2" /> Imprimir
-                </Button>
-                <Button variant="outline-primary" onClick={handleShare}>
-                  <FontAwesomeIcon icon={faShareAlt} className="me-2" /> Compartilhar
-                </Button>
-                <Button variant="outline-primary" onClick={handleDownload}>
-                  <FontAwesomeIcon icon={faDownload} className="me-2" /> Baixar
-                </Button>
-              </div>
-            </Card>
-          )}
+            <div ref={componentRef}>
+              <Card className="p-4 shadow mt-4">
+                <h4 className="text-center">Seu Orçamento Final</h4>
+                <hr />
+                <div className="orcamento-detalhes">
+                  <p>
+                    <strong>Nome:</strong> {userData.nome}
+                  </p>
+                  <p>
+                    <strong>E-mail:</strong> {userData.email}
+                  </p>
+                  <p>
+                    <strong>Empresa:</strong> {userData.empresa}
+                  </p>
+                  <p>
+                    <strong>Telefone:</strong> {userData.telefone}
+                  </p>
+                  <h5 className="mt-4">Serviços Selecionados:</h5>
+                  <ul className="list-unstyled">
+                    {Object.entries(selectedServices).map(([category, services]) => (
+                      <li key={category}>
+                        <strong>{category}</strong>
+                        <ul>
+                          {Object.entries(services).map(([title, price]) => (
+                            <li key={title}>
+                              {title} - R$ {price.toFixed(2)}
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <hr />
+                <div className="orcamento-valores text-end">
+                  <p>
+                    <strong>Total Bruto:</strong> R$ {(finalPrice + appliedDiscount).toFixed(2)}
+                  </p>
+                  <p>
+                    <strong>Desconto Aplicado:</strong> R$ {appliedDiscount.toFixed(2)}
+                  </p>
+                  <h5 className="text-primary fw-bold">
+                    Preço Final: R$ {finalPrice.toFixed(2)}
+                  </h5>
+                </div>
+
+                <div className="mt-4 d-flex justify-content-center gap-3">
+                  <Button variant="outline-primary" onClick={handleShare}>
+                    <FontAwesomeIcon icon={faShareAlt} className="me-2" /> Compartilhar
+              </Button>
+              <Button variant="outline-primary" onClick={handleDownload}>
+                <FontAwesomeIcon icon={faDownload} className="me-2" /> Baixar
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+
         </Col>
       </Row>
 
