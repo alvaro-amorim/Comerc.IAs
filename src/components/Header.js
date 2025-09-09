@@ -32,7 +32,7 @@ const Header = () => {
 
         {/* Menu Desktop */}
         <Navbar.Collapse id="responsive-navbar-nav" className="d-none d-md-flex">
-          <Nav className="navbar-links">
+          <Nav className="navbar-links ms-auto">
             <Nav.Link as={NavLink} to="/" className="navbar-link" activeClassName="active-link" end>
               HOME
             </Nav.Link>
@@ -41,6 +41,9 @@ const Header = () => {
             </Nav.Link>
             <Nav.Link as={NavLink} to="/portfolio" className="navbar-link" activeClassName="active-link">
               Portfólio
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/orcamento" className="navbar-link" activeClassName="active-link">
+              Orçamento
             </Nav.Link>
             <Nav.Link as={NavLink} to="/contact" className="navbar-link" activeClassName="active-link">
               Contato
@@ -64,13 +67,15 @@ const Header = () => {
           <Nav.Link as={NavLink} to="/portfolio" onClick={toggleMenu} className="nav-link" activeClassName="active-link">
             Portfólio
           </Nav.Link>
+          <Nav.Link as={NavLink} to="/orcamento" onClick={toggleMenu} className="nav-link" activeClassName="active-link">
+            Orçamento
+          </Nav.Link>
           <Nav.Link as={NavLink} to="/contact" onClick={toggleMenu} className="nav-link" activeClassName="active-link">
             Contato
           </Nav.Link>
         </Nav>
       </div>
 
-      {/* Overlay */}
       <div className={`overlay ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}></div>
     </Navbar>
   );

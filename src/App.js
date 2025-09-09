@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import PortfolioPage from './pages/PortfolioPage';
 import ContactPage from './pages/ContactPage';
+import OrcamentoPage from './pages/OrcamentoPage'; // Importe a nova página
 import Footer from './components/Footer';
 import ContactModal from './components/forms/ContactModal';
 import ContactForm from './components/forms/ContactForm';
@@ -25,6 +26,7 @@ const App = () => {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/about" element={<AboutPage />} />
                         <Route path="/portfolio" element={<PortfolioPage />} />
+                        <Route path="/orcamento" element={<OrcamentoPage />} /> {/* Adicione a nova rota */}
                         <Route path="/contact" element={<ContactPage />} />
                     </Routes>
                 </main>

@@ -1,0 +1,80 @@
+{
+  "orcamento": {
+    "categorias": [
+      {
+        "nome": "Imagens",
+        "servicos": [
+          {
+            "titulo": "5 imagens",
+            "descricao": "Criação de até 5 artes",
+            "extras": "Lettering simples opcional",
+            "preco": 100.00
+          },
+          {
+            "titulo": "10 imagens",
+            "descricao": "Criação de até 10 artes",
+            "extras": "Lettering simples",
+            "preco": 179.90
+          },
+          {
+            "titulo": "15 imagens",
+            "descricao": "Criação de até 15 artes",
+            "extras": "Lettering simples",
+            "preco": 249.90
+          }
+        ]
+      },
+      {
+        "nome": "Vídeos",
+        "servicos": [
+          {
+            "titulo": "Vídeo Simples",
+            "descricao": "Até 30 segundos",
+            "preco": 199.90
+          },
+          {
+            "titulo": "Vídeo Premium",
+            "descricao": "Até 60 segundos",
+            "preco": 349.90
+          },
+          {
+            "titulo": "Vídeo Elaborado",
+            "descricao": "Mais de 60 segundos com efeitos especiais",
+            "preco": 499.90
+          }
+        ]
+      },
+      {
+        "nome": "Serviços Avulsos",
+        "servicos": [
+          { "titulo": "Narração profissional IA", "descricao": "Até 100 caracteres", "preco": 49.90 },
+          { "titulo": "Cartaz de divulgação", "descricao": "Arte personalizada", "preco": 79.90 },
+          { "titulo": "Edição de foto com IA", "descricao": "Por foto", "preco": 29.90 },
+          { "titulo": "Ensaio de produto", "descricao": "Fotos + vídeos com efeitos", "preco": 599.90 },
+          { "titulo": "Criação de logomarca", "descricao": "Identidade visual básica", "preco": 149.90 },
+          { "titulo": "Branding de marca", "descricao": "Posicionamento e identidade", "preco": 799.90 },
+          { "titulo": "Site empresarial personalizado", "descricao": "Website profissional", "preco": 1499.90 },
+          { "titulo": "Trilha sonora IA", "descricao": "Música exclusiva", "preco": 199.90 }
+        ]
+      },
+      {
+        "nome": "Criação de Personagem",
+        "servicos": [
+          { "titulo": "Pacote 1", "descricao": "5 poses (imagens)", "preco": 199.90 },
+          { "titulo": "Pacote 2", "descricao": "Vídeo 30 seg + narração", "preco": 349.90 },
+          { "titulo": "Pacote 3", "descricao": "Vídeo 1 min + narração", "preco": 499.90 }
+        ]
+      },
+      {
+        "nome": "Pacotes de Personagem",
+        "servicos": [
+          { "titulo": "Pacote A", "descricao": "3 vídeos (30 seg) + narrações + 5 poses (imagem)", "preco": 899.90 },
+          { "titulo": "Pacote B", "descricao": "1 vídeo (30 seg) + narração + 3 poses (imagem)", "preco": 499.90 },
+          { "titulo": "Pacote C", "descricao": "1 vídeo (1 min) + narração + 3 poses (imagem)", "preco": 649.90 },
+          { "titulo": "Pacote D", "descricao": "6 vídeos (30 seg) ou 3 vídeos (1 min) + narração", "preco": 1299.90 }
+        ]
+      }
+    ],
+    "observacoes": "Descontos progressivos em combos e parceria mensal sob consulta."
+  }
+}

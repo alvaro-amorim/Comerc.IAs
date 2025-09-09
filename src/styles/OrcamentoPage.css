@@ -1,0 +1,64 @@
+/* Estilos para a página de orçamento */
+
+.orcamento-page-container {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.orcamento-title {
+  color: var(--bs-primary);
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.orcamento-card {
+  padding: 1.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.orcamento-subtitle {
+  margin-bottom: 1rem;
+}
+
+.orcamento-list {
+  margin-bottom: 1.5rem;
+}
+
+.category-item {
+  margin-bottom: 0.5rem;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.category-header h5 {
+  margin: 0;
+}
+
+.services-list-container {
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.orcamento-button {
+  width: 100%;
+  border-radius: 2rem;
+  margin-top: 1rem;
+}
+
+.observacoes-container {
+  margin-top: 1.5rem;
+}
