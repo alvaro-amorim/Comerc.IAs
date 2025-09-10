@@ -119,7 +119,7 @@ const OrcamentoPage = () => {
     }
 
     let discount = 0;
-    if (userData.cupom.toUpperCase() === 'IA25') {
+    if (userData.cupom.trim().toUpperCase() === 'IA25') {
       discount = total * 0.25;
     }
 
