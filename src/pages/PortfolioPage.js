@@ -4,43 +4,46 @@ import '../styles/PortfolioPage.css';
 // Imagens
 import tumbMarcos from '../assets/images/tumb.marcos.png';
 import blueMarine from '../assets/images/blue.marine.jpg';
-import fotoTom from '../assets/images/foto.tom.jpg';
+import fotoTom from '../assets/images/foto.tom.png';
 import fotoComerc from '../assets/images/foto.comerc.jpg';
+import promoComerc from '../assets/images/promoComerc.png';
 
-// Vídeos
-import reelMarcos from '../assets/videos/reel.marcos.mp4';
-import apresentacaoTalita from '../assets/videos/apresentacao.talita.mp4';
-import videoTom from '../assets/videos/video.tom.mp4';
-import comercApresenta from '../assets/videos/comerc.apresenta.mp4';
-
+// Links do YouTube (embed)
 const portfolioItemsData = [
   {
     thumbnail: fotoComerc,
     media_type: "video",
-    media_url: comercApresenta,
+    media_url: "https://www.youtube.com/embed/uYZeMRy9g-E",
     title: "Apresentação de Marca",
-    description: `Apresentar sua marca ao mundo nunca foi tão fácil — e tão inovador...`
+    description: `Apresentar sua marca ao mundo nunca foi tão fácil — e tão inovador — faça o seu cliente conhecer o seu trabalho de forma prática!`,
   },
   {
     thumbnail: tumbMarcos,
     media_type: "video",
-    media_url: reelMarcos,
-    title: "Vídeos Gerados com IA",
-    description: `Transformamos ideias criativas em roteiros impactantes...`
+    media_url: "https://www.youtube.com/embed/pcl1pZejmgs",
+    title: "Vídeos Storytelling com IA",
+    description: `Transformamos ideias criativas em roteiros impactantes, misturando humor, storytelling e total identidade da sua marca!`,
   },
   {
     thumbnail: blueMarine,
     media_type: "video",
-    media_url: apresentacaoTalita,
+    media_url: "https://www.youtube.com/embed/fXJ_CIXnhVs",
     title: "Apresentações Comerciais",
-    description: `Neste exemplo, usamos IA para desenvolver uma apresentação moderna...`
+    description: `Neste exemplo, usamos IA para desenvolver uma apresentação moderna de um empreendimento para divulgação de uma corretora imobiliária!`,
   },
   {
     thumbnail: fotoTom,
     media_type: "video",
-    media_url: videoTom,
-    title: "Vídeos IA a Partir de Fotos",
-    description: `Com apenas uma imagem estática, conseguimos gerar cenas...`
+    media_url: fotoTom,
+    title: "Personagens a partir de fotos",
+    description: `Com apenas uma imagem estática, conseguimos gerar cenas animadas, para melhorar a qualidade do seu conteúdo!.`,
+  },
+  {
+    thumbnail: promoComerc,
+    media_type: "video",
+    media_url: "https://www.youtube.com/embed/Xfmcg0axl-s",
+    title: "Vídeo de Promoção e Divulgação",
+    description: "Uma campanha de promoção que prende o seu cliente! Humor, Identidade e Conversão!",
   }
 ];
 
@@ -100,14 +103,14 @@ const PortfolioPage = () => {
                     className="portfolio-media-img"
                   />
                 ) : (
-                  <video
+                  <iframe
                     src={selectedProject.media_url}
-                    controls
-                    autoPlay
-                    muted
-                    loop
+                    title={selectedProject.title}
                     className="portfolio-media-video"
-                  />
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
                 )}
               </div>
               <div className="portfolio-description">

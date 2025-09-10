@@ -1,19 +1,29 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ContactForm from '../components/forms/ContactForm';
-import ContactInfo from '../components/ContactInfo'; // Importa o novo componente
+import ContactInfo from '../components/ContactInfo';
+import '../styles/ContactPage.css'; // import do CSS separado
 
 const ContactPage = () => {
     return (
-        <section id="contact_form" className="py-5 bg-light">
-            <Container>
-                <Row className="justify-content-center g-4">
-                    <Col md={6}>
-                        <h2 className="text-primary fw-bold mb-4 text-center">Fale Conosco</h2>
-                        <ContactForm />
+        <section id="contact-page" className="contact-page-section">
+            <Container className="contact-page-container">
+                <Row className="contact-page-row">
+                    {/* Coluna do formulário */}
+                    <Col md={6} className="contact-form-col">
+                        <h2 className="contact-title">Fale Conosco</h2>
+                        <div className="contact-card">
+                            <div className="contact-form-wrapper">
+                                <ContactForm />
+                            </div>
+                        </div>
                     </Col>
-                    <Col md={4} className="d-flex align-items-center justify-content-center">
-                        <ContactInfo />
+
+                    {/* Coluna das informações de contato */}
+                    <Col md={4} className="contact-info-col">
+                        <div className="contact-info-wrapper">
+                            <ContactInfo />
+                        </div>
                     </Col>
                 </Row>
             </Container>

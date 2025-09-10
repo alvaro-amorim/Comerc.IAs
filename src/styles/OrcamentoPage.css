@@ -1,4 +1,11 @@
 /* Estilos para a página de orçamento */
+.orcamento-section{
+  background: #b5e9ff;
+  margin-top: 2%;
+  min-width: 100%;
+  padding: 2rem 3rem;
+  margin-bottom: -3%;
+}
 
 .orcamento-page-container {
   padding-top: 3rem;
@@ -10,11 +17,13 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 1.5rem;
+  margin-top: 5%;
 }
 
 .orcamento-card {
   padding: 1.5rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);  
+  margin-bottom: 5%;
 }
 
 .orcamento-subtitle {
@@ -62,3 +71,11 @@
 .observacoes-container {
   margin-top: 1.5rem;
 }
+
+@media (max-width: 767px) {
+  .orcamento-section{
+    margin-bottom: -12%
+  };
+
+};
+  

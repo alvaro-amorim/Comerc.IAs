@@ -264,12 +264,12 @@ Qualquer dúvida, é só nos chamar!`;
   };
 
   return (
-    <Container className="py-5">
+    <Container className="orcamento-section">
       <h2 className="text-primary fw-bold text-center mb-4">Gerador de Orçamento</h2>
 
       <Row className="justify-content-center">
         <Col md={8}>
-          <Card className="p-4 shadow">
+          <Card className="orcamento-card">
             <h4 className="mb-3">Selecione os Serviços</h4>
             <div className="orcamento-list mb-4">
               {precosData.orcamento.categorias.map((categoria) => (

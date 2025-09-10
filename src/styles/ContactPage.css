@@ -1,0 +1,96 @@
+/* ===== Estrutura geral ===== */
+.contact-page-section {
+    padding: 3rem 1rem;
+    background-color: #b5e9ff;
+    margin-bottom: -12%;
+    margin-top: 1%;
+}
+
+.contact-page-container {
+    max-width: 1200px;
+    margin-bottom: 1%;
+}
+
+.contact-page-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+/* ===== Coluna do formulário ===== */
+.contact-form-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0d6efd;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* ===== Card do formulário ===== */
+.contact-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    width: 100%;
+}
+
+.contact-form-wrapper {
+    width: 100%;
+}
+
+/* ===== Coluna das informações ===== */
+.contact-info-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-info-wrapper {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 992px) {
+    .contact-page-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-form-col,
+    .contact-info-col {
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .contact-title {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .contact-page-section {
+        padding: 2rem 1rem;
+    }
+
+    .contact-title {
+        font-size: 1.5rem;
+    }
+
+    .contact-card {
+        padding: 1.5rem;
+    }
+
+    .contact-info-wrapper {
+        max-width: 100%;
+        text-align: center;
+    }
+}

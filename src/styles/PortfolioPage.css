@@ -114,12 +114,27 @@
   justify-content: center;
 }
 
-.portfolio-media-img,
+.portfolio-media-img{
+  width: 300px;
+  height: 200px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
 .portfolio-media-video {
   width: 100%;
   border-radius: 8px;
 }
 
+/* Ajuste específico para vídeos do YouTube (iframe) */
+.portfolio-media-video {
+  aspect-ratio: 16 / 9; /* Mantém proporção correta em qualquer tela */
+  height: auto;
+}
+
+/* Descrição */
 .portfolio-description {
   flex: 1;
   text-align: left;
