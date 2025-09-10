@@ -225,7 +225,7 @@
 }
 
 @media (max-width: 768px){
-  .about-section{ margin-top: 4%; margin-bottom: -11%;}
+  .about-section{ margin-top: 4%; margin-bottom: -12%;}
   .about-grid{
     grid-template-columns: 1fr;
   }
