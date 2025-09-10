@@ -9,8 +9,6 @@ import {
   Collapse,
   Alert,
   Modal,
-  OverlayTrigger,
-  Tooltip
 } from 'react-bootstrap';
 import precosData from '../data/precos.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,6 +22,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useReactToPrint } from 'react-to-print';
 import '../styles/OrcamentoPage.css';
+import InfoTooltip from '../components/InfoTooltip'; // 👈 novo componente
 
 const OrcamentoPage = () => {
   const [selectedServices, setSelectedServices] = useState({});
@@ -304,25 +303,22 @@ Qualquer dúvida, é só nos chamar!`;
                               selectedServices[categoria.nome][servico.titulo]
                             }
                           />
-                          <OverlayTrigger
-                            trigger="click"
-                            placement="right"
-                            overlay={
-                              <Tooltip id={`tooltip-${categoria.nome}-${index}`}>
+                          <InfoTooltip
+                            content={
+                              <>
                                 <strong>{servico.titulo}:</strong> {servico.descricao}
                                 {servico.extras && (
                                   <div>
                                     <em>{servico.extras}</em>
                                   </div>
                                 )}
-                              </Tooltip>
+                              </>
                             }
-                            rootClose
                           >
-                            <span className="ms-2 text-primary" style={{ cursor: 'pointer' }}>
+                            <span className="ms-2 text-primary">
                               <FontAwesomeIcon icon={faInfoCircle} />
                             </span>
-                          </OverlayTrigger>
+                          </InfoTooltip>
                         </div>
                       ))}
                     </div>
@@ -460,15 +456,14 @@ Qualquer dúvida, é só nos chamar!`;
                 <div className="mt-4 d-flex justify-content-center gap-3">
                   <Button variant="outline-primary" onClick={handleShare}>
                     <FontAwesomeIcon icon={faShareAlt} className="me-2" /> Compartilhar
-              </Button>
-              <Button variant="outline-primary" onClick={handleDownload}>
-                <FontAwesomeIcon icon={faDownload} className="me-2" /> Baixar
-              </Button>
+                  </Button>
+                  <Button variant="outline-primary" onClick={handleDownload}>
+                    <FontAwesomeIcon icon={faDownload} className="me-2" /> Baixar
+                  </Button>
+                </div>
+              </Card>
             </div>
-          </Card>
-        </div>
-      )}
-
+          )}
         </Col>
       </Row>
 
