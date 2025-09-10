@@ -22,7 +22,7 @@ const AboutPage = () => {
           </p>
           <div className="about-ctas">
             <a className="btn btn-primary" href="/portfolio">Ver portfólio</a>
-            <a className="btn btn-secondary" href="/contact">Solicitar orçamento</a>
+            <a className="btn btn-secondary" href="/orcamento">Simular orçamento</a>
           </div>
         </header>
 
