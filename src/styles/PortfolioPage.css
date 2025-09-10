@@ -2,6 +2,8 @@
 .portfolio-section {
   padding: 60px 20px;
   background-color: #b5e9ff;
+  min-height: 86vh;
+  margin-bottom: -5%;
 }
 
 .portfolio-container {
@@ -127,6 +129,11 @@
 @media (max-width: 992px) {
   .portfolio-grid {
     grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 5%;
+  }
+
+  .portfolio-section {
+    margin-bottom: -11%;
   }
 
   .portfolio-modal-body {
