@@ -8,19 +8,19 @@
             "titulo": "5 imagens",
             "descricao": "Criação de até 5 artes",
             "extras": "Lettering simples opcional",
-            "preco": 100.00
+            "preco": 59.99
           },
           {
             "titulo": "10 imagens",
             "descricao": "Criação de até 10 artes",
             "extras": "Lettering simples",
-            "preco": 179.90
+            "preco": 99.99
           },
           {
             "titulo": "15 imagens",
             "descricao": "Criação de até 15 artes",
             "extras": "Lettering simples",
-            "preco": 249.90
+            "preco": 139.99
           }
         ]
       },
@@ -30,51 +30,50 @@
           {
             "titulo": "Vídeo Simples",
             "descricao": "Até 30 segundos",
-            "preco": 199.90
+            "preco": 179.99
           },
           {
             "titulo": "Vídeo Premium",
             "descricao": "Até 60 segundos",
-            "preco": 349.90
+            "preco": 299.00
           },
           {
             "titulo": "Vídeo Elaborado",
-            "descricao": "Mais de 60 segundos com efeitos especiais",
-            "preco": 499.90
+            "descricao": "Mais de 60 segundos / até 120 segundos (com efeitos especiais elaborados)",
+            "preco": 449.99
           }
         ]
       },
       {
         "nome": "Serviços Avulsos",
         "servicos": [
-          { "titulo": "Narração profissional IA", "descricao": "Até 100 caracteres", "preco": 49.90 },
-          { "titulo": "Cartaz de divulgação", "descricao": "Arte personalizada", "preco": 79.90 },
-          { "titulo": "Edição de foto com IA", "descricao": "Por foto", "preco": 29.90 },
-          { "titulo": "Ensaio de produto", "descricao": "Fotos + vídeos com efeitos", "preco": 599.90 },
-          { "titulo": "Criação de logomarca", "descricao": "Identidade visual básica", "preco": 149.90 },
-          { "titulo": "Branding de marca", "descricao": "Posicionamento e identidade", "preco": 799.90 },
-          { "titulo": "Site empresarial personalizado", "descricao": "Website profissional", "preco": 1499.90 },
-          { "titulo": "Trilha sonora IA", "descricao": "Música exclusiva", "preco": 199.90 }
+          { "titulo": "Narração profissional IA", "descricao": "A cada 100 caracteres", "preco": 39.99 },
+          { "titulo": "Cartaz de divulgação", "descricao": "Arte personalizada a partir de briefing", "preco": 59.99 },
+          { "titulo": "Edição de foto com IA", "descricao": "a cada foto", "preco": 29.99 },
+          { "titulo": "Ensaio de produto", "descricao": "10 Fotos + 2 vídeos(até 30 segundos)", "preco": 399.99 },
+          { "titulo": "Criação de logomarca", "descricao": "Identidade visual básica", "preco": 119.99 },
+          { "titulo": "Trilha sonora IA", "descricao": "Música exclusiva gerado por IA (sem direitos autorais)", "preco": 199.99 },
+          { "titulo": "Site empresarial personalizado", "descricao": "Website profissional com artes IA e adaptado às suas necessidades", "preco": 799.99 }
         ]
       },
       {
-        "nome": "Criação de Personagem",
+        "nome": "Criação de Personagem Personalizados a partir do seu briefing",
         "servicos": [
-          { "titulo": "Pacote 1", "descricao": "5 poses (imagens)", "preco": 199.90 },
-          { "titulo": "Pacote 2", "descricao": "Vídeo 30 seg + narração", "preco": 349.90 },
-          { "titulo": "Pacote 3", "descricao": "Vídeo 1 min + narração", "preco": 499.90 }
+          { "titulo": "Personagem estático", "descricao": "5 poses (imagens)", "preco": 199.99 },
+          { "titulo": "Personagem animado (curto)", "descricao": "Vídeo 30 seg + narração", "preco": 349.99 },
+          { "titulo": "Personagem animado (longo)", "descricao": "Vídeo 1 min + narração", "preco": 499.99 }
         ]
       },
       {
-        "nome": "Pacotes de Personagem",
+        "nome": "Pacotes de Personagem Personalizados",
         "servicos": [
-          { "titulo": "Pacote A", "descricao": "3 vídeos (30 seg) + narrações + 5 poses (imagem)", "preco": 899.90 },
-          { "titulo": "Pacote B", "descricao": "1 vídeo (30 seg) + narração + 3 poses (imagem)", "preco": 499.90 },
-          { "titulo": "Pacote C", "descricao": "1 vídeo (1 min) + narração + 3 poses (imagem)", "preco": 649.90 },
-          { "titulo": "Pacote D", "descricao": "6 vídeos (30 seg) ou 3 vídeos (1 min) + narração", "preco": 1299.90 }
+          { "titulo": "Pacote básico", "descricao": "1 vídeo (30 seg) + narração + 3 poses (imagem)", "preco": 499.99 },
+          { "titulo": "Pacote standart", "descricao": "1 vídeo (1 min) + narração + 3 poses (imagem)", "preco": 649.99 },
+          { "titulo": "Pacote premium", "descricao": "3 vídeos (30 seg) + narrações + 5 poses (imagem)", "preco": 899.99 },          
+          { "titulo": "Pacote deluxe", "descricao": "6 vídeos (30 seg) ou 3 vídeos (1 min) + narrações", "preco": 1299.90 }
         ]
       }
     ],
-    "observacoes": "Descontos progressivos em combos e parceria mensal sob consulta."
+    "observacoes": "Descontos progressivos em combos e parceria mensal sob consulta. Conte sua ideia para a gente!"
   }
 }
