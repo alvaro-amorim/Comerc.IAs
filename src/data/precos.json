@@ -28,9 +28,14 @@
         "nome": "Vídeos",
         "servicos": [
           {
+            "titulo": "Vídeo Rápido",
+            "descricao": "Até 15 segundos",
+            "preco": 89.99
+          },          
+          {
             "titulo": "Vídeo Simples",
             "descricao": "Até 30 segundos",
-            "preco": 179.99
+            "preco": 169.99
           },
           {
             "titulo": "Vídeo Premium",
@@ -57,7 +62,7 @@
         ]
       },
       {
-        "nome": "Criação de Personagem Personalizados a partir do seu briefing",
+        "nome": "Criação de Personagem Personalizado",
         "servicos": [
           { "titulo": "Personagem estático", "descricao": "5 poses (imagens)", "preco": 199.99 },
           { "titulo": "Personagem animado (curto)", "descricao": "Vídeo 30 seg + narração", "preco": 349.99 },
@@ -65,7 +70,7 @@
         ]
       },
       {
-        "nome": "Pacotes de Personagem Personalizados",
+        "nome": "Pacotes de Personagem Personalizado",
         "servicos": [
           { "titulo": "Pacote básico", "descricao": "1 vídeo (30 seg) + narração + 3 poses (imagem)", "preco": 499.99 },
           { "titulo": "Pacote standart", "descricao": "1 vídeo (1 min) + narração + 3 poses (imagem)", "preco": 649.99 },
