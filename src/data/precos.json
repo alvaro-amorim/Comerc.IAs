@@ -52,7 +52,7 @@
       {
         "nome": "Serviços Avulsos",
         "servicos": [
-          { "titulo": "Narração profissional IA", "descricao": "A cada 100 caracteres", "preco": 39.99 },
+          { "titulo": "Narração profissional IA", "descricao": "A cada 100 caracteres", "preco": 29.99 },
           { "titulo": "Cartaz de divulgação", "descricao": "Arte personalizada a partir de briefing", "preco": 59.99 },
           { "titulo": "Edição de foto com IA", "descricao": "a cada foto", "preco": 29.99 },
           { "titulo": "Ensaio de produto", "descricao": "10 Fotos + 2 vídeos(até 30 segundos)", "preco": 399.99 },
