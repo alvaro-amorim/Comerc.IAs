@@ -3,7 +3,7 @@ import '../styles/PortfolioPage.css';
 
 // Imagens
 import tumbMarcos from '../assets/images/tumb.marcos.png';
-import blueMarine from '../assets/images/blue.marine.jpg';
+import blueMarine from '../assets/images/blue.marine.png';
 import fotoTom from '../assets/images/foto.tom.png';
 import fotoComerc from '../assets/images/foto.comerc.jpg';
 import promoComerc from '../assets/images/promoComerc.png';
@@ -27,23 +27,23 @@ const portfolioItemsData = [
   {
     thumbnail: blueMarine,
     media_type: "video",
-    media_url: "https://www.youtube.com/embed/fXJ_CIXnhVs",
-    title: "Apresentações Comerciais",
-    description: `Neste exemplo, usamos IA para desenvolver uma apresentação moderna de um empreendimento para divulgação de uma corretora imobiliária!`,
+    media_url: "https://www.youtube.com/embed/HXK0NjQgCjE",
+    title: "Branding e Propostas Criativas",
+    description: 'Neste exemplo, usamos IA para desenvolver diversos cenários surreais mantendo o logotipo e branding da marca!',
   },
   {
     thumbnail: fotoTom,
     media_type: "video",
-    media_url: fotoTom,
-    title: "Personagens a partir de fotos",
-    description: `Com apenas uma imagem estática, conseguimos gerar cenas animadas, para melhorar a qualidade do seu conteúdo!.`,
+    media_url: "https://www.youtube.com/embed/55RzdM2dfKk",
+    title: "Efeitos Especiais Para Prender a Atenção",
+    description: `Conteúdos realistas e que prendem o lead até ouvir sua mensagem! Infinitas possibilidades!`,
   },
   {
     thumbnail: promoComerc,
     media_type: "video",
     media_url: "https://www.youtube.com/embed/Xfmcg0axl-s",
-    title: "Vídeo de Promoção e Divulgação",
-    description: "Uma campanha de promoção que prende o seu cliente! Humor, Identidade e Conversão!",
+    title: "Vídeo de Promoção ou Divulgação",
+    description: "Uma campanha de promoção ou divulgação que prende o seu cliente! Humor, Identidade e Conversão!",
   }
 ];
 
