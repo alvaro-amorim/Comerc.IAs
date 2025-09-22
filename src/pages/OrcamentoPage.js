@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react'; // 👈 Adicionei useEffect aqui
 import {
   Container,
   Form,
@@ -22,7 +22,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useReactToPrint } from 'react-to-print';
 import '../styles/OrcamentoPage.css';
-import InfoTooltip from '../components/InfoTooltip'; // 👈 novo componente
+import InfoTooltip from '../components/InfoTooltip';
 
 const OrcamentoPage = () => {
   const [selectedServices, setSelectedServices] = useState({});
@@ -32,7 +32,8 @@ const OrcamentoPage = () => {
     email: '',
     empresa: '',
     telefone: '',
-    cupom: ''
+    cupom: '',
+    mensagem: '' // 👈 Adicionei o estado para a mensagem
   });
   const [finalPrice, setFinalPrice] = useState(0);
   const [appliedDiscount, setAppliedDiscount] = useState(0);
@@ -41,6 +42,56 @@ const OrcamentoPage = () => {
   const [agreedToContact, setAgreedToContact] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const componentRef = useRef();
+
+  // 👈 NOVO: Código para ler a URL e preencher o formulário
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedServices = urlParams.get('servicos');
+    const encodedResumo = urlParams.get('resumo');
+
+    if (encodedServices) {
+      try {
+        const selectedFromQuiz = JSON.parse(decodeURIComponent(encodedServices));
+        const newSelectedServices = {};
+
+        selectedFromQuiz.forEach(item => {
+          if (!newSelectedServices[item.category]) {
+            newSelectedServices[item.category] = {};
+          }
+          const serviceObject = precosData.orcamento.categorias
+            .find(cat => cat.nome === item.category)?.servicos
+            .find(svc => svc.titulo === item.title);
+          
+          if (serviceObject) {
+            newSelectedServices[item.category][item.title] = serviceObject.preco;
+          }
+        });
+        setSelectedServices(newSelectedServices);
+
+        // Abre as categorias selecionadas
+        const newOpenCategories = {};
+        Object.keys(newSelectedServices).forEach(cat => {
+          newOpenCategories[cat] = true;
+        });
+        setOpenCategories(newOpenCategories);
+
+      } catch (e) {
+        console.error("Erro ao decodificar serviços da URL:", e);
+      }
+    }
+
+    if (encodedResumo) {
+      try {
+        const resumoDecodificado = decodeURIComponent(encodedResumo);
+        setUserData(prev => ({
+          ...prev,
+          mensagem: resumoDecodificado
+        }));
+      } catch (e) {
+        console.error("Erro ao decodificar resumo da URL:", e);
+      }
+    }
+  }, []); // O array vazio garante que rode apenas uma vez
 
   const toggleCategory = (categoryName) => {
     setOpenCategories((prevState) => ({
@@ -146,6 +197,7 @@ const OrcamentoPage = () => {
       E-mail: ${userData.email}
       Telefone: ${userData.telefone || 'Não informado'}
       Empresa/Instagram: ${userData.empresa || 'Não informado'}
+      Mensagem do Quiz: ${userData.mensagem}
 
       ---
       
@@ -241,8 +293,8 @@ Qualquer dúvida, é só nos chamar!`;
       --------------------------------------
 
       Total Bruto: R$ ${(finalPrice + appliedDiscount).toFixed(2)}
-      Desconto: R$ ${appliedDiscount.toFixed(2)}
-      Preço Final: R$ ${finalPrice.toFixed(2)}
+      Desconto: R$ {appliedDiscount.toFixed(2)}
+      Preço Final: R$ {finalPrice.toFixed(2)}
 
       --------------------------------------
 
@@ -261,7 +313,7 @@ Qualquer dúvida, é só nos chamar!`;
   const handleShare = () => {
     setShowShareModal(true);
   };
-
+  
   return (
     <Container className="orcamento-section">
       <h2 className="text-primary fw-bold text-center mb-4">Gerador de Orçamento</h2>
@@ -378,6 +430,18 @@ Qualquer dúvida, é só nos chamar!`;
                   onChange={handleUserInputChange}
                 />
               </Form.Group>
+              
+              {/* 👈 NOVO: Adicionei o campo de mensagem */}
+              <Form.Group className="mb-3">
+                <Form.Label>Mensagem:</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={4}
+                  name="mensagem"
+                  value={userData.mensagem}
+                  onChange={handleUserInputChange}
+                />
+              </Form.Group>
 
               <Form.Group className="mb-3">
                 <Form.Check
@@ -423,6 +487,9 @@ Qualquer dúvida, é só nos chamar!`;
                   </p>
                   <p>
                     <strong>Telefone:</strong> {userData.telefone}
+                  </p>
+                  <p>
+                    <strong>Mensagem:</strong> {userData.mensagem}
                   </p>
                   <h5 className="mt-4">Serviços Selecionados:</h5>
                   <ul className="list-unstyled">
