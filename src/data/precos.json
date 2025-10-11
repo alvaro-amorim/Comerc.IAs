@@ -6,21 +6,79 @@
         "servicos": [
           {
             "titulo": "5 imagens",
-            "descricao": "Criação de até 5 artes",
-            "extras": "Lettering simples opcional",
-            "preco": 59.99
+            "titulo_venda": "Pack Visual Rápido — 5 artes",
+            "descricao": "Criação de até 5 artes originais pensadas para redes sociais ou anúncios. Ideal para quem precisa de conteúdo visual consistente e rápido.",
+            "inclui": [
+              "5 imagens em alta resolução",
+              "1 versão para feed (quadrado) e 1 versão para stories (vertical) quando aplicável",
+              "Lettering simples opcional",
+              "Otimização para redes sociais"
+            ],
+            "beneficios": [
+              "Entrega rápida",
+              "Consistência visual para campanhas",
+              "Arquivos prontos para publicação"
+            ],
+            "prazo_entrega": "2 dias úteis",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PNG 1080x1080",
+              "JPG otimizado",
+              "Fonte/vector quando aplicável (.svg/.ai sob consulta)"
+            ],
+            "preco": 50
           },
           {
             "titulo": "10 imagens",
-            "descricao": "Criação de até 10 artes",
-            "extras": "Lettering simples",
-            "preco": 99.99
+            "titulo_venda": "Pack Engajamento — 10 artes",
+            "descricao": "Série de 10 artes alinhadas à sua identidade visual ou campanha. Inclui tratamento visual e pequenas variações para testes A/B.",
+            "inclui": [
+              "10 imagens em alta resolução",
+              "Layouts diferentes para variações de publicação",
+              "Lettering simples",
+              "Briefing rápido para alinhamento"
+            ],
+            "beneficios": [
+              "Melhor performance em cronograma de publicações",
+              "Variações para testar engajamento",
+              "Economia por volume"
+            ],
+            "prazo_entrega": "3 dias úteis",
+            "tempo_estimado_horas_min": 3,
+            "tempo_estimado_horas_max": 6,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PNG 1080x1080",
+              "PNG 1080x1920 (versões stories) quando solicitado"
+            ],
+            "preco": 80
           },
           {
             "titulo": "15 imagens",
-            "descricao": "Criação de até 15 artes",
-            "extras": "Lettering simples",
-            "preco": 139.99
+            "titulo_venda": "Pack Crescimento — 15 artes",
+            "descricao": "Solução para quem precisa de um banco de conteúdo maior: 15 artes com identidade sólida, pronto para calendário mensal.",
+            "inclui": [
+              "15 imagens em alta resolução",
+              "2 variações por peça quando aplicável",
+              "Briefing visual detalhado",
+              "Sugestão de legendas (opcional)"
+            ],
+            "beneficios": [
+              "Banco de conteúdo para 2–3 semanas",
+              "Economia por volume",
+              "Planejamento visual coeso"
+            ],
+            "prazo_entrega": "5 dias úteis",
+            "tempo_estimado_horas_min": 5,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PNG/JPG em alta",
+              "Arquivo fonte sob pedido"
+            ],
+            "preco": 110
           }
         ]
       },
@@ -29,53 +87,446 @@
         "servicos": [
           {
             "titulo": "Vídeo Rápido",
-            "descricao": "Até 15 segundos",
-            "preco": 89.99
-          },          
+            "titulo_venda": "Vídeo Short — até 15s",
+            "descricao": "Vídeo curto otimizado para Reels / Shorts / Tiktok — ideal para anúncios rápidos, chamadas para ação e divulgação de promoções.",
+            "inclui": [
+              "Edição completa do clipe (cortes, transições suaves)",
+              "Legendas básicas embutidas",
+              "Correção básica de cor",
+              "Exportação em MP4 otimizada para redes sociais"
+            ],
+            "beneficios": [
+              "Alto impacto em pouco tempo",
+              "Rápida geração de conteúdo",
+              "Pronto para impulsionamento"
+            ],
+            "prazo_entrega": "1 dia útil",
+            "tempo_estimado_horas_min": 1,
+            "tempo_estimado_horas_max": 2,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "MP4 H.264 (1080p)",
+              "Versão vertical e quadrada quando aplicável"
+            ],
+            "preco": 70
+          },
           {
             "titulo": "Vídeo Simples",
-            "descricao": "Até 30 segundos",
-            "preco": 169.99
+            "titulo_venda": "Vídeo Storytelling — até 30s",
+            "descricao": "Vídeo de 30 segundos com narrativa simples: ideal para apresentar produto, serviço ou um caso de uso rápido.",
+            "inclui": [
+              "Edição com ritmo e storytelling",
+              "Correção de cor básica",
+              "Legendas embutidas",
+              "Música livre de direitos (biblioteca padrão)"
+            ],
+            "beneficios": [
+              "Engajamento com mensagem clara",
+              "Formato versátil para anúncios e orgânico",
+              "Entrega rápida"
+            ],
+            "prazo_entrega": "1 dia útil",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Arquivo otimizado para Instagram/Facebook/YouTube Shorts"
+            ],
+            "preco": 140
           },
           {
             "titulo": "Vídeo Premium",
-            "descricao": "Até 60 segundos",
-            "preco": 299.00
+            "titulo_venda": "Vídeo Premium — até 60s",
+            "descricao": "Vídeo de 60 segundos produzido com cuidado: narrativa estruturada, edição refinada e sonorização. Serviço ideal como base de cálculo e referência.",
+            "inclui": [
+              "Edição completa e ritmo narrativo",
+              "Tratamento de som e mixagem leve",
+              "Correção de cor básica",
+              "Legendas e lower thirds",
+              "Exportação em múltiplos formatos"
+            ],
+            "beneficios": [
+              "Peça de alta conversão para campanhas",
+              "Entrega em 1 dia útil para urgência",
+              "Resultado profissional com boa retenção"
+            ],
+            "prazo_entrega": "1 dia útil (turnaround rápido)",
+            "tempo_estimado_horas_min": 5,
+            "tempo_estimado_horas_max": 7,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "MP4 vertical/quadrado sob solicitação"
+            ],
+            "preco": 240
           },
           {
             "titulo": "Vídeo Elaborado",
-            "descricao": "Mais de 60 segundos / até 120 segundos (com efeitos especiais elaborados)",
-            "preco": 449.99
+            "titulo_venda": "Vídeo Pro — até 120s (Efeitos especiais)",
+            "descricao": "Vídeo com efeitos especiais, composições e cenas mais elaboradas. Ideal para campanhas maiores, apresentações institucionais ou peças publicitárias com maior requinte.",
+            "inclui": [
+              "Efeitos visuais básicos a intermediários",
+              "Correção de cor mais detalhada",
+              "Mixagem de áudio",
+              "Motion graphics simples",
+              "Entrega em formatos prontos para veiculação"
+            ],
+            "beneficios": [
+              "Alto impacto visual",
+              "Apropriado para uso institucional e anúncios de maior alcance",
+              "Suporte técnico na entrega"
+            ],
+            "prazo_entrega": "4–7 dias úteis dependendo da complexidade",
+            "tempo_estimado_horas_min": 8,
+            "tempo_estimado_horas_max": 20,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080/4K (quando aplicável)",
+              "Project file sob consulta"
+            ],
+            "preco": 380
           }
         ]
       },
       {
         "nome": "Serviços Avulsos",
         "servicos": [
-          { "titulo": "Narração profissional IA", "descricao": "A cada 100 caracteres", "preco": 29.99 },
-          { "titulo": "Cartaz de divulgação", "descricao": "Arte personalizada a partir de briefing", "preco": 59.99 },
-          { "titulo": "Edição de foto com IA", "descricao": "a cada foto", "preco": 29.99 },
-          { "titulo": "Ensaio de produto", "descricao": "10 Fotos + 2 vídeos(até 30 segundos)", "preco": 399.99 },
-          { "titulo": "Criação de logomarca", "descricao": "Identidade visual básica", "preco": 119.99 },
-          { "titulo": "Trilha sonora IA", "descricao": "Música exclusiva gerado por IA (sem direitos autorais)", "preco": 199.99 },
-          { "titulo": "Site empresarial personalizado", "descricao": "Website profissional com artes IA e adaptado às suas necessidades", "preco": 799.99 }
+          {
+            "titulo": "Narração profissional IA",
+            "titulo_venda": "Voz Profissional (IA) — preço por bloco",
+            "descricao": "Narração gerada por IA com entonação natural e opções de voz (masculina/feminina/neutral). Cobrado por cada 100 caracteres.",
+            "inclui": [
+              "Arquivo de áudio WAV/MP3",
+              "Ajuste de entonação básico",
+              "Sincronização simples com vídeo (sob consulta)"
+            ],
+            "beneficios": [
+              "Rápido e custo-efetivo",
+              "Versões alternativas de tom sob pedido"
+            ],
+            "prazo_entrega": "6–12 horas",
+            "tempo_estimado_horas_min": 0.5,
+            "tempo_estimado_horas_max": 1,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV sem compressão sob pedido"
+            ],
+            "preco": 25
+          },
+          {
+            "titulo": "Cartaz de divulgação",
+            "titulo_venda": "Poster Promocional — Arte personalizada",
+            "descricao": "Criação de cartaz para eventos, promoções ou divulgação física/digital a partir de briefing detalhado.",
+            "inclui": [
+              "1 arte personalizada",
+              "Versão para impressão (300dpi) e web",
+              "2 revisões rápidas"
+            ],
+            "beneficios": [
+              "Pronto para impressão e divulgação digital",
+              "Imagem profissional que destaca sua oferta"
+            ],
+            "prazo_entrega": "2 dias úteis",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PDF 300dpi",
+              "PNG/JPG web"
+            ],
+            "preco": 50
+          },
+          {
+            "titulo": "Edição de foto com IA",
+            "titulo_venda": "Retoque Rápido — por foto",
+            "descricao": "Melhoria e tratamento de imagens com ferramentas assistidas por IA: remoção de imperfeições, ajuste de cor e recorte.",
+            "inclui": [
+              "Retoque básico",
+              "Recorte e ajuste de cor",
+              "Entrega em alta resolução"
+            ],
+            "beneficios": [
+              "Melhora instantânea da apresentação do produto",
+              "Solução rápida e barata para catálogos"
+            ],
+            "prazo_entrega": "1 dia útil",
+            "tempo_estimado_horas_min": 0.5,
+            "tempo_estimado_horas_max": 1,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "PNG/JPG em alta"
+            ],
+            "preco": 25
+          },
+          {
+            "titulo": "Ensaio de produto",
+            "titulo_venda": "Shooting Compact — 10 fotos + 2 vídeos",
+            "descricao": "Sessão básica de fotos e vídeos para catálogo de produto: 10 fotos profissionais + 2 vídeos curtos (até 30s). Ideal para e-commerce e redes sociais.",
+            "inclui": [
+              "Sessão fotográfica (local/estúdio sob consulta)",
+              "10 fotos tratadas",
+              "2 vídeos de até 30s editados",
+              "Seleção e entrega em galeria online"
+            ],
+            "beneficios": [
+              "Conteúdo pronto para loja e redes",
+              "Acelera validação de produto no mercado"
+            ],
+            "prazo_entrega": "5 dias úteis",
+            "tempo_estimado_horas_min": 4,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "JPG 300dpi",
+              "MP4 1080p"
+            ],
+            "preco": 330
+          },
+          {
+            "titulo": "Criação de logomarca",
+            "titulo_venda": "Identidade Visual Básica — logomarca",
+            "descricao": "Criação de logotipo com conceitos alinhados ao posicionamento da marca. Entrega em arquivos vetoriais e versões para web.",
+            "inclui": [
+              "3 propostas iniciais",
+              "1 versão final com ajustes",
+              "Arquivos PNG, JPG e vetor (SVG/AI básico)"
+            ],
+            "beneficios": [
+              "Base sólida para identidade visual",
+              "Arquivos prontos para aplicação digital e impressão"
+            ],
+            "prazo_entrega": "5 dias úteis",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 10,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "SVG, PNG, JPG",
+              "Guia simples de aplicação (cores e fontes)"
+            ],
+            "preco": 100
+          },
+          {
+            "titulo": "Trilha sonora IA",
+            "titulo_venda": "Trilha Exclusiva por IA",
+            "descricao": "Composição musical gerada por IA, criada sob briefing para combinar com o tom do seu vídeo ou campanha (sem direitos autorais).",
+            "inclui": [
+              "Faixa musical exclusiva",
+              "Versões loop e versão curta",
+              "Licença de uso para campanhas"
+            ],
+            "beneficios": [
+              "Solução econômica para sonorização",
+              "Música adaptada ao ritmo do seu vídeo"
+            ],
+            "prazo_entrega": "2–3 dias úteis",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV sob pedido"
+            ],
+            "preco": 170
+          },
+          {
+            "titulo": "Site empresarial personalizado",
+            "titulo_venda": "Website Corporativo Básico",
+            "descricao": "Website institucional com design personalizado, páginas principais, e integração básica. Conteúdos e artes otimizados para apresentação profissional online.",
+            "inclui": [
+              "Página inicial + até 4 páginas internas",
+              "Design responsivo",
+              "Artes e banners inclusos",
+              "Entrega com orientações para hospedagem"
+            ],
+            "beneficios": [
+              "Presença profissional online",
+              "Entrega rápida para lançamento"
+            ],
+            "prazo_entrega": "7–14 dias úteis",
+            "tempo_estimado_horas_min": 20,
+            "tempo_estimado_horas_max": 40,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "HTML/CSS/JS prontos",
+              "Arquivos e instruções para hospedagem"
+            ],
+            "preco": 650
+          }
         ]
       },
       {
         "nome": "Criação de Personagem Personalizado",
         "servicos": [
-          { "titulo": "Personagem estático", "descricao": "5 poses (imagens)", "preco": 199.99 },
-          { "titulo": "Personagem animado (curto)", "descricao": "Vídeo 30 seg + narração", "preco": 349.99 },
-          { "titulo": "Personagem animado (longo)", "descricao": "Vídeo 1 min + narração", "preco": 499.99 }
+          {
+            "titulo": "Personagem estático",
+            "titulo_venda": "Mascote Ilustrado — 5 poses",
+            "descricao": "Desenvolvimento de personagem estático com 5 poses distintas, perfeito para branding, stickers ou materiais promocionais.",
+            "inclui": [
+              "Conceito inicial",
+              "5 poses finalizadas",
+              "Versões colorida e monocromática"
+            ],
+            "beneficios": [
+              "Identidade visual única",
+              "Material reutilizável em várias comunicações"
+            ],
+            "prazo_entrega": "5 dias úteis",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 10,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PNG em alta",
+              "SVG/AI sob pedido"
+            ],
+            "preco": 170
+          },
+          {
+            "titulo": "Personagem animado (curto)",
+            "titulo_venda": "Mascote Animado — 30s + narração",
+            "descricao": "Animação curta do personagem com narração básica — ideal para vinhetas, introduções e materiais de marca.",
+            "inclui": [
+              "Animação 30s",
+              "Narração IA inclusa",
+              "Efeitos simples e loop quando aplicável"
+            ],
+            "beneficios": [
+              "Humaniza a marca",
+              "Melhora reconhecimento e engajamento"
+            ],
+            "prazo_entrega": "4–7 dias úteis",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 12,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNG sequence ou GIF sob pedido"
+            ],
+            "preco": 290
+          },
+          {
+            "titulo": "Personagem animado (longo)",
+            "titulo_venda": "Mascote Cinemático — 1 min + narração",
+            "descricao": "Animação de 1 minuto com narrativa e sonorização. Indicado para campanhas, apresentações e conteúdo institucional com mais presença.",
+            "inclui": [
+              "Animação 60s",
+              "Narração IA",
+              "Mixagem básica de áudio",
+              "Correção de cor quando aplicável"
+            ],
+            "beneficios": [
+              "Alto potencial de compartilhamento",
+              "Peça completa para campanhas"
+            ],
+            "prazo_entrega": "7–10 dias úteis",
+            "tempo_estimado_horas_min": 10,
+            "tempo_estimado_horas_max": 18,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Project file sob consulta"
+            ],
+            "preco": 420
+          }
         ]
       },
       {
         "nome": "Pacotes de Personagem Personalizado",
         "servicos": [
-          { "titulo": "Pacote básico", "descricao": "1 vídeo (30 seg) + narração + 3 poses (imagem)", "preco": 499.99 },
-          { "titulo": "Pacote standart", "descricao": "1 vídeo (1 min) + narração + 3 poses (imagem)", "preco": 649.99 },
-          { "titulo": "Pacote premium", "descricao": "3 vídeos (30 seg) + narrações + 5 poses (imagem)", "preco": 899.99 },          
-          { "titulo": "Pacote deluxe", "descricao": "6 vídeos (30 seg) ou 3 vídeos (1 min) + narrações", "preco": 1299.90 }
+          {
+            "titulo": "Pacote básico",
+            "titulo_venda": "Starter Pack — 1x 30s + 3 poses",
+            "descricao": "Combo inicial para testar o personagem em vídeo e imagem: 1 vídeo de 30s + narração e 3 poses para uso em posts.",
+            "inclui": [
+              "1 vídeo 30s + narração",
+              "3 poses em alta",
+              "Briefing e conceito"
+            ],
+            "beneficios": [
+              "Entrega rápida de identidade multimídia",
+              "Ótimo custo-benefício"
+            ],
+            "prazo_entrega": "7 dias úteis",
+            "tempo_estimado_horas_min": 12,
+            "tempo_estimado_horas_max": 20,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNGs das poses"
+            ],
+            "preco": 420
+          },
+          {
+            "titulo": "Pacote standart",
+            "titulo_venda": "Brand Pack — 1x 1min + 3 poses",
+            "descricao": "Pacote mais completo com vídeo de 1 minuto, ideal para uso em campanhas e apresentação de marca.",
+            "inclui": [
+              "1 vídeo 60s + narração",
+              "3 poses em alta",
+              "Briefing detalhado"
+            ],
+            "beneficios": [
+              "Peça central para campanhas digitais",
+              "Material pronto para múltiplas aplicações"
+            ],
+            "prazo_entrega": "10 dias úteis",
+            "tempo_estimado_horas_min": 16,
+            "tempo_estimado_horas_max": 28,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Arquivos de imagem em PNG"
+            ],
+            "preco": 550
+          },
+          {
+            "titulo": "Pacote premium",
+            "titulo_venda": "Pro Pack — 3x 30s + 5 poses",
+            "descricao": "Pacote para quem quer presença consistente: 3 vídeos curtos, narrações e 5 poses para uso amplo.",
+            "inclui": [
+              "3 vídeos de 30s",
+              "5 poses do personagem",
+              "Narrações e mixagem básica"
+            ],
+            "beneficios": [
+              "Forte presença multiplataforma",
+              "Conteúdo pronto para campanha contínua"
+            ],
+            "prazo_entrega": "14–20 dias úteis",
+            "tempo_estimado_horas_min": 30,
+            "tempo_estimado_horas_max": 50,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNGs e arquivos fontes sob pedido"
+            ],
+            "preco": 750
+          },
+          {
+            "titulo": "Pacote deluxe",
+            "titulo_venda": "Deluxe Pack — 6x 30s ou 3x 1min",
+            "descricao": "Pacote topo de linha com volumetria e variedade: ideal para lançamentos, rebranding ou campanhas robustas.",
+            "inclui": [
+              "6 vídeos de 30s ou 3 vídeos de 60s",
+              "Narrações",
+              "Edição avançada e mixagem",
+              "Suporte na entrega e orientações de veiculação"
+            ],
+            "beneficios": [
+              "Solução completa para campanhas de alto impacto",
+              "Acompanhamento técnico de entrega"
+            ],
+            "prazo_entrega": "20–30 dias úteis",
+            "tempo_estimado_horas_min": 60,
+            "tempo_estimado_horas_max": 100,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "MP4 1080/4K",
+              "Arquivos fontes sob consulta"
+            ],
+            "preco": 1100
+          }
         ]
       }
     ],

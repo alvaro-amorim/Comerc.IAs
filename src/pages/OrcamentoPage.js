@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'; // 👈 Adicionei useEffect aqui
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Container,
   Form,
@@ -9,8 +9,9 @@ import {
   Collapse,
   Alert,
   Modal,
+  Badge,
 } from 'react-bootstrap';
-import precosData from '../data/precos.json';
+import precosData from '../data/precos.json'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronDown,
@@ -18,7 +19,7 @@ import {
   faPrint,
   faShareAlt,
   faDownload,
-  faInfoCircle
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { useReactToPrint } from 'react-to-print';
 import '../styles/OrcamentoPage.css';
@@ -27,13 +28,14 @@ import InfoTooltip from '../components/InfoTooltip';
 const OrcamentoPage = () => {
   const [selectedServices, setSelectedServices] = useState({});
   const [openCategories, setOpenCategories] = useState({});
+  const [openServiceDetails, setOpenServiceDetails] = useState({}); // para expandir detalhes por serviço
   const [userData, setUserData] = useState({
     nome: '',
     email: '',
     empresa: '',
     telefone: '',
     cupom: '',
-    mensagem: '' // 👈 Adicionei o estado para a mensagem
+    mensagem: '',
   });
   const [finalPrice, setFinalPrice] = useState(0);
   const [appliedDiscount, setAppliedDiscount] = useState(0);
@@ -43,7 +45,6 @@ const OrcamentoPage = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const componentRef = useRef();
 
-  // 👈 NOVO: Código para ler a URL e preencher o formulário
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const encodedServices = urlParams.get('servicos');
@@ -54,56 +55,63 @@ const OrcamentoPage = () => {
         const selectedFromQuiz = JSON.parse(decodeURIComponent(encodedServices));
         const newSelectedServices = {};
 
-        selectedFromQuiz.forEach(item => {
+        selectedFromQuiz.forEach((item) => {
           if (!newSelectedServices[item.category]) {
             newSelectedServices[item.category] = {};
           }
-          const serviceObject = precosData.orcamento.categorias
-            .find(cat => cat.nome === item.category)?.servicos
-            .find(svc => svc.titulo === item.title);
-          
+          const serviceObject = findServiceObject(item.category, item.title);
           if (serviceObject) {
             newSelectedServices[item.category][item.title] = serviceObject.preco;
           }
         });
         setSelectedServices(newSelectedServices);
 
-        // Abre as categorias selecionadas
         const newOpenCategories = {};
-        Object.keys(newSelectedServices).forEach(cat => {
+        Object.keys(newSelectedServices).forEach((cat) => {
           newOpenCategories[cat] = true;
         });
         setOpenCategories(newOpenCategories);
-
       } catch (e) {
-        console.error("Erro ao decodificar serviços da URL:", e);
+        console.error('Erro ao decodificar serviços da URL:', e);
       }
     }
 
     if (encodedResumo) {
       try {
         const resumoDecodificado = decodeURIComponent(encodedResumo);
-        setUserData(prev => ({
+        setUserData((prev) => ({
           ...prev,
-          mensagem: resumoDecodificado
+          mensagem: resumoDecodificado,
         }));
       } catch (e) {
-        console.error("Erro ao decodificar resumo da URL:", e);
+        console.error('Erro ao decodificar resumo da URL:', e);
       }
     }
-  }, []); // O array vazio garante que rode apenas uma vez
+  }, []);
+
+  // Helper: encontra o objeto do serviço a partir da categoria e título
+  const findServiceObject = (categoryName, serviceTitle) => {
+    const cat = precosData.orcamento.categorias.find((c) => c.nome === categoryName);
+    if (!cat) return null;
+    return cat.servicos.find((s) => s.titulo === serviceTitle) || null;
+  };
 
   const toggleCategory = (categoryName) => {
     setOpenCategories((prevState) => ({
       ...prevState,
-      [categoryName]: !prevState[categoryName]
+      [categoryName]: !prevState[categoryName],
     }));
+  };
+
+  const toggleServiceDetails = (categoryName, serviceTitle) => {
+    const key = `${categoryName}||${serviceTitle}`;
+    setOpenServiceDetails((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   const handleServiceSelect = (categoryName, serviceTitle, price) => {
     setSelectedServices((prevState) => {
       const isSelected =
-        prevState[categoryName] && prevState[categoryName][serviceTitle];
+        prevState[categoryName] && Object.prototype.hasOwnProperty.call(prevState[categoryName], serviceTitle);
       const newSelection = { ...prevState };
 
       if (isSelected) {
@@ -117,7 +125,7 @@ const OrcamentoPage = () => {
       } else {
         newSelection[categoryName] = {
           ...newSelection[categoryName],
-          [serviceTitle]: price
+          [serviceTitle]: price,
         };
       }
       return newSelection;
@@ -174,11 +182,11 @@ const OrcamentoPage = () => {
       discount = total * 0.25;
     }
 
-    const finalPrice = total - discount;
-    setFinalPrice(finalPrice);
+    const final = total - discount;
+    setFinalPrice(final);
     setAppliedDiscount(discount);
 
-    sendEmail(finalPrice, discount);
+    sendEmail(final, discount);
     setShowResultCard(true);
   };
 
@@ -186,31 +194,34 @@ const OrcamentoPage = () => {
     const serviceList = Object.entries(selectedServices)
       .map(([category, services]) => {
         const serviceItems = Object.entries(services)
-          .map(([title, itemPrice]) => `- ${title} (R$ ${itemPrice.toFixed(2)})`)
+          .map(([title, itemPrice]) => {
+            const svcObj = findServiceObject(category, title);
+            const vendaTitle = svcObj?.titulo_venda || title;
+            return `- ${vendaTitle} (${title}) - R$ ${itemPrice.toFixed(2)}`;
+          })
           .join('\n');
         return `*${category}*\n${serviceItems}`;
       })
       .join('\n\n');
 
     const emailContent = `
-      Novo Orçamento de ${userData.nome}
-      E-mail: ${userData.email}
-      Telefone: ${userData.telefone || 'Não informado'}
-      Empresa/Instagram: ${userData.empresa || 'Não informado'}
-      Mensagem do Quiz: ${userData.mensagem}
+Novo Orçamento de ${userData.nome}
+E-mail: ${userData.email}
+Telefone: ${userData.telefone || 'Não informado'}
+Empresa/Instagram: ${userData.empresa || 'Não informado'}
+Mensagem do Cliente: ${userData.mensagem || '—'}
 
-      ---
-      
-      Serviços selecionados:
-      
-      ${serviceList}
-      
-      ---
-      
-      Total do Orçamento: R$ ${(price + discount).toFixed(2)}
-      Desconto Aplicado: R$ ${discount.toFixed(2)}
-      Preço Final: R$ ${price.toFixed(2)}
-    `;
+---
+Serviços selecionados:
+
+${serviceList}
+
+---
+
+Total Bruto: R$ ${(price + discount).toFixed(2)}
+Desconto Aplicado: R$ ${discount.toFixed(2)}
+Preço Final: R$ ${price.toFixed(2)}
+`;
 
     try {
       const formspreeUrl = 'https://formspree.io/f/xwpnyvba';
@@ -218,15 +229,15 @@ const OrcamentoPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json'
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           from: 'comerc.ias.prod@gmail.com',
           to: 'comerc.ias.prod@gmail.com',
           _replyto: userData.email,
           subject: 'Novo Orçamento - Comerc IAs',
-          body: emailContent
-        })
+          body: emailContent,
+        }),
       });
 
       setAlert({ variant: 'success', message: 'Orçamento gerado com sucesso! Verifique abaixo!' });
@@ -238,29 +249,33 @@ const OrcamentoPage = () => {
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: `Orçamento Comerc IAs - ${userData.nome}`
+    documentTitle: `Orçamento Comerc IAs - ${userData.nome}`,
   });
 
   const getShareText = () => {
     const serviceList = Object.entries(selectedServices)
       .map(([category, services]) => {
         const serviceItems = Object.entries(services)
-          .map(([title, itemPrice]) => `• ${title} (R$ ${itemPrice.toFixed(2)})`)
+          .map(([title, itemPrice]) => {
+            const svcObj = findServiceObject(category, title);
+            const vendaTitle = svcObj?.titulo_venda || title;
+            return `• ${vendaTitle} — R$ ${itemPrice.toFixed(2)}`;
+          })
           .join('\n');
-        return `*${category}*\n${serviceItems}`;
+        return `${category}\n${serviceItems}`;
       })
       .join('\n\n');
 
     return `Olá, ${userData.nome}!
-O seu orçamento com a Comerc IAs ficou assim:
+Seu orçamento ficou assim:
 
 ${serviceList}
 
-Total: R$ ${(finalPrice + appliedDiscount).toFixed(2)}
+Total Bruto: R$ ${(finalPrice + appliedDiscount).toFixed(2)}
 Desconto: R$ ${appliedDiscount.toFixed(2)}
 Preço Final: R$ ${finalPrice.toFixed(2)}
 
-Qualquer dúvida, é só nos chamar!`;
+Qualquer dúvida, estamos à disposição!`;
   };
 
   const copyToClipboard = () => {
@@ -270,36 +285,42 @@ Qualquer dúvida, é só nos chamar!`;
   };
 
   const handleDownload = () => {
+    const servicesText = Object.entries(selectedServices)
+      .map(([category, services]) => {
+        const items = Object.entries(services)
+          .map(([title, price]) => {
+            const svcObj = findServiceObject(category, title);
+            const vendaTitle = svcObj?.titulo_venda || title;
+            return `- ${vendaTitle} (${title}) — R$ ${price.toFixed(2)}`;
+          })
+          .join('\n');
+        return `\n${category}\n${items}`;
+      })
+      .join('\n');
+
     const contentToDownload = `
-      Orçamento Comerc IAs
+Orçamento Comerc IAs
 
-      Cliente: ${userData.nome}
-      E-mail: ${userData.email}
-      Telefone: ${userData.telefone}
-      Empresa: ${userData.empresa}
+Cliente: ${userData.nome}
+E-mail: ${userData.email}
+Telefone: ${userData.telefone}
+Empresa: ${userData.empresa}
 
-      --------------------------------------
+--------------------------------------
 
-      Serviços Selecionados:
-      ${Object.entries(selectedServices)
-        .map(
-          ([category, services]) =>
-            `\n*${category}*\n${Object.entries(services)
-              .map(([title, price]) => `- ${title} (R$ ${price.toFixed(2)})`)
-              .join('\n')}`
-        )
-        .join('\n')}
+Serviços Selecionados:
+${servicesText}
 
-      --------------------------------------
+--------------------------------------
 
-      Total Bruto: R$ ${(finalPrice + appliedDiscount).toFixed(2)}
-      Desconto: R$ {appliedDiscount.toFixed(2)}
-      Preço Final: R$ {finalPrice.toFixed(2)}
+Total Bruto: R$ ${(finalPrice + appliedDiscount).toFixed(2)}
+Desconto: R$ ${appliedDiscount.toFixed(2)}
+Preço Final: R$ ${finalPrice.toFixed(2)}
 
-      --------------------------------------
+--------------------------------------
 
-      Observações: ${precosData.orcamento.observacoes}
-    `;
+Observações: ${precosData.orcamento.observacoes}
+`;
     const blob = new Blob([contentToDownload], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -313,66 +334,166 @@ Qualquer dúvida, é só nos chamar!`;
   const handleShare = () => {
     setShowShareModal(true);
   };
-  
+
+  // Helper: formata tempo estimado e calcula preco/hora aproximado
+  const formatEstimatedHours = (svc, price) => {
+    if (!svc) return null;
+    const min = svc.tempo_estimado_horas_min;
+    const max = svc.tempo_estimado_horas_max;
+    if (min && max) {
+      const avg = (min + max) / 2;
+      const pricePerHour = avg > 0 ? price / avg : null;
+      return {
+        label: `${min}–${max} h`,
+        avg,
+        pricePerHour: pricePerHour ? Number(pricePerHour.toFixed(2)) : null,
+      };
+    }
+    return null;
+  };
+
   return (
     <Container className="orcamento-section">
       <h2 className="text-primary fw-bold text-center mb-4">Gerador de Orçamento</h2>
 
       <Row className="justify-content-center">
-        <Col md={8}>
-          <Card className="orcamento-card">
-            <h4 className="mb-3">Selecione os Serviços</h4>
-            <div className="orcamento-list mb-4">
+        <Col md={9}>
+          <Card className="orcamento-card p-3">
+            <h4 className="mb-3">Escolha os serviços que você deseja</h4>
+            <div className="orcamento-list mb-3">
               {precosData.orcamento.categorias.map((categoria) => (
-                <div key={categoria.nome} className="category-item mb-2">
+                <div key={categoria.nome} className="category-item mb-3">
                   <div
                     onClick={() => toggleCategory(categoria.nome)}
                     className="d-flex justify-content-between align-items-center p-3 rounded"
-                    style={{ backgroundColor: '#f0f0f0', cursor: 'pointer' }}
+                    style={{ backgroundColor: '#f7f9fb', cursor: 'pointer' }}
                   >
-                    <h5 className="mb-0">{categoria.nome}</h5>
+                    <div>
+                      <h5 className="mb-0">{categoria.nome}</h5>
+                      <small className="text-muted">{categoria.servicos.length} opções</small>
+                    </div>
                     <FontAwesomeIcon
                       icon={openCategories[categoria.nome] ? faChevronUp : faChevronDown}
+                      size="lg"
                     />
                   </div>
+
                   <Collapse in={openCategories[categoria.nome]}>
                     <div className="services-list p-3 border rounded">
-                      {categoria.servicos.map((servico, index) => (
-                        <div key={index} className="d-flex align-items-center mb-2">
-                          <Form.Check
-                            type="checkbox"
-                            id={`${categoria.nome}-${servico.titulo}`}
-                            label={`${servico.titulo} - R$ ${servico.preco.toFixed(2)}`}
-                            onChange={() =>
-                              handleServiceSelect(
-                                categoria.nome,
-                                servico.titulo,
-                                servico.preco
-                              )
-                            }
-                            checked={
-                              selectedServices[categoria.nome] &&
-                              selectedServices[categoria.nome][servico.titulo]
-                            }
-                          />
-                          <InfoTooltip
-                            content={
-                              <>
-                                <strong>{servico.titulo}:</strong> {servico.descricao}
-                                {servico.extras && (
-                                  <div>
-                                    <em>{servico.extras}</em>
+                      {categoria.servicos.map((servico, index) => {
+                        const key = `${categoria.nome}-${servico.titulo}`;
+                        const isChecked =
+                          selectedServices[categoria.nome] &&
+                          selectedServices[categoria.nome][servico.titulo];
+                        const vendaTitle = servico.titulo_venda || servico.titulo;
+                        const est = formatEstimatedHours(servico, servico.preco);
+
+                        return (
+                          <Card key={key} className="mb-2">
+                            <Card.Body className="p-2">
+                              <div className="d-flex align-items-start">
+                                <div style={{ flex: 1 }}>
+                                  <div className="d-flex align-items-center justify-content-between">
+                                    <div>
+                                      <Form.Check
+                                        type="checkbox"
+                                        id={`${categoria.nome}-${servico.titulo}`}
+                                        label={<strong>{vendaTitle}</strong>}
+                                        onChange={() =>
+                                          handleServiceSelect(categoria.nome, servico.titulo, servico.preco)
+                                        }
+                                        checked={!!isChecked}
+                                      />
+                                      <div className="ms-4 mt-1">
+                                        <small className="text-muted d-block">{servico.descricao}</small>
+                                        <div className="mt-1">
+                                          <Badge bg="info" className="me-1">
+                                            {servico.prazo_entrega || 'Padrão'}
+                                          </Badge>
+                                          <Badge bg="secondary" className="me-1">
+                                            {servico.revisoes_incluidas != null
+                                              ? `${servico.revisoes_incluidas} revisão(ões)`
+                                              : 'Revisões sob pedido'}
+                                          </Badge>
+                                          {est && (
+                                            <Badge bg="warning" text="dark">
+                                              {est.label}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="text-end">
+                                      <div className="fw-bold fs-5">R$ {Number(servico.preco).toFixed(0)}</div>
+                                      <div className="mt-2">
+                                        <Button
+                                          variant="link"
+                                          size="sm"
+                                          onClick={() => toggleServiceDetails(categoria.nome, servico.titulo)}
+                                        >
+                                          {openServiceDetails[`${categoria.nome}||${servico.titulo}`] ? 'Fechar' : 'Detalhes'}
+                                          {' '}
+                                          <FontAwesomeIcon icon={faInfoCircle} />
+                                        </Button>
+                                      </div>
+                                    </div>
                                   </div>
-                                )}
-                              </>
-                            }
-                          >
-                            <span className="ms-2 text-primary">
-                              <FontAwesomeIcon icon={faInfoCircle} />
-                            </span>
-                          </InfoTooltip>
-                        </div>
-                      ))}
+                                </div>
+                              </div>
+
+                              <Collapse in={openServiceDetails[`${categoria.nome}||${servico.titulo}`]}>
+                                <div className="mt-3 ms-4">
+                                  <div>
+                                    <strong>O que inclui:</strong>
+                                    {servico.inclui && servico.inclui.length > 0 ? (
+                                      <ul>
+                                        {servico.inclui.map((it, i) => (
+                                          <li key={i}>{it}</li>
+                                        ))}
+                                      </ul>
+                                    ) : (
+                                      <p className="mb-1 text-muted">Inclusões não especificadas.</p>
+                                    )}
+                                  </div>
+
+                                  {servico.beneficios && servico.beneficios.length > 0 && (
+                                    <div>
+                                      <strong>Benefícios:</strong>
+                                      <ul>
+                                        {servico.beneficios.map((b, i) => (
+                                          <li key={i}>{b}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                  <div className="d-flex gap-3 flex-wrap">
+                                    {servico.formato_entrega && (
+                                      <div>
+                                        <strong>Formatos:</strong>
+                                        <div className="small">{servico.formato_entrega.join(' • ')}</div>
+                                      </div>
+                                    )}
+                                    <div>
+                                      <strong>Prazo:</strong>
+                                      <div className="small">{servico.prazo_entrega || 'Conforme acordado'}</div>
+                                    </div>
+                                    {est && (
+                                      <div>
+                                        <strong>Estimativa de horas:</strong>
+                                        <div className="small">
+                                          {est.label}
+                                          {est.pricePerHour ? ` • ~R$ ${est.pricePerHour}/h` : ''}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </Collapse>
+                            </Card.Body>
+                          </Card>
+                        );
+                      })}
                     </div>
                   </Collapse>
                 </div>
@@ -383,64 +504,33 @@ Qualquer dúvida, é só nos chamar!`;
             <Form>
               <Form.Group className="mb-3">
                 <Form.Label>Nome:</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="nome"
-                  value={userData.nome}
-                  onChange={handleUserInputChange}
-                  required
-                />
+                <Form.Control type="text" name="nome" value={userData.nome} onChange={handleUserInputChange} required />
               </Form.Group>
+
               <Form.Group className="mb-3">
                 <Form.Label>E-mail:</Form.Label>
-                <Form.Control
-                  type="email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleUserInputChange}
-                  required
-                />
+                <Form.Control type="email" name="email" value={userData.email} onChange={handleUserInputChange} required />
               </Form.Group>
+
               <Form.Group className="mb-3">
                 <Form.Label>Nome da Empresa ou Instagram:</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="empresa"
-                  value={userData.empresa}
-                  onChange={handleUserInputChange}
-                  required
-                />
+                <Form.Control type="text" name="empresa" value={userData.empresa} onChange={handleUserInputChange} required />
               </Form.Group>
+
               <Form.Group className="mb-3">
                 <Form.Label>Telefone (com DDD):</Form.Label>
-                <Form.Control
-                  type="tel"
-                  name="telefone"
-                  value={userData.telefone}
-                  onChange={handleUserInputChange}
-                  required
-                />
+                <Form.Control type="tel" name="telefone" value={userData.telefone} onChange={handleUserInputChange} required />
               </Form.Group>
+
               <Form.Group className="mb-3">
                 <Form.Label>Cupom de Desconto:</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="cupom"
-                  value={userData.cupom}
-                  onChange={handleUserInputChange}
-                />
+                <Form.Control type="text" name="cupom" value={userData.cupom} onChange={handleUserInputChange} />
+                <small className="text-muted">Use IA25 para 25% (quando aplicável).</small>
               </Form.Group>
-              
-              {/* 👈 NOVO: Adicionei o campo de mensagem */}
+
               <Form.Group className="mb-3">
-                <Form.Label>Mensagem:</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={4}
-                  name="mensagem"
-                  value={userData.mensagem}
-                  onChange={handleUserInputChange}
-                />
+                <Form.Label>Mensagem / Briefing rápido:</Form.Label>
+                <Form.Control as="textarea" rows={4} name="mensagem" value={userData.mensagem} onChange={handleUserInputChange} />
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -459,8 +549,8 @@ Qualquer dúvida, é só nos chamar!`;
                 </Alert>
               )}
 
-              <Button onClick={calculateBudget} className="w-100 rounded-pill mt-3">
-                Calcular Orçamento
+              <Button onClick={calculateBudget} className="w-100 rounded-pill mt-2">
+                Gerar Orçamento
               </Button>
             </Form>
 
@@ -473,59 +563,79 @@ Qualquer dúvida, é só nos chamar!`;
           {showResultCard && (
             <div ref={componentRef}>
               <Card className="p-4 shadow mt-4">
-                <h4 className="text-center">Seu Orçamento Final</h4>
-                <hr />
-                <div className="orcamento-detalhes">
-                  <p>
-                    <strong>Nome:</strong> {userData.nome}
-                  </p>
-                  <p>
-                    <strong>E-mail:</strong> {userData.email}
-                  </p>
-                  <p>
-                    <strong>Empresa:</strong> {userData.empresa}
-                  </p>
-                  <p>
-                    <strong>Telefone:</strong> {userData.telefone}
-                  </p>
-                  <p>
-                    <strong>Mensagem:</strong> {userData.mensagem}
-                  </p>
-                  <h5 className="mt-4">Serviços Selecionados:</h5>
-                  <ul className="list-unstyled">
-                    {Object.entries(selectedServices).map(([category, services]) => (
-                      <li key={category}>
-                        <strong>{category}</strong>
-                        <ul>
-                          {Object.entries(services).map(([title, price]) => (
-                            <li key={title}>
-                              {title} - R$ {price.toFixed(2)}
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="d-flex justify-content-between align-items-start">
+                  <h4>Seu Orçamento Final</h4>
+                  <div>
+                    <Button variant="outline-secondary" size="sm" className="me-2" onClick={handlePrint}>
+                      <FontAwesomeIcon icon={faPrint} /> Imprimir
+                    </Button>
+                    <Button variant="outline-secondary" size="sm" onClick={handleDownload}>
+                      <FontAwesomeIcon icon={faDownload} /> Baixar
+                    </Button>
+                  </div>
                 </div>
                 <hr />
-                <div className="orcamento-valores text-end">
-                  <p>
-                    <strong>Total Bruto:</strong> R$ {(finalPrice + appliedDiscount).toFixed(2)}
-                  </p>
-                  <p>
-                    <strong>Desconto Aplicado:</strong> R$ {appliedDiscount.toFixed(2)}
-                  </p>
-                  <h5 className="text-primary fw-bold">
-                    Preço Final: R$ {finalPrice.toFixed(2)}
-                  </h5>
+                <Row>
+                  <Col md={6}>
+                    <p><strong>Nome:</strong> {userData.nome}</p>
+                    <p><strong>E-mail:</strong> {userData.email}</p>
+                    <p><strong>Empresa:</strong> {userData.empresa}</p>
+                    <p><strong>Telefone:</strong> {userData.telefone}</p>
+                  </Col>
+                  <Col md={6}>
+                    <p><strong>Mensagem / Briefing:</strong> {userData.mensagem || '—'}</p>
+                    <p><strong>Desconto Aplicado:</strong> R$ {appliedDiscount.toFixed(2)}</p>
+                    <h5 className="text-primary">Preço Final: R$ {finalPrice.toFixed(2)}</h5>
+                  </Col>
+                </Row>
+
+                <h5 className="mt-3">Serviços Selecionados</h5>
+                <div>
+                  {Object.entries(selectedServices).map(([category, services]) => (
+                    <Card key={category} className="mb-2">
+                      <Card.Body>
+                        <h6>{category}</h6>
+                        <ul className="list-unstyled mb-0">
+                          {Object.entries(services).map(([title, price]) => {
+                            const svcObj = findServiceObject(category, title);
+                            const vendaTitle = svcObj?.titulo_venda || title;
+                            const est = formatEstimatedHours(svcObj, price);
+                            return (
+                              <li key={title} className="mb-2">
+                                <div className="d-flex justify-content-between">
+                                  <div>
+                                    <strong>{vendaTitle}</strong>
+                                    <div className="small text-muted">{svcObj?.descricao}</div>
+                                    {svcObj?.inclui && (
+                                      <div className="small mt-1">
+                                        <em>Inclui:</em> {svcObj.inclui.slice(0, 3).join(' • ')}{svcObj.inclui.length > 3 ? ' • …' : ''}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="text-end">
+                                    <div>R$ {Number(price).toFixed(0)}</div>
+                                    {est && (
+                                      <div className="small text-muted">
+                                        {est.label} • ~R$ {est.pricePerHour ?? '—'} /h
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </Card.Body>
+                    </Card>
+                  ))}
                 </div>
 
-                <div className="mt-4 d-flex justify-content-center gap-3">
+                <div className="mt-3 d-flex gap-2 justify-content-end">
                   <Button variant="outline-primary" onClick={handleShare}>
                     <FontAwesomeIcon icon={faShareAlt} className="me-2" /> Compartilhar
                   </Button>
-                  <Button variant="outline-primary" onClick={handleDownload}>
-                    <FontAwesomeIcon icon={faDownload} className="me-2" /> Baixar
+                  <Button variant="primary" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                    Voltar ao topo
                   </Button>
                 </div>
               </Card>
@@ -540,12 +650,7 @@ Qualquer dúvida, é só nos chamar!`;
         </Modal.Header>
         <Modal.Body>
           <p>Copie o texto abaixo para compartilhar o orçamento:</p>
-          <Form.Control
-            as="textarea"
-            rows={10}
-            readOnly
-            value={getShareText()}
-          />
+          <Form.Control as="textarea" rows={10} readOnly value={getShareText()} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowShareModal(false)}>
