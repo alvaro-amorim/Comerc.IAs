@@ -30,7 +30,7 @@ const Footer = ({ onChatClick }) => {
                 <FontAwesomeIcon icon={faTiktok} size="3x" />
               </a>
               <a
-                href="https://wa.me/5532991147944"
+                href="https://wa.me/5532984869192"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-link"
