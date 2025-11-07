@@ -525,7 +525,6 @@ Observações: ${precosData.orcamento.observacoes}
               <Form.Group className="mb-3">
                 <Form.Label>Cupom de Desconto:</Form.Label>
                 <Form.Control type="text" name="cupom" value={userData.cupom} onChange={handleUserInputChange} />
-                <small className="text-muted">Use IA25 para 25% (quando aplicável).</small>
               </Form.Group>
 
               <Form.Group className="mb-3">
