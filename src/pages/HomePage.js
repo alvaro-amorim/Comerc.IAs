@@ -4,10 +4,24 @@ import { Link } from 'react-router-dom';
 import escritorio from '../assets/images/escritorio.png';
 import '../styles/HomePage.css'; // Import do CSS
 import saibaMaisImg from "../assets/images/saiba-mais.png"; // caminho da imagem
+import headerImage from '../assets/images/header.png'; // 👈 NOVO: Import da imagem do topo
 
 const HomePage = () => {
   return (
     <>
+      {/* 👈 NOVO: Seção da Imagem no Topo */}
+      <section className="top-image-section">
+        <Container fluid> {/* Usamos 'fluid' para a imagem ocupar toda a largura, se necessário */}
+          <img 
+            src={headerImage} 
+            alt="Cabeçalho da Página Inicial" 
+            className="img-fluid w-100" // Classes do Bootstrap: 'img-fluid' garante responsividade, 'w-100' garante 100% de largura
+          />
+        </Container>
+      </section>
+      {/* Fim da Seção da Imagem no Topo */}
+
+
       {/* Nova Seção Principal (Hero) */}
       <section className="hero-section">
         <Container>
@@ -51,7 +65,7 @@ const HomePage = () => {
                 />
               </Link>
             </Col>
-
+            {/* O conteúdo original da Col md={5} que foi removido (a imagem do escritório) foi tratado na seção hero-desktop */}
           </Row>
         </Container>
       </section>

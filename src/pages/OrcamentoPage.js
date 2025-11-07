@@ -359,7 +359,7 @@ Observações: ${precosData.orcamento.observacoes}
       <Row className="justify-content-center">
         <Col md={9}>
           <Card className="orcamento-card p-3">
-            <h4 className="mb-3">Escolha os serviços que você deseja</h4>
+            <h4 className="mb-3">Escolha os serviços que você deseja! Preços já ajustados para a Black Ninja!</h4>
             <div className="orcamento-list mb-3">
               {precosData.orcamento.categorias.map((categoria) => (
                 <div key={categoria.nome} className="category-item mb-3">
