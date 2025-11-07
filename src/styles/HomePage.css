@@ -215,3 +215,18 @@
 }
 
 
+/* No seu arquivo de estilos global ou no topo do HomePage.css */
+/* 👈 NOVO: Zera Margens e Preenchimentos Padrão */
+body, html {
+    margin: 0;
+    padding: 0;
+    /* Garante que a largura total seja calculada corretamente */
+    box-sizing: border-box; 
+}
+
+/* Garante que o container fluid que você usou na imagem realmente use toda a largura */
+.top-image-section .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 20px;
+}
