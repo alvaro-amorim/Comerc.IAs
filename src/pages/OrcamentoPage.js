@@ -335,6 +335,16 @@ Observações: ${precosData.orcamento.observacoes}
     setShowShareModal(true);
   };
 
+  // Helper: calcula porcentagem de desconto
+  const calculateDiscountPercentage = (originalPrice, currentPrice) => {
+    if (!originalPrice || originalPrice <= currentPrice) {
+      return 0; // Sem desconto ou preço original não é maior
+    }
+    const discount = originalPrice - currentPrice;
+    const percentage = (discount / originalPrice) * 100;
+    return Math.round(percentage);
+  };
+
   // Helper: formata tempo estimado e calcula preco/hora aproximado
   const formatEstimatedHours = (svc, price) => {
     if (!svc) return null;
@@ -359,7 +369,7 @@ Observações: ${precosData.orcamento.observacoes}
       <Row className="justify-content-center">
         <Col md={9}>
           <Card className="orcamento-card p-3">
-            <h4 className="mb-3">Escolha os serviços que você deseja! Preços já ajustados para a Black Ninja!</h4>
+            <h4 className="mb-3">Escolha os serviços que você deseja! Aproveite nossa Black Ninja! É só até 28/11!</h4>
             <div className="orcamento-list mb-3">
               {precosData.orcamento.categorias.map((categoria) => (
                 <div key={categoria.nome} className="category-item mb-3">
@@ -387,6 +397,10 @@ Observações: ${precosData.orcamento.observacoes}
                           selectedServices[categoria.nome][servico.titulo];
                         const vendaTitle = servico.titulo_venda || servico.titulo;
                         const est = formatEstimatedHours(servico, servico.preco);
+                        const discountPercentage = calculateDiscountPercentage(
+                          servico.preco_original,
+                          servico.preco
+                        );
 
                         return (
                           <Card key={key} className="mb-2">
@@ -423,8 +437,21 @@ Observações: ${precosData.orcamento.observacoes}
                                         </div>
                                       </div>
                                     </div>
+                                    {/* --- NOVO TRECHO DE PREÇO AQUI --- */}
                                     <div className="text-end">
-                                      <div className="fw-bold fs-5">R$ {Number(servico.preco).toFixed(0)}</div>
+                                      {discountPercentage > 0 && (
+                                        <div className="d-flex justify-content-end align-items-center gap-2 mb-1">
+                                          <div className="text-muted small" style={{ textDecoration: 'line-through' }}>
+                                            R$ {Number(servico.preco_original).toFixed(0)}
+                                          </div>
+                                          <Badge bg="danger" className="align-self-start">
+                                            -{discountPercentage}%
+                                          </Badge>
+                                        </div>
+                                      )}
+                                      <div className="fw-bold fs-5 text-success">
+                                        R$ {Number(servico.preco).toFixed(0)}
+                                      </div>
                                       <div className="mt-2">
                                         <Button
                                           variant="link"
@@ -437,6 +464,7 @@ Observações: ${precosData.orcamento.observacoes}
                                         </Button>
                                       </div>
                                     </div>
+                                    {/* --- FIM NOVO TRECHO DE PREÇO --- */}
                                   </div>
                                 </div>
                               </div>
@@ -599,6 +627,9 @@ Observações: ${precosData.orcamento.observacoes}
                             const svcObj = findServiceObject(category, title);
                             const vendaTitle = svcObj?.titulo_venda || title;
                             const est = formatEstimatedHours(svcObj, price);
+                            const originalPrice = svcObj?.preco_original;
+                            const discountPercentage = calculateDiscountPercentage(originalPrice, price);
+
                             return (
                               <li key={title} className="mb-2">
                                 <div className="d-flex justify-content-between">
@@ -612,6 +643,11 @@ Observações: ${precosData.orcamento.observacoes}
                                     )}
                                   </div>
                                   <div className="text-end">
+                                    {discountPercentage > 0 && (
+                                      <div className="text-muted small" style={{ textDecoration: 'line-through' }}>
+                                        R$ {Number(originalPrice).toFixed(0)}
+                                      </div>
+                                    )}
                                     <div>R$ {Number(price).toFixed(0)}</div>
                                     {est && (
                                       <div className="small text-muted">
