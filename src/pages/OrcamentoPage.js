@@ -115,7 +115,7 @@ const OrcamentoPage = () => {
       if (categoryName.includes('Planos de Social Media')) {
           // Os detalhes dos planos são baseados no título (Básico, Intermediário, Premium)
           if (title.includes('Básico')) return '1 Reunião Semanal';
-          if (title.includes('Intermediário')) return '1 Reunião Semanal';
+          if (title.includes('Standart')) return '2 Reuniões Semanais';
           if (title.includes('Premium')) return '2 Reuniões Semanais';
       }
       return null; // Retorna null para serviços avulsos
