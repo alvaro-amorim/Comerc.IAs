@@ -202,10 +202,10 @@
           {
             "titulo": "Plano Básico",
             "titulo_venda": "Plano Conteúdo Básico",
-            "descricao": "Conteúdo mensal para 3 a 4 posts semanais. Inclui: 10 Imagens + 4 Vídeos (até 30s) ou 2 Vídeos (até 1 min).",
+            "descricao": "Conteúdo mensal para 3 a 4 posts semanais. Inclui: 10 Artes Personalizadas + 120 segundos em Vídeos.",
             "inclui": [
-              "10 Imagens + 4 Vídeos (até 30s) ou 2 Vídeos (até 1 min) mensais",
-              "1 revisão para imagens, 1 revisão para vídeos",
+              "10 Artes Personalizadas + 120 segundos em Vídeos mensais",
+              "1 revisão por Arte e 1 revisão por Vídeo",
               "1 reunião semanal"
             ],
             "beneficios": [
@@ -256,13 +256,13 @@
             ]
           },
           {
-            "titulo": "Plano Intermediário",
-            "titulo_venda": "Plano Conteúdo Intermediário",
-            "descricao": "Conteúdo mensal para 7 a 8 posts semanais. Inclui: 20 Imagens + 6 Vídeos (até 30s) + 1 Vídeo (até 1 min).",
+            "titulo": "Plano Standart",
+            "titulo_venda": "Plano Conteúdo Standart",
+            "descricao": "Conteúdo mensal para 7 a 8 posts semanais. Inclui: 20 Artes Personalizadas + 240 segundos em Vídeos.",
             "inclui": [
-              "20 Imagens + 6 Vídeos (até 30 seg) + 1 Vídeo (até 1 min) mensais",
-              "2 revisões para imagens, 2 revisões para vídeos",
-              "1 reunião semanal"
+              "20 Artes Personalizadas + 240 segundos em Vídeos mensais",
+              "1 revisão por Arte e 2 revisões por Vídeo",
+              "2 reuniões semanais"
             ],
             "beneficios": [
               "Aumento da frequência de postagem",
@@ -314,18 +314,18 @@
           {
             "titulo": "Plano Premium",
             "titulo_venda": "Plano Conteúdo Premium",
-            "descricao": "Conteúdo mensal para 11 a 12 posts semanais. Inclui: 40 Imagens + 4 Vídeos (até 30s) + 2 Vídeos (até 1 min).",
+            "descricao": "Conteúdo mensal para 11 a 12 posts semanais. Inclui: 40 Artes Personalizadas + 320 segundos em Vídeos",
             "inclui": [
-              "40 Imagens + 4 Vídeos (até 30 seg) + 2 Vídeos (até 1 min) mensais",
-              "2 revisões para imagens, 3 revisões para vídeos",
+              "40 Artes Personalizadas + 320 segundos em Vídeos mensais",
+              "1 revisão por Arte e 2 revisões por Vídeo",
               "2 reuniões semanais"
             ],
             "beneficios": [
               "Máxima frequência e visibilidade",
               "Suporte ampliado com 2 reuniões semanais"
             ],
-            "prazo_entrega": "Entrega semanal escalonada ou conteúdo total em até 12 dias úteis/mês",
-            "revisoes_incluidas": 3,
+            "prazo_entrega": "Entrega semanal escalonada ou conteúdo total em até 15 dias úteis/mês",
+            "revisoes_incluidas": 2,
             "tempo_estimado_horas_min": 35,
             "tempo_estimado_horas_max": 60,
             "formato_entrega": [
