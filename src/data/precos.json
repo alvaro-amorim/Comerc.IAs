@@ -197,6 +197,179 @@
         ]
       },
       {
+        "nome": "Planos de Social Media (Conteúdo Mensal)",
+        "servicos": [
+          {
+            "titulo": "Plano Básico",
+            "titulo_venda": "Plano Conteúdo Básico",
+            "descricao": "Conteúdo mensal para 3 a 4 posts semanais. Inclui: 10 Imagens + 4 Vídeos (até 30s) ou 2 Vídeos (até 1 min).",
+            "inclui": [
+              "10 Imagens + 4 Vídeos (até 30s) ou 2 Vídeos (até 1 min) mensais",
+              "1 revisão para imagens, 1 revisão para vídeos",
+              "1 reunião semanal"
+            ],
+            "beneficios": [
+              "Consistência de posts",
+              "Preço mensal efetivo mais baixo para compromissos de longo prazo"
+            ],
+            "prazo_entrega": "Entrega semanal escalonada ou conteúdo total em até 7 dias úteis/mês",
+            "revisoes_incluidas": 1,
+            "tempo_estimado_horas_min": 10,
+            "tempo_estimado_horas_max": 20,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Mensal",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 400,
+                "preco_total_com_desc": 400,
+                "preco_mensal_efetivo": 400
+              },
+              {
+                "periodo": "Trimestral",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 1200.00,
+                "preco_total_com_desc": 1140.00,
+                "preco_mensal_efetivo": 380.00
+              },
+              {
+                "periodo": "Semestral",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 2400.00,
+                "preco_total_com_desc": 2160.00,
+                "preco_mensal_efetivo": 360.00
+              },
+              {
+                "periodo": "Anual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 4800.00,
+                "preco_total_com_desc": 4080.00,
+                "preco_mensal_efetivo": 340.00
+              }
+            ]
+          },
+          {
+            "titulo": "Plano Intermediário",
+            "titulo_venda": "Plano Conteúdo Intermediário",
+            "descricao": "Conteúdo mensal para 7 a 8 posts semanais. Inclui: 20 Imagens + 6 Vídeos (até 30s) + 1 Vídeo (até 1 min).",
+            "inclui": [
+              "20 Imagens + 6 Vídeos (até 30 seg) + 1 Vídeo (até 1 min) mensais",
+              "2 revisões para imagens, 2 revisões para vídeos",
+              "1 reunião semanal"
+            ],
+            "beneficios": [
+              "Aumento da frequência de postagem",
+              "Maior variedade de conteúdo (imagens e vídeos)"
+            ],
+            "prazo_entrega": "Entrega semanal escalonada ou conteúdo total em até 10 dias úteis/mês",
+            "revisoes_incluidas": 2,
+            "tempo_estimado_horas_min": 20,
+            "tempo_estimado_horas_max": 35,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Mensal",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 800,
+                "preco_total_com_desc": 800,
+                "preco_mensal_efetivo": 800
+              },
+              {
+                "periodo": "Trimestral",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 2400.00,
+                "preco_total_com_desc": 2280.00,
+                "preco_mensal_efetivo": 760.00
+              },
+              {
+                "periodo": "Semestral",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 4800.00,
+                "preco_total_com_desc": 4320.00,
+                "preco_mensal_efetivo": 720.00
+              },
+              {
+                "periodo": "Anual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 9600.00,
+                "preco_total_com_desc": 8160.00,
+                "preco_mensal_efetivo": 680.00
+              }
+            ]
+          },
+          {
+            "titulo": "Plano Premium",
+            "titulo_venda": "Plano Conteúdo Premium",
+            "descricao": "Conteúdo mensal para 11 a 12 posts semanais. Inclui: 40 Imagens + 4 Vídeos (até 30s) + 2 Vídeos (até 1 min).",
+            "inclui": [
+              "40 Imagens + 4 Vídeos (até 30 seg) + 2 Vídeos (até 1 min) mensais",
+              "2 revisões para imagens, 3 revisões para vídeos",
+              "2 reuniões semanais"
+            ],
+            "beneficios": [
+              "Máxima frequência e visibilidade",
+              "Suporte ampliado com 2 reuniões semanais"
+            ],
+            "prazo_entrega": "Entrega semanal escalonada ou conteúdo total em até 12 dias úteis/mês",
+            "revisoes_incluidas": 3,
+            "tempo_estimado_horas_min": 35,
+            "tempo_estimado_horas_max": 60,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Mensal",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 1200,
+                "preco_total_com_desc": 1200,
+                "preco_mensal_efetivo": 1200
+              },
+              {
+                "periodo": "Trimestral",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 3600.00,
+                "preco_total_com_desc": 3420.00,
+                "preco_mensal_efetivo": 1140.00
+              },
+              {
+                "periodo": "Semestral",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 7200.00,
+                "preco_total_com_desc": 6480.00,
+                "preco_mensal_efetivo": 1080.00
+              },
+              {
+                "periodo": "Anual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 14400.00,
+                "preco_total_com_desc": 12240.00,
+                "preco_mensal_efetivo": 1020.00
+              }
+            ]
+          }
+        ]
+      },
+      {
         "nome": "Serviços Avulsos",
         "servicos": [
           {

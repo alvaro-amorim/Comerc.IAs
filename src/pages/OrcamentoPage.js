@@ -26,6 +26,7 @@ import '../styles/OrcamentoPage.css';
 import InfoTooltip from '../components/InfoTooltip';
 
 const OrcamentoPage = () => {
+  // selectedServices agora armazena o preço TOTAL do serviço/período selecionado
   const [selectedServices, setSelectedServices] = useState({});
   const [openCategories, setOpenCategories] = useState({});
   const [openServiceDetails, setOpenServiceDetails] = useState({}); // para expandir detalhes por serviço
@@ -59,9 +60,14 @@ const OrcamentoPage = () => {
           if (!newSelectedServices[item.category]) {
             newSelectedServices[item.category] = {};
           }
+          // Lógica simplificada: para planos de longo prazo que não têm 'preco' direto, 
+          // usaremos o preço do primeiro período (Mensal) para inicialização.
           const serviceObject = findServiceObject(item.category, item.title);
           if (serviceObject) {
-            newSelectedServices[item.category][item.title] = serviceObject.preco;
+            const priceToUse = serviceObject.preco || (serviceObject.precos_por_periodo && serviceObject.precos_por_periodo[0].preco_total_com_desc);
+            if (priceToUse !== undefined) {
+              newSelectedServices[item.category][item.title] = priceToUse;
+            }
           }
         });
         setSelectedServices(newSelectedServices);
@@ -96,6 +102,15 @@ const OrcamentoPage = () => {
     return cat.servicos.find((s) => s.titulo === serviceTitle) || null;
   };
 
+  // Helper: encontra os detalhes do período selecionado
+  const findPeriodDetails = (serviceObject, selectedPrice) => {
+    if (serviceObject.precos_por_periodo) {
+      return serviceObject.precos_por_periodo.find(p => p.preco_total_com_desc === selectedPrice);
+    }
+    return null; // Não se aplica a serviços avulsos
+  };
+
+
   const toggleCategory = (categoryName) => {
     setOpenCategories((prevState) => ({
       ...prevState,
@@ -114,20 +129,30 @@ const OrcamentoPage = () => {
         prevState[categoryName] && Object.prototype.hasOwnProperty.call(prevState[categoryName], serviceTitle);
       const newSelection = { ...prevState };
 
-      if (isSelected) {
-        const updatedCategory = { ...newSelection[categoryName] };
-        delete updatedCategory[serviceTitle];
-        if (Object.keys(updatedCategory).length === 0) {
-          delete newSelection[categoryName];
+      // Se for um serviço com preço único (sem 'precos_por_periodo')
+      if (!findServiceObject(categoryName, serviceTitle).precos_por_periodo) {
+        if (isSelected) {
+          const updatedCategory = { ...newSelection[categoryName] };
+          delete updatedCategory[serviceTitle];
+          if (Object.keys(updatedCategory).length === 0) {
+            delete newSelection[categoryName];
+          } else {
+            newSelection[categoryName] = updatedCategory;
+          }
         } else {
-          newSelection[categoryName] = updatedCategory;
+          newSelection[categoryName] = {
+            ...newSelection[categoryName],
+            [serviceTitle]: price,
+          };
         }
       } else {
+        // Se for um serviço com 'precos_por_periodo' (Plano), o preço é sempre substituído
         newSelection[categoryName] = {
           ...newSelection[categoryName],
           [serviceTitle]: price,
         };
       }
+      
       return newSelection;
     });
   };
@@ -178,26 +203,60 @@ const OrcamentoPage = () => {
     }
 
     let discount = 0;
+    let appliedCoupon = false;
+
+    // Lógica para verificar se o cupom IA25 deve ser aplicado e se é cumulativo
     if (userData.cupom.trim().toUpperCase() === 'IA25') {
-      discount = total * 0.25;
+      appliedCoupon = true;
+      
+      // Verifica se algum plano de longo prazo já está selecionado
+      const isLongTermPlanSelected = Object.keys(selectedServices).some(category => {
+        const cat = precosData.orcamento.categorias.find(c => c.nome === category);
+        if (cat && cat.nome.includes('Planos de Social Media')) {
+          return Object.keys(selectedServices[category]).some(title => {
+            const svc = findServiceObject(category, title);
+            const selectedPrice = selectedServices[category][title];
+            const periodDetails = findPeriodDetails(svc, selectedPrice);
+            return periodDetails && periodDetails.meses > 1 && periodDetails.desconto_perc > 0;
+          });
+        }
+        return false;
+      });
+
+      if (isLongTermPlanSelected) {
+        setAlert({ variant: 'warning', message: 'O cupom IA25 não é cumulativo com os descontos dos Planos de Compromisso (Trimestral, Semestral, Anual). O desconto será de 0%.' });
+        discount = 0;
+      } else {
+        discount = total * 0.25;
+      }
     }
 
     const final = total - discount;
     setFinalPrice(final);
     setAppliedDiscount(discount);
 
-    sendEmail(final, discount);
+    sendEmail(final, discount, appliedCoupon);
     setShowResultCard(true);
   };
 
-  const sendEmail = async (price, discount) => {
+  const sendEmail = async (price, discount, appliedCoupon) => {
     const serviceList = Object.entries(selectedServices)
       .map(([category, services]) => {
         const serviceItems = Object.entries(services)
           .map(([title, itemPrice]) => {
             const svcObj = findServiceObject(category, title);
             const vendaTitle = svcObj?.titulo_venda || title;
-            return `- ${vendaTitle} (${title}) - R$ ${itemPrice.toFixed(2)}`;
+            
+            let periodInfo = '';
+            const periodDetails = findPeriodDetails(svcObj, itemPrice);
+
+            if (periodDetails) {
+                // É um plano de longo prazo
+                const economia = periodDetails.preco_total_sem_desc - periodDetails.preco_total_com_desc;
+                periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses, Economia: R$ ${economia.toFixed(2)})`;
+            }
+
+            return `- ${vendaTitle} ${periodInfo} - R$ ${itemPrice.toFixed(2)}`;
           })
           .join('\n');
         return `*${category}*\n${serviceItems}`;
@@ -210,6 +269,7 @@ E-mail: ${userData.email}
 Telefone: ${userData.telefone || 'Não informado'}
 Empresa/Instagram: ${userData.empresa || 'Não informado'}
 Mensagem do Cliente: ${userData.mensagem || '—'}
+Cupom de Desconto: ${userData.cupom || 'Nenhum'} (${appliedCoupon ? 'Aplicado' : 'Não aplicado ou Inválido'})
 
 ---
 Serviços selecionados:
@@ -259,7 +319,16 @@ Preço Final: R$ ${price.toFixed(2)}
           .map(([title, itemPrice]) => {
             const svcObj = findServiceObject(category, title);
             const vendaTitle = svcObj?.titulo_venda || title;
-            return `• ${vendaTitle} — R$ ${itemPrice.toFixed(2)}`;
+            
+            let periodInfo = '';
+            const periodDetails = findPeriodDetails(svcObj, itemPrice);
+
+            if (periodDetails) {
+                // É um plano de longo prazo
+                periodInfo = `(${periodDetails.periodo} - ~R$ ${periodDetails.preco_mensal_efetivo.toFixed(2)}/mês)`;
+            }
+
+            return `• ${vendaTitle} ${periodInfo} — R$ ${itemPrice.toFixed(2)}`;
           })
           .join('\n');
         return `${category}\n${serviceItems}`;
@@ -291,7 +360,16 @@ Qualquer dúvida, estamos à disposição!`;
           .map(([title, price]) => {
             const svcObj = findServiceObject(category, title);
             const vendaTitle = svcObj?.titulo_venda || title;
-            return `- ${vendaTitle} (${title}) — R$ ${price.toFixed(2)}`;
+            
+            let periodInfo = '';
+            const periodDetails = findPeriodDetails(svcObj, price);
+
+            if (periodDetails) {
+                // É um plano de longo prazo
+                periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses | R$ ${periodDetails.preco_mensal_efetivo.toFixed(2)}/mês)`;
+            }
+
+            return `- ${vendaTitle} ${periodInfo} — R$ ${price.toFixed(2)}`;
           })
           .join('\n');
         return `\n${category}\n${items}`;
@@ -347,6 +425,9 @@ Observações: ${precosData.orcamento.observacoes}
 
   // Helper: formata tempo estimado e calcula preco/hora aproximado
   const formatEstimatedHours = (svc, price) => {
+    // Para planos, o preço/hora não é tão relevante e é difícil calcular
+    if (svc.precos_por_periodo) return null; 
+
     if (!svc) return null;
     const min = svc.tempo_estimado_horas_min;
     const max = svc.tempo_estimado_horas_max;
@@ -392,37 +473,54 @@ Observações: ${precosData.orcamento.observacoes}
                     <div className="services-list p-3 border rounded">
                       {categoria.servicos.map((servico, index) => {
                         const key = `${categoria.nome}-${servico.titulo}`;
-                        const isChecked =
-                          selectedServices[categoria.nome] &&
-                          selectedServices[categoria.nome][servico.titulo];
+                        // Para serviços avulsos, usa o preço simples; para planos, usaremos o preço do primeiro item (Mensal) como default
+                        const defaultPrice = servico.preco || (servico.precos_por_periodo ? servico.precos_por_periodo[0].preco_total_com_desc : 0);
+                        const currentPrice = selectedServices[categoria.nome] ? selectedServices[categoria.nome][servico.titulo] : defaultPrice;
+                        const isChecked = !!selectedServices[categoria.nome] && !!selectedServices[categoria.nome][servico.titulo];
+
                         const vendaTitle = servico.titulo_venda || servico.titulo;
-                        const est = formatEstimatedHours(servico, servico.preco);
+                        const est = formatEstimatedHours(servico, currentPrice);
                         const discountPercentage = calculateDiscountPercentage(
                           servico.preco_original,
-                          servico.preco
+                          currentPrice
                         );
+                        
+                        // Detalhes do período selecionado (se aplicável)
+                        const periodDetails = findPeriodDetails(servico, currentPrice);
+                        const originalPriceToDisplay = periodDetails ? periodDetails.preco_total_sem_desc : servico.preco_original;
+                        const discountToDisplay = periodDetails ? periodDetails.desconto_perc : discountPercentage;
+                        const finalPriceToDisplay = periodDetails ? periodDetails.preco_total_com_desc : currentPrice;
+                        
 
                         return (
                           <Card key={key} className="mb-2">
                             <Card.Body className="p-2">
+                              {/* Conteúdo principal do card (Título, checkbox/radio e Preço) */}
                               <div className="d-flex align-items-start">
                                 <div style={{ flex: 1 }}>
                                   <div className="d-flex align-items-center justify-content-between">
                                     <div>
-                                      <Form.Check
-                                        type="checkbox"
-                                        id={`${categoria.nome}-${servico.titulo}`}
-                                        label={<strong>{vendaTitle}</strong>}
-                                        onChange={() =>
-                                          handleServiceSelect(categoria.nome, servico.titulo, servico.preco)
-                                        }
-                                        checked={!!isChecked}
-                                      />
+                                      {servico.precos_por_periodo ? (
+                                        // Para planos, não usamos o checkbox principal, a seleção é feita pelo radio
+                                        <h5 className="mb-0"><strong>{vendaTitle}</strong></h5>
+                                      ) : (
+                                        // Para serviços avulsos, usamos o checkbox
+                                        <Form.Check
+                                          type="checkbox"
+                                          id={`${categoria.nome}-${servico.titulo}`}
+                                          label={<strong>{vendaTitle}</strong>}
+                                          onChange={() =>
+                                            handleServiceSelect(categoria.nome, servico.titulo, defaultPrice)
+                                          }
+                                          checked={!!isChecked}
+                                        />
+                                      )}
+                                      
                                       <div className="ms-4 mt-1">
                                         <small className="text-muted d-block">{servico.descricao}</small>
                                         <div className="mt-1">
                                           <Badge bg="info" className="me-1">
-                                            {servico.prazo_entrega || 'Padrão'}
+                                            {periodDetails ? `${periodDetails.meses} meses` : servico.prazo_entrega || 'Padrão'}
                                           </Badge>
                                           <Badge bg="secondary" className="me-1">
                                             {servico.revisoes_incluidas != null
@@ -437,37 +535,85 @@ Observações: ${precosData.orcamento.observacoes}
                                         </div>
                                       </div>
                                     </div>
-                                    {/* --- NOVO TRECHO DE PREÇO AQUI --- */}
-                                    <div className="text-end">
-                                      {discountPercentage > 0 && (
-                                        <div className="d-flex justify-content-end align-items-center gap-2 mb-1">
-                                          <div className="text-muted small" style={{ textDecoration: 'line-through' }}>
-                                            R$ {Number(servico.preco_original).toFixed(0)}
+                                    
+                                    {/* --- TRECHO DE PREÇO --- */}
+                                    {!servico.precos_por_periodo && ( // Apenas para serviços avulsos
+                                      <div className="text-end">
+                                        {discountToDisplay > 0 && (
+                                          <div className="d-flex justify-content-end align-items-center gap-2 mb-1">
+                                            <div className="text-muted small" style={{ textDecoration: 'line-through' }}>
+                                              R$ {Number(originalPriceToDisplay).toFixed(0)}
+                                            </div>
+                                            <Badge bg="danger" className="align-self-start">
+                                              -{discountToDisplay}%
+                                            </Badge>
                                           </div>
-                                          <Badge bg="danger" className="align-self-start">
-                                            -{discountPercentage}%
-                                          </Badge>
+                                        )}
+                                        <div className="fw-bold fs-5 text-success">
+                                          R$ {Number(finalPriceToDisplay).toFixed(0)}
                                         </div>
-                                      )}
-                                      <div className="fw-bold fs-5 text-success">
-                                        R$ {Number(servico.preco).toFixed(0)}
                                       </div>
-                                      <div className="mt-2">
-                                        <Button
-                                          variant="link"
-                                          size="sm"
-                                          onClick={() => toggleServiceDetails(categoria.nome, servico.titulo)}
-                                        >
-                                          {openServiceDetails[`${categoria.nome}||${servico.titulo}`] ? 'Fechar' : 'Detalhes'}
-                                          {' '}
-                                          <FontAwesomeIcon icon={faInfoCircle} />
-                                        </Button>
-                                      </div>
+                                    )}
+                                    {/* --- FIM TRECHO DE PREÇO --- */}
+                                    
+                                    <div className="mt-2 ms-3">
+                                      <Button
+                                        variant="link"
+                                        size="sm"
+                                        onClick={() => toggleServiceDetails(categoria.nome, servico.titulo)}
+                                      >
+                                        {openServiceDetails[`${categoria.nome}||${servico.titulo}`] ? 'Fechar' : 'Detalhes'}
+                                        {' '}
+                                        <FontAwesomeIcon icon={faInfoCircle} />
+                                      </Button>
                                     </div>
-                                    {/* --- FIM NOVO TRECHO DE PREÇO --- */}
+
                                   </div>
                                 </div>
                               </div>
+                              {/* Opções de Período para Planos de Social Media */}
+                              {servico.precos_por_periodo && (
+                                <div className="mt-3 p-2 border-top">
+                                  <h6>Escolha o Período:</h6>
+                                  {servico.precos_por_periodo.map((p, pIndex) => {
+                                    const isPeriodChecked = isChecked && currentPrice === p.preco_total_com_desc;
+                                    
+                                    return (
+                                      <Form.Check
+                                        key={`${key}-${p.periodo}`}
+                                        type="radio" 
+                                        name={`${categoria.nome}-${servico.titulo}-periodo`}
+                                        id={`${categoria.nome}-${servico.titulo}-${p.periodo}`}
+                                        label={
+                                          <div className="d-flex justify-content-between align-items-center w-100">
+                                            <span>
+                                              {p.periodo} ({p.meses} meses)
+                                              {p.desconto_perc > 0 && <Badge bg="danger" className="ms-2">-{p.desconto_perc}% OFF</Badge>}
+                                            </span>
+                                            <div className="text-end">
+                                                <span className="fw-bold fs-6 text-success">
+                                                    R$ {p.preco_total_com_desc.toFixed(0)}
+                                                </span>
+                                                {p.meses > 1 && (
+                                                    <small className="text-muted d-block" style={{fontSize: '0.75em'}}>
+                                                      ~R$ {p.preco_mensal_efetivo.toFixed(0)}/mês
+                                                    </small>
+                                                )}
+                                            </div>
+                                          </div>
+                                        }
+                                        onChange={() =>
+                                          // O preço é o preço total do período
+                                          handleServiceSelect(categoria.nome, servico.titulo, p.preco_total_com_desc)
+                                        }
+                                        checked={isPeriodChecked}
+                                        className="mb-1"
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              )}
+
 
                               <Collapse in={openServiceDetails[`${categoria.nome}||${servico.titulo}`]}>
                                 <div className="mt-3 ms-4">
@@ -627,14 +773,25 @@ Observações: ${precosData.orcamento.observacoes}
                             const svcObj = findServiceObject(category, title);
                             const vendaTitle = svcObj?.titulo_venda || title;
                             const est = formatEstimatedHours(svcObj, price);
-                            const originalPrice = svcObj?.preco_original;
-                            const discountPercentage = calculateDiscountPercentage(originalPrice, price);
+                            
+                            let periodInfo = '';
+                            let originalPrice = svcObj?.preco_original;
+                            let discountPercentage = calculateDiscountPercentage(originalPrice, price);
 
+                            const periodDetails = findPeriodDetails(svcObj, price);
+
+                            if (periodDetails) {
+                                // Se for plano, usa os detalhes do período
+                                periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses)`;
+                                originalPrice = periodDetails.preco_total_sem_desc;
+                                discountPercentage = periodDetails.desconto_perc;
+                            }
+                            
                             return (
                               <li key={title} className="mb-2">
                                 <div className="d-flex justify-content-between">
                                   <div>
-                                    <strong>{vendaTitle}</strong>
+                                    <strong>{vendaTitle} {periodInfo}</strong>
                                     <div className="small text-muted">{svcObj?.descricao}</div>
                                     {svcObj?.inclui && (
                                       <div className="small mt-1">
