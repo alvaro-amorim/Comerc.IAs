@@ -494,7 +494,7 @@
           },
           {
             "titulo": "Trilha sonora IA",
-            "titulo_venda": "Trilha Exclusiva por IA",
+            "titulo_venda": "Trilha Sonora Exclusiva por IA",
             "descricao": "Composição musical gerada por IA, criada sob briefing para combinar com o tom do seu vídeo ou campanha (sem direitos autorais).",
             "inclui": [
               "Faixa musical exclusiva",
@@ -515,6 +515,30 @@
             ],
             "preco_original": 170,
             "preco": 102
+          },
+          {
+            "titulo": "Dublagem IA",
+            "titulo_venda": "Dublagem profissional por IA",
+            "descricao": "Dublagem em qualquer idioma a partir de vídeo (até 15 minutos de duração)",
+            "inclui": [
+              "Dublagem em 1 idioma escolhido",
+              "Edição de tempo de fala",
+              "Legendas"
+            ],
+            "beneficios": [
+              "Ideal para expandir sua mensagem para outros países",
+              "Voz da dublagem é um clone da original, mantendo tom e fluidez"
+            ],
+            "prazo_entrega": "3 dias úteis (Prazo Acelerado)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV sob pedido"
+            ],
+            "preco_original": 300,
+            "preco": 220
           },
           {
             "titulo": "Site empresarial personalizado",

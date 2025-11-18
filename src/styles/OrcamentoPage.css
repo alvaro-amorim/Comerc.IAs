@@ -2,9 +2,12 @@
 .orcamento-section{
   background: #b5e9ff;
   margin-top: 2%;
-  min-width: 100%;
+  /* Usar 100% da largura da viewport (vw) para evitar vazamento em telas pequenas */
+  min-width: 100vw; 
   padding: 2rem 3rem;
   margin-bottom: -3%;
+  /* Garante que nada vaze horizontalmente */
+  overflow-x: hidden; 
 }
 
 .orcamento-page-container {
@@ -72,19 +75,30 @@
   margin-top: 1.5rem;
 }
 
+/* Para o alinhamento funcionar, estamos confiando no "text-align: right" 
+  aplicado diretamente nos contêineres de preço no OrcamentoPage.js 
+  (que agora usa minWidth, flex-direction: column e align-items-end).
+  As classes de CSS personalizado antigas foram removidas.
+*/
+
 @media (max-width: 767px) {
   .orcamento-section{
-    margin-bottom: -12%
+    padding: 1rem 1rem;
+    margin-bottom: -12%;
   };
 
+  /* Garante que o contêiner principal do card não vaze */
+  .orcamento-card .card-body {
+    overflow-x: hidden;
+  }
 };
   
 .tooltip {
-  max-width: calc(100vw - 20px) !important; /* nunca maior que a tela */
-  white-space: normal !important;           /* quebra linha automática */
+  max-width: calc(100vw - 20px) !important; 
+  white-space: normal !important;           
   word-wrap: break-word;
   overflow-wrap: break-word;
-  text-align: left;                         /* evita alinhar centralizado e expandir */
+  text-align: left;                         
 }
 .custom-tooltip {
   background: #fff;
@@ -98,4 +112,3 @@
   word-wrap: break-word;
 }
 .custom-tooltip .custom-tooltip-content em { display:block; margin-top:6px; font-style:italic; color:#555; }
-

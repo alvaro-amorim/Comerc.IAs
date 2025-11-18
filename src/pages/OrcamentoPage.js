@@ -104,10 +104,21 @@ const OrcamentoPage = () => {
 
   // Helper: encontra os detalhes do período selecionado
   const findPeriodDetails = (serviceObject, selectedPrice) => {
-    if (serviceObject.precos_por_periodo) {
+    if (serviceObject?.precos_por_periodo) {
       return serviceObject.precos_por_periodo.find(p => p.preco_total_com_desc === selectedPrice);
     }
     return null; // Não se aplica a serviços avulsos
+  };
+
+  // Helper: Encontra o detalhe específico das reuniões semanais para os planos
+  const getReunioesSemanas = (categoryName, title) => {
+      if (categoryName.includes('Planos de Social Media')) {
+          // Os detalhes dos planos são baseados no título (Básico, Intermediário, Premium)
+          if (title.includes('Básico')) return '1 Reunião Semanal';
+          if (title.includes('Intermediário')) return '1 Reunião Semanal';
+          if (title.includes('Premium')) return '2 Reuniões Semanais';
+      }
+      return null; // Retorna null para serviços avulsos
   };
 
 
@@ -165,6 +176,75 @@ const OrcamentoPage = () => {
   const handleAgreementChange = (e) => {
     setAgreedToContact(e.target.checked);
   };
+  
+  const sendEmail = async (price, discount, appliedCoupon) => {
+    const serviceList = Object.entries(selectedServices)
+      .map(([category, services]) => {
+        const serviceItems = Object.entries(services)
+          .map(([title, itemPrice]) => {
+            const svcObj = findServiceObject(category, title);
+            const vendaTitle = svcObj?.titulo_venda || title;
+            
+            let periodInfo = '';
+            const periodDetails = findPeriodDetails(svcObj, itemPrice);
+
+            if (periodDetails) {
+                // É um plano de longo prazo
+                const economia = periodDetails.preco_total_sem_desc - periodDetails.preco_total_com_desc;
+                periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses, Economia: R$ ${economia.toFixed(2)})`;
+            }
+
+            return `- ${vendaTitle} ${periodInfo} - R$ ${itemPrice.toFixed(2)}`;
+          })
+          .join('\n');
+        return `*${category}*\n${serviceItems}`;
+      })
+      .join('\n\n');
+
+    const emailContent = `
+Novo Orçamento de ${userData.nome}
+E-mail: ${userData.email}
+Telefone: ${userData.telefone || 'Não informado'}
+Empresa/Instagram: ${userData.empresa || 'Não informado'}
+Mensagem do Cliente: ${userData.mensagem || '—'}
+Cupom de Desconto: ${userData.cupom || 'Nenhum'} (${appliedCoupon ? 'Aplicado' : 'Não aplicado ou Inválido'})
+
+---
+Serviços selecionados:
+
+${serviceList}
+
+---
+
+Total Bruto: R$ ${(price + discount).toFixed(2)}
+Desconto Aplicado: R$ ${discount.toFixed(2)}
+Preço Final: R$ ${price.toFixed(2)}
+`;
+
+    try {
+      const formspreeUrl = 'https://formspree.io/f/xwpnyvba';
+      await fetch(formspreeUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'comerc.ias.prod@gmail.com',
+          to: 'comerc.ias.prod@gmail.com',
+          _replyto: userData.email,
+          subject: 'Novo Orçamento - Comerc IAs',
+          body: emailContent,
+        }),
+      });
+
+      setAlert({ variant: 'success', message: 'Orçamento gerado com sucesso! Verifique abaixo!' });
+      setShowResultCard(true);
+    } catch (error) {
+      setAlert({ variant: 'danger', message: 'Houve um erro ao gerar o orçamento. Por favor, tente novamente.' });
+    }
+  };
+
 
   const calculateBudget = () => {
     setAlert(null);
@@ -239,74 +319,6 @@ const OrcamentoPage = () => {
     setShowResultCard(true);
   };
 
-  const sendEmail = async (price, discount, appliedCoupon) => {
-    const serviceList = Object.entries(selectedServices)
-      .map(([category, services]) => {
-        const serviceItems = Object.entries(services)
-          .map(([title, itemPrice]) => {
-            const svcObj = findServiceObject(category, title);
-            const vendaTitle = svcObj?.titulo_venda || title;
-            
-            let periodInfo = '';
-            const periodDetails = findPeriodDetails(svcObj, itemPrice);
-
-            if (periodDetails) {
-                // É um plano de longo prazo
-                const economia = periodDetails.preco_total_sem_desc - periodDetails.preco_total_com_desc;
-                periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses, Economia: R$ ${economia.toFixed(2)})`;
-            }
-
-            return `- ${vendaTitle} ${periodInfo} - R$ ${itemPrice.toFixed(2)}`;
-          })
-          .join('\n');
-        return `*${category}*\n${serviceItems}`;
-      })
-      .join('\n\n');
-
-    const emailContent = `
-Novo Orçamento de ${userData.nome}
-E-mail: ${userData.email}
-Telefone: ${userData.telefone || 'Não informado'}
-Empresa/Instagram: ${userData.empresa || 'Não informado'}
-Mensagem do Cliente: ${userData.mensagem || '—'}
-Cupom de Desconto: ${userData.cupom || 'Nenhum'} (${appliedCoupon ? 'Aplicado' : 'Não aplicado ou Inválido'})
-
----
-Serviços selecionados:
-
-${serviceList}
-
----
-
-Total Bruto: R$ ${(price + discount).toFixed(2)}
-Desconto Aplicado: R$ ${discount.toFixed(2)}
-Preço Final: R$ ${price.toFixed(2)}
-`;
-
-    try {
-      const formspreeUrl = 'https://formspree.io/f/xwpnyvba';
-      await fetch(formspreeUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          from: 'comerc.ias.prod@gmail.com',
-          to: 'comerc.ias.prod@gmail.com',
-          _replyto: userData.email,
-          subject: 'Novo Orçamento - Comerc IAs',
-          body: emailContent,
-        }),
-      });
-
-      setAlert({ variant: 'success', message: 'Orçamento gerado com sucesso! Verifique abaixo!' });
-      setShowResultCard(true);
-    } catch (error) {
-      setAlert({ variant: 'danger', message: 'Houve um erro ao gerar o orçamento. Por favor, tente novamente.' });
-    }
-  };
-
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: `Orçamento Comerc IAs - ${userData.nome}`,
@@ -341,7 +353,7 @@ Seu orçamento ficou assim:
 ${serviceList}
 
 Total Bruto: R$ ${(finalPrice + appliedDiscount).toFixed(2)}
-Desconto: R$ ${appliedDiscount.toFixed(2)}
+Desconto: R$ R$ ${appliedDiscount.toFixed(2)}
 Preço Final: R$ ${finalPrice.toFixed(2)}
 
 Qualquer dúvida, estamos à disposição!`;
@@ -426,7 +438,7 @@ Observações: ${precosData.orcamento.observacoes}
   // Helper: formata tempo estimado e calcula preco/hora aproximado
   const formatEstimatedHours = (svc, price) => {
     // Para planos, o preço/hora não é tão relevante e é difícil calcular
-    if (svc.precos_por_periodo) return null; 
+    if (svc?.precos_por_periodo) return null; 
 
     if (!svc) return null;
     const min = svc.tempo_estimado_horas_min;
@@ -491,6 +503,9 @@ Observações: ${precosData.orcamento.observacoes}
                         const discountToDisplay = periodDetails ? periodDetails.desconto_perc : discountPercentage;
                         const finalPriceToDisplay = periodDetails ? periodDetails.preco_total_com_desc : currentPrice;
                         
+                        // Detalhe das reuniões
+                        const reunioesBadge = getReunioesSemanas(categoria.nome, servico.titulo);
+
 
                         return (
                           <Card key={key} className="mb-2">
@@ -519,9 +534,11 @@ Observações: ${precosData.orcamento.observacoes}
                                       <div className="ms-4 mt-1">
                                         <small className="text-muted d-block">{servico.descricao}</small>
                                         <div className="mt-1">
+                                          {/* Badge: Mostra reuniões ou meses/prazo */}
                                           <Badge bg="info" className="me-1">
-                                            {periodDetails ? `${periodDetails.meses} meses` : servico.prazo_entrega || 'Padrão'}
+                                            {reunioesBadge || (periodDetails ? `${periodDetails.meses} meses` : servico.prazo_entrega || 'Padrão')}
                                           </Badge>
+
                                           <Badge bg="secondary" className="me-1">
                                             {servico.revisoes_incluidas != null
                                               ? `${servico.revisoes_incluidas} revisão(ões)`
@@ -536,48 +553,56 @@ Observações: ${precosData.orcamento.observacoes}
                                       </div>
                                     </div>
                                     
-                                    {/* --- TRECHO DE PREÇO --- */}
-                                    {!servico.precos_por_periodo && ( // Apenas para serviços avulsos
-                                      <div className="text-end">
+                                    {/* --- COLUNA DE PREÇO E DETALHES (INVERTIDA) --- */}
+                                    <div style={{minWidth: '130px', textAlign: 'right'}} className="d-flex flex-column justify-content-center align-items-end"> 
+                                      
+                                      {/* Preço Final e Desconto */}
+                                      <div style={{lineHeight: 1}} className="d-flex flex-column align-items-end">
                                         {discountToDisplay > 0 && (
-                                          <div className="d-flex justify-content-end align-items-center gap-2 mb-1">
+                                          <div className="d-flex align-items-center justify-content-end gap-1 mb-1 w-100">
                                             <div className="text-muted small" style={{ textDecoration: 'line-through' }}>
                                               R$ {Number(originalPriceToDisplay).toFixed(0)}
                                             </div>
-                                            <Badge bg="danger" className="align-self-start">
+                                            <Badge bg="danger" className="align-self-start ms-1">
                                               -{discountToDisplay}%
                                             </Badge>
                                           </div>
                                         )}
-                                        <div className="fw-bold fs-5 text-success">
+                                        <div className="text-success" style={{fontWeight: 900, fontSize: '1.4rem'}}>
                                           R$ {Number(finalPriceToDisplay).toFixed(0)}
                                         </div>
                                       </div>
-                                    )}
-                                    {/* --- FIM TRECHO DE PREÇO --- */}
-                                    
-                                    <div className="mt-2 ms-3">
-                                      <Button
-                                        variant="link"
-                                        size="sm"
-                                        onClick={() => toggleServiceDetails(categoria.nome, servico.titulo)}
-                                      >
-                                        {openServiceDetails[`${categoria.nome}||${servico.titulo}`] ? 'Fechar' : 'Detalhes'}
-                                        {' '}
-                                        <FontAwesomeIcon icon={faInfoCircle} />
-                                      </Button>
+                                      
+                                      {/* Botão Detalhes (Movido para baixo) */}
+                                      <div className="mt-2">
+                                        <Button
+                                          variant="link"
+                                          size="sm"
+                                          onClick={() => toggleServiceDetails(categoria.nome, servico.titulo)}
+                                          style={{ padding: 0 }}
+                                        >
+                                          {openServiceDetails[`${categoria.nome}||${servico.titulo}`] ? 'Fechar' : 'Detalhes'}
+                                          {' '}
+                                          <FontAwesomeIcon icon={faInfoCircle} />
+                                        </Button>
+                                      </div>
                                     </div>
-
+                                    {/* --- FIM COLUNA DE PREÇO E DETALHES --- */}
+                                    
                                   </div>
                                 </div>
                               </div>
-                              {/* Opções de Período para Planos de Social Media */}
+                              
+                              {/* Opções de Período para Planos de Social Media (AJUSTADO) */}
                               {servico.precos_por_periodo && (
                                 <div className="mt-3 p-2 border-top">
                                   <h6>Escolha o Período:</h6>
                                   {servico.precos_por_periodo.map((p, pIndex) => {
                                     const isPeriodChecked = isChecked && currentPrice === p.preco_total_com_desc;
                                     
+                                    // Determina se é Mensal (sem desconto)
+                                    const isMonthly = p.meses === 1;
+
                                     return (
                                       <Form.Check
                                         key={`${key}-${p.periodo}`}
@@ -585,18 +610,38 @@ Observações: ${precosData.orcamento.observacoes}
                                         name={`${categoria.nome}-${servico.titulo}-periodo`}
                                         id={`${categoria.nome}-${servico.titulo}-${p.periodo}`}
                                         label={
-                                          <div className="d-flex justify-content-between align-items-center w-100">
-                                            <span>
+                                          <div className="d-flex justify-content-between align-items-start w-100">
+                                            <span className="mt-1">
                                               {p.periodo} ({p.meses} meses)
-                                              {p.desconto_perc > 0 && <Badge bg="danger" className="ms-2">-{p.desconto_perc}% OFF</Badge>}
                                             </span>
-                                            <div className="text-end">
-                                                <span className="fw-bold fs-6 text-success">
-                                                    R$ {p.preco_total_com_desc.toFixed(0)}
-                                                </span>
-                                                {p.meses > 1 && (
+                                            <div style={{minWidth: '130px', textAlign: 'right', marginLeft: '10px'}} className="d-flex flex-column align-items-end">
+                                                
+                                                {/* Linha 1: Preço Principal e Desconto (Se existir) */}
+                                                <div className="d-flex align-items-center" style={{minHeight: '24px', marginBottom: '4px'}}>
+                                                    {/* Preço Principal */}
+                                                    <span className="text-success" style={{fontWeight: 700, fontSize: '1.1rem', whiteSpace: 'nowrap'}}>
+                                                        R$ {p.preco_total_com_desc.toFixed(0)}
+                                                    </span>
+                                                    {/* BADGE DE DESCONTO: Só aparece se houver desconto */}
+                                                    {p.desconto_perc > 0 ? (
+                                                        <Badge bg="danger" className="ms-2">-{p.desconto_perc}% OFF</Badge>
+                                                    ) : (
+                                                        // Bloco de espaço vazio para alinhar o preço principal (R$ 400) com os demais
+                                                        <span style={{minWidth: '55px', height: '100%', visibility: 'hidden'}}>
+                                                          &nbsp;
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                
+                                                {/* Linha 2: Preço Mensal Efetivo (ou espaço vazio para o Mensal) */}
+                                                {(!isMonthly) ? (
                                                     <small className="text-muted d-block" style={{fontSize: '0.75em'}}>
                                                       ~R$ {p.preco_mensal_efetivo.toFixed(0)}/mês
+                                                    </small>
+                                                ) : (
+                                                    // Espaço vazio para manter a altura da linha
+                                                    <small className="text-muted d-block" style={{fontSize: '0.75em', visibility: 'hidden'}}>
+                                                        &nbsp;
                                                     </small>
                                                 )}
                                             </div>
