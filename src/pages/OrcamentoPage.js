@@ -697,15 +697,6 @@ Observações: ${precosData.orcamento.observacoes}
                                       <strong>Prazo:</strong>
                                       <div className="small">{servico.prazo_entrega || 'Conforme acordado'}</div>
                                     </div>
-                                    {est && (
-                                      <div>
-                                        <strong>Estimativa de horas:</strong>
-                                        <div className="small">
-                                          {est.label}
-                                          {est.pricePerHour ? ` • ~R$ ${est.pricePerHour}/h` : ''}
-                                        </div>
-                                      </div>
-                                    )}
                                   </div>
                                 </div>
                               </Collapse>
