@@ -611,8 +611,8 @@ Observações: ${precosData.orcamento.observacoes}
                                         id={`${categoria.nome}-${servico.titulo}-${p.periodo}`}
                                         label={
                                           <div className="d-flex justify-content-between align-items-start w-100">
-                                            <span className="mt-1">
-                                              {p.periodo} ({p.meses} meses)
+                                            <span className="mt-1" style={{ fontWeight: 'bold' }}>
+                                              {p.periodo}
                                             </span>
                                             <div style={{minWidth: '130px', textAlign: 'right', marginLeft: '10px'}} className="d-flex flex-column align-items-end">
                                                 
