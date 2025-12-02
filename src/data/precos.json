@@ -29,7 +29,7 @@
               "Fonte/vector quando aplicável (.svg/.ai sob consulta)"
             ],
             "preco_original": 50,
-            "preco": 30
+            "preco": 45
           },
           {
             "titulo": "10 imagens",
@@ -55,7 +55,7 @@
               "PNG 1080x1920 (versões stories) quando solicitado"
             ],
             "preco_original": 80,
-            "preco": 48
+            "preco": 80
           },
           {
             "titulo": "15 imagens",
@@ -81,7 +81,7 @@
               "Arquivo fonte sob pedido"
             ],
             "preco_original": 110,
-            "preco": 66
+            "preco": 110
           }
         ]
       },
@@ -112,7 +112,7 @@
               "Versão vertical e quadrada quando aplicável"
             ],
             "preco_original": 70,
-            "preco": 42
+            "preco": 70
           },
           {
             "titulo": "Vídeo Simples",
@@ -138,7 +138,7 @@
               "Arquivo otimizado para Instagram/Facebook/YouTube Shorts"
             ],
             "preco_original": 140,
-            "preco": 84
+            "preco": 125
           },
           {
             "titulo": "Vídeo Premium",
@@ -165,7 +165,7 @@
               "MP4 vertical/quadrado sob solicitação"
             ],
             "preco_original": 240,
-            "preco": 144
+            "preco": 240
           },
           {
             "titulo": "Vídeo Elaborado",
@@ -192,7 +192,7 @@
               "Project file sob consulta"
             ],
             "preco_original": 380,
-            "preco": 228
+            "preco": 380
           }
         ]
       },
@@ -394,7 +394,7 @@
               "WAV sob pedido"
             ],
             "preco_original": 25,
-            "preco": 15
+            "preco": 25
           },
           {
             "titulo": "Cartaz de divulgação",
@@ -418,7 +418,7 @@
               "PNG/JPG web"
             ],
             "preco_original": 50,
-            "preco": 30
+            "preco": 50
           },
           {
             "titulo": "Edição de foto com IA",
@@ -441,7 +441,7 @@
               "PNG/JPG em alta"
             ],
             "preco_original": 25,
-            "preco": 15
+            "preco": 25
           },
           {
             "titulo": "Ensaio de produto",
@@ -466,7 +466,7 @@
               "MP4 1080p"
             ],
             "preco_original": 330,
-            "preco": 198
+            "preco": 299
           },
           {
             "titulo": "Criação de logomarca",
@@ -490,7 +490,7 @@
               "Guia simples de aplicação (cores e fontes)"
             ],
             "preco_original": 100,
-            "preco": 60
+            "preco": 100
           },
           {
             "titulo": "Trilha sonora IA",
@@ -514,7 +514,7 @@
               "WAV sob pedido"
             ],
             "preco_original": 170,
-            "preco": 102
+            "preco": 170
           },
           {
             "titulo": "Dublagem IA",
@@ -538,7 +538,7 @@
               "WAV sob pedido"
             ],
             "preco_original": 300,
-            "preco": 220
+            "preco": 300
           },
           {
             "titulo": "Site empresarial personalizado",
@@ -563,7 +563,7 @@
               "Arquivos e instruções para hospedagem"
             ],
             "preco_original": 650,
-            "preco": 450
+            "preco": 590
           }
         ]
       },
@@ -592,7 +592,7 @@
               "SVG/AI sob pedido"
             ],
             "preco_original": 170,
-            "preco": 102
+            "preco": 170
           },
           {
             "titulo": "Personagem animado (curto)",
@@ -616,7 +616,7 @@
               "PNG sequence ou GIF sob pedido"
             ],
             "preco_original": 290,
-            "preco": 174
+            "preco": 290
           },
           {
             "titulo": "Personagem animado (longo)",
@@ -641,7 +641,7 @@
               "Project file sob consulta"
             ],
             "preco_original": 420,
-            "preco": 252
+            "preco": 420
           }
         ]
       },
@@ -670,7 +670,7 @@
               "PNGs das poses"
             ],
             "preco_original": 420,
-            "preco": 252
+            "preco": 420
           },
           {
             "titulo": "Pacote standart",
@@ -694,7 +694,7 @@
               "Arquivos de imagem em PNG"
             ],
             "preco_original": 550,
-            "preco": 330
+            "preco": 550
           },
           {
             "titulo": "Pacote premium",
@@ -718,7 +718,7 @@
               "PNGs e arquivos fontes sob pedido"
             ],
             "preco_original": 750,
-            "preco": 450
+            "preco": 675
           },
           {
             "titulo": "Pacote deluxe",
@@ -743,7 +743,7 @@
               "Arquivos fontes sob consulta"
             ],
             "preco_original": 1100,
-            "preco": 660
+            "preco": 1100
           }
         ]
       }
