@@ -286,7 +286,7 @@ Preço Final: R$ ${price.toFixed(2)}
     let appliedCoupon = false;
 
     // Lógica para verificar se o cupom IA25 deve ser aplicado e se é cumulativo
-    if (userData.cupom.trim().toUpperCase() === 'IA25') {
+    if (userData.cupom.trim().toUpperCase() === 'NATAL25') {
       appliedCoupon = true;
       
       // Verifica se algum plano de longo prazo já está selecionado
