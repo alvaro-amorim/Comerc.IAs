@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEO from '../components/SEO'; // <--- Importação do componente SEO
 import '../styles/PortfolioPage.css';
 
 // Imagens
@@ -62,65 +63,80 @@ const PortfolioPage = () => {
   };
 
   return (
-    <section id="portfolio" className="portfolio-section">
-      <div className="portfolio-container">
-        <h2 className="portfolio-title">Portfólio</h2>
-        <div className="portfolio-grid">
-          {portfolioItemsData.map((project, index) => (
-            <div
-              key={index}
-              className="portfolio-card"
-              onClick={() => handleShow(project)}
-            >
-              <img
-                src={project.thumbnail}
-                alt={project.title}
-                className="portfolio-thumbnail"
-              />
-              <div className="portfolio-card-body">
-                <h3 className="portfolio-card-title">
-                  {project.title.replace('<br>', ' ')}
-                </h3>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+    <>
+      {/* Configuração de SEO para a página de Portfólio */}
+      <SEO 
+        title="Portfólio - Vídeos com IA e Storytelling" 
+        description="Veja exemplos reais dos nossos vídeos comerciais, campanhas de branding e efeitos visuais criados com Inteligência Artificial. Inspire-se com o nosso portfólio."
+        href="/portfolio"
+      />
 
-      {selectedProject && (
-        <div className={`portfolio-modal ${showModal ? 'show' : ''}`}>
-          <div className="portfolio-modal-content">
-            <button className="portfolio-modal-close" onClick={handleClose}>
-              ✕
-            </button>
-            <h3 className="portfolio-modal-title">{selectedProject.title}</h3>
-            <div className="portfolio-modal-body">
-              <div className="portfolio-media">
-                {selectedProject.media_type === "image" ? (
-                  <img
-                    src={selectedProject.media_url}
-                    alt={selectedProject.title}
-                    className="portfolio-media-img"
-                  />
-                ) : (
-                  <iframe
-                    src={selectedProject.media_url}
-                    title={selectedProject.title}
-                    className="portfolio-media-video"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                )}
+      <section id="portfolio" className="portfolio-section">
+        <div className="portfolio-container">
+          {/* Correção: Alterado de H2 para H1 para hierarquia correta */}
+          <h1 className="portfolio-title">Portfólio</h1>
+          
+          <div className="portfolio-grid">
+            {portfolioItemsData.map((project, index) => (
+              <div
+                key={index}
+                className="portfolio-card"
+                onClick={() => handleShow(project)}
+                // Adicionado role e tabIndex para acessibilidade no clique da div
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => e.key === 'Enter' && handleShow(project)}
+              >
+                <img
+                  src={project.thumbnail}
+                  alt={`Thumbnail do projeto: ${project.title}`}
+                  className="portfolio-thumbnail"
+                />
+                <div className="portfolio-card-body">
+                  <h3 className="portfolio-card-title">
+                    {project.title.replace('<br>', ' ')}
+                  </h3>
+                </div>
               </div>
-              <div className="portfolio-description">
-                <p>{selectedProject.description}</p>
+            ))}
+          </div>
+        </div>
+
+        {selectedProject && (
+          <div className={`portfolio-modal ${showModal ? 'show' : ''}`} onClick={handleClose}>
+            <div className="portfolio-modal-content" onClick={e => e.stopPropagation()}>
+              <button className="portfolio-modal-close" onClick={handleClose} aria-label="Fechar modal">
+                ✕
+              </button>
+              <h3 className="portfolio-modal-title">{selectedProject.title}</h3>
+              <div className="portfolio-modal-body">
+                <div className="portfolio-media">
+                  {selectedProject.media_type === "image" ? (
+                    <img
+                      src={selectedProject.media_url}
+                      alt={selectedProject.title}
+                      className="portfolio-media-img"
+                    />
+                  ) : (
+                    <iframe
+                      src={selectedProject.media_url}
+                      title={`Vídeo do projeto: ${selectedProject.title}`} // Título descritivo para acessibilidade
+                      className="portfolio-media-video"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  )}
+                </div>
+                <div className="portfolio-description">
+                  <p>{selectedProject.description}</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </section>
+        )}
+      </section>
+    </>
   );
 };
 
