@@ -1,13 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom"; // <--- Importante para navegação interna sem refresh
-import SEO from "../components/SEO"; // <--- Componente de SEO
+import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next'; // <--- Importação
+import SEO from "../components/SEO";
 import "../styles/AboutPage.css";
 import servicos from "../assets/images/servicos.png";
 
 const AboutPage = () => {
+  const { i18n } = useTranslation(); // <--- Hook
+  const currentLang = i18n.language || 'pt'; // Idioma atual
+
   return (
     <>
-      {/* Configuração de SEO específica para a página Sobre */}
       <SEO 
         title="Quem Somos - Produtora de Vídeos com IA" 
         description="Criamos vídeos hiper-realistas para empresas: comerciais, reels, vídeos institucionais e treinamentos com avatares e narração em português. Conheça a Comerc IA's."
@@ -16,7 +19,6 @@ const AboutPage = () => {
 
       <section id="about" className="about-section">
         <div className="container-lg about-container">
-          {/* HERO / TOP */}
           <header className="about-hero">
             <h1 className="about-title">Transformamos ideias em vídeos que convertem</h1>
             <p className="about-subtitle">
@@ -26,14 +28,13 @@ const AboutPage = () => {
               tecnologias de inteligência artificial.
             </p>
             <div className="about-ctas">
-              {/* Correção: Uso de Link para navegação interna instantânea */}
-              <Link className="btn btn-primary" to="/portfolio">Ver portfólio</Link>
-              <Link className="btn btn-secondary" to="/orcamento">Simular orçamento</Link>
+              {/* CORREÇÃO: Links com idioma dinâmico */}
+              <Link className="btn btn-primary" to={`/${currentLang}/portfolio`}>Ver portfólio</Link>
+              <Link className="btn btn-secondary" to={`/${currentLang}/orcamento`}>Simular orçamento</Link>
             </div>
           </header>
 
           <div className="about-grid">
-            {/* LEFT: texto detalhado - Usamos <article> para conteúdo independente */}
             <article className="about-text">
               <h2 className="section-heading">Quem Somos</h2>
 
@@ -67,7 +68,6 @@ const AboutPage = () => {
               </div>
 
               <div className="about-ctas-bottom">
-                {/* Links externos (WhatsApp) continuam como <a> */}
                 <a 
                   className="btn btn-primary" 
                   href="https://wa.me/5532991147944"
@@ -79,7 +79,6 @@ const AboutPage = () => {
               </div>
             </article>
 
-            {/* RIGHT: painel visual com imagem / serviços em destaque */}
             <aside className="about-panel">
               <div className="panel-inner">
                 <img 
@@ -89,7 +88,7 @@ const AboutPage = () => {
                 />
 
                 <div className="panel-cta">
-                  <Link className="btn btn-light" to="/portfolio">Ver exemplos</Link>
+                  <Link className="btn btn-light" to={`/${currentLang}/portfolio`}>Ver exemplos</Link>
                 </div>
               </div>
             </aside>
