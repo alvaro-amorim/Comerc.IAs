@@ -1,17 +1,20 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next'; // <--- Importação
 import ContactForm from '../components/forms/ContactForm';
 import ContactInfo from '../components/ContactInfo';
-import '../styles/ContactPage.css'; // import do CSS separado
+import '../styles/ContactPage.css';
 
 const ContactPage = () => {
+    const { t } = useTranslation(); // <--- Hook
+
     return (
         <section id="contact-page" className="contact-page-section">
             <Container className="contact-page-container">
                 <Row className="contact-page-row">
                     {/* Coluna do formulário */}
                     <Col md={6} className="contact-form-col">
-                        <h2 className="contact-title">Fale Conosco</h2>
+                        <h2 className="contact-title">{t('contact_title')}</h2>
                         <div className="contact-card">
                             <div className="contact-form-wrapper">
                                 <ContactForm />

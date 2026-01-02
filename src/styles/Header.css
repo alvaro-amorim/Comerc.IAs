@@ -140,3 +140,59 @@
     font-size: 1rem;   /* Links menores em telas muito pequenas */
   }
 }
+
+/* ... (mantenha o CSS anterior) ... */
+
+/* ===== Seletor de Idiomas (Desktop) ===== */
+.language-selector-desktop {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-left: 1px solid rgba(255,255,255,0.2); /* Divisória sutil */
+    padding-left: 15px;
+}
+
+.lang-btn {
+    color: rgba(255,255,255,0.6) !important;
+    text-decoration: none !important;
+    font-weight: 600;
+    padding: 0 !important;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+    color: white !important;
+    transform: scale(1.1);
+}
+
+.lang-btn.active {
+    color: white !important;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* ===== Seletor de Idiomas (Mobile - Topo) ===== */
+.language-selector-mobile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.language-selector-mobile span {
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.language-selector-mobile .lang-active {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.language-selector-mobile .divider {
+    color: white;
+    font-size: 1rem;
+    opacity: 0.3;
+}

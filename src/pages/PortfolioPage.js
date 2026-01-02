@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import SEO from '../components/SEO'; // <--- Importação do componente SEO
+import { useTranslation } from 'react-i18next'; // <--- Hook
+import SEO from '../components/SEO';
 import '../styles/PortfolioPage.css';
 
 // Imagens
@@ -9,48 +10,49 @@ import fotoTom from '../assets/images/foto.tom.png';
 import fotoComerc from '../assets/images/foto.comerc.jpg';
 import promoComerc from '../assets/images/promoComerc.png';
 
-// Links do YouTube (embed)
-const portfolioItemsData = [
-  {
-    thumbnail: fotoComerc,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/uYZeMRy9g-E",
-    title: "Apresentação de Marca",
-    description: `Apresentar sua marca ao mundo nunca foi tão fácil — e tão inovador — faça o seu cliente conhecer o seu trabalho de forma prática!`,
-  },
-  {
-    thumbnail: tumbMarcos,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/pcl1pZejmgs",
-    title: "Vídeos Storytelling com IA",
-    description: `Transformamos ideias criativas em roteiros impactantes, misturando humor, storytelling e total identidade da sua marca!`,
-  },
-  {
-    thumbnail: blueMarine,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/HXK0NjQgCjE",
-    title: "Branding e Propostas Criativas",
-    description: 'Neste exemplo, usamos IA para desenvolver diversos cenários surreais mantendo o logotipo e branding da marca!',
-  },
-  {
-    thumbnail: fotoTom,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/55RzdM2dfKk",
-    title: "Efeitos Especiais Para Prender a Atenção",
-    description: `Conteúdos realistas e que prendem o lead até ouvir sua mensagem! Infinitas possibilidades!`,
-  },
-  {
-    thumbnail: promoComerc,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/Xfmcg0axl-s",
-    title: "Vídeo de Promoção ou Divulgação",
-    description: "Uma campanha de promoção ou divulgação que prende o seu cliente! Humor, Identidade e Conversão!",
-  }
-];
-
 const PortfolioPage = () => {
+  const { t } = useTranslation(); // <--- Inicializa tradução
   const [showModal, setShowModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+
+  // Mover dados para DENTRO do componente para usar t()
+  const portfolioItemsData = [
+    {
+      thumbnail: fotoComerc,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/uYZeMRy9g-E",
+      title: t('port_item_1_title'),
+      description: t('port_item_1_desc'),
+    },
+    {
+      thumbnail: tumbMarcos,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/pcl1pZejmgs",
+      title: t('port_item_2_title'),
+      description: t('port_item_2_desc'),
+    },
+    {
+      thumbnail: blueMarine,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/HXK0NjQgCjE",
+      title: t('port_item_3_title'),
+      description: t('port_item_3_desc'),
+    },
+    {
+      thumbnail: fotoTom,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/55RzdM2dfKk",
+      title: t('port_item_4_title'),
+      description: t('port_item_4_desc'),
+    },
+    {
+      thumbnail: promoComerc,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/Xfmcg0axl-s",
+      title: t('port_item_5_title'),
+      description: t('port_item_5_desc'),
+    }
+  ];
 
   const handleShow = (project) => {
     setSelectedProject(project);
@@ -64,17 +66,15 @@ const PortfolioPage = () => {
 
   return (
     <>
-      {/* Configuração de SEO para a página de Portfólio */}
       <SEO 
-        title="Portfólio - Vídeos com IA e Storytelling" 
-        description="Veja exemplos reais dos nossos vídeos comerciais, campanhas de branding e efeitos visuais criados com Inteligência Artificial. Inspire-se com o nosso portfólio."
+        title={t('portfolio_seo_title')} 
+        description={t('portfolio_seo_desc')}
         href="/portfolio"
       />
 
       <section id="portfolio" className="portfolio-section">
         <div className="portfolio-container">
-          {/* Correção: Alterado de H2 para H1 para hierarquia correta */}
-          <h1 className="portfolio-title">Portfólio</h1>
+          <h1 className="portfolio-title">{t('portfolio_title')}</h1>
           
           <div className="portfolio-grid">
             {portfolioItemsData.map((project, index) => (
@@ -82,19 +82,19 @@ const PortfolioPage = () => {
                 key={index}
                 className="portfolio-card"
                 onClick={() => handleShow(project)}
-                // Adicionado role e tabIndex para acessibilidade no clique da div
                 role="button"
                 tabIndex={0}
                 onKeyPress={(e) => e.key === 'Enter' && handleShow(project)}
               >
                 <img
                   src={project.thumbnail}
-                  alt={`Thumbnail do projeto: ${project.title}`}
+                  alt={`Thumbnail: ${project.title}`}
                   className="portfolio-thumbnail"
                 />
                 <div className="portfolio-card-body">
                   <h3 className="portfolio-card-title">
-                    {project.title.replace('<br>', ' ')}
+                    {/* Caso tenha <br> na tradução no futuro */}
+                    {project.title}
                   </h3>
                 </div>
               </div>
@@ -105,7 +105,7 @@ const PortfolioPage = () => {
         {selectedProject && (
           <div className={`portfolio-modal ${showModal ? 'show' : ''}`} onClick={handleClose}>
             <div className="portfolio-modal-content" onClick={e => e.stopPropagation()}>
-              <button className="portfolio-modal-close" onClick={handleClose} aria-label="Fechar modal">
+              <button className="portfolio-modal-close" onClick={handleClose} aria-label={t('btn_close')}>
                 ✕
               </button>
               <h3 className="portfolio-modal-title">{selectedProject.title}</h3>
@@ -120,7 +120,7 @@ const PortfolioPage = () => {
                   ) : (
                     <iframe
                       src={selectedProject.media_url}
-                      title={`Vídeo do projeto: ${selectedProject.title}`} // Título descritivo para acessibilidade
+                      title={selectedProject.title}
                       className="portfolio-media-video"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

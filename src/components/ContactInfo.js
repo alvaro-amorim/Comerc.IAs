@@ -3,12 +3,15 @@ import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next'; // <--- Import
 
 const ContactInfo = () => {
+    const { t } = useTranslation(); // <--- Hook
+
     return (
         <Card className="p-4 text-center">
-            <h5 className="fw-bold">Outras maneiras de entrar em contato!</h5>
-            <p className="text-muted">(A resposta pode ser mais rápida.)</p>
+            <h5 className="fw-bold">{t('contact_other_ways')}</h5>
+            <p className="text-muted">{t('contact_response_time')}</p>
             <div className="d-flex justify-content-center mt-4">
                 <a href="https://wa.me/5532984869192" target="_blank" rel="noopener noreferrer" className="text-decoration-none me-4">
                     <FontAwesomeIcon icon={faWhatsapp} size="3x" style={{ color: '#25D366' }} />

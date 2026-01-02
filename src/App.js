@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Hook para usar tradução
+import { useTranslation } from 'react-i18next'; 
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ContactModal from './components/forms/ContactModal';
 import ContactForm from './components/forms/ContactForm';
+import ScrollToTop from './components/ScrollToTop'; // <--- 1. Importar
 
 // Páginas
 import HomePage from './pages/HomePage';
@@ -15,16 +16,14 @@ import OrcamentoPage from './pages/OrcamentoPage';
 
 import './styles/custom.css';
 
-// Componente "Wrapper" que verifica o idioma na URL e atualiza o site
 const LanguageLayout = () => {
-  const { lang } = useParams(); // Pega o "pt" ou "en" da URL
+  const { lang } = useParams(); 
   const { i18n } = useTranslation();
   const [showModal, setShowModal] = React.useState(false);
 
   const handleChatClick = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  // Efeito para trocar o idioma quando a URL muda
   useEffect(() => {
     if (lang && ['pt', 'en'].includes(lang)) {
       if (i18n.language !== lang) {
@@ -33,17 +32,15 @@ const LanguageLayout = () => {
     }
   }, [lang, i18n]);
 
-  // Se o idioma na URL não for suportado (ex: /fr/), força volta para /pt
   if (lang && !['pt', 'en'].includes(lang)) {
     return <Navigate to="/pt" replace />;
   }
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <Header />
+      <Header /> {/* O Header agora terá o seletor de idiomas */}
       <main className="flex-grow-1" style={{ paddingTop: '56px' }}>
         <Routes>
-          {/* Rotas internas (agora relativas ao /:lang) */}
           <Route path="/" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
@@ -63,11 +60,9 @@ const LanguageLayout = () => {
 const App = () => {
     return (
         <Router>
+            <ScrollToTop /> {/* <--- 2. Ativar o ScrollToTop aqui */}
             <Routes>
-                {/* 1. Se acessar a raiz pura, redireciona para /pt */}
                 <Route path="/" element={<Navigate to="/pt" replace />} />
-
-                {/* 2. Qualquer rota começando com idioma cai no Layout */}
                 <Route path="/:lang/*" element={<LanguageLayout />} />
             </Routes>
         </Router>

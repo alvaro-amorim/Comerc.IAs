@@ -1,0 +1,753 @@
+{
+  "orcamento": {
+    "categorias": [
+      {
+        "nome": "Images",
+        "servicos": [
+          {
+            "titulo": "5 images",
+            "titulo_venda": "Quick Visual Pack — 5 arts",
+            "descricao": "Creation of up to 5 original arts designed for social media or ads. Ideal for those needing consistent and fast visual content.",
+            "inclui": [
+              "5 high-resolution images",
+              "1 version for feed (square) and 1 version for stories (vertical) when applicable",
+              "Optional simple lettering",
+              "Social media optimization"
+            ],
+            "beneficios": [
+              "Fast delivery",
+              "Visual consistency for campaigns",
+              "Files ready for publishing"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PNG 1080x1080",
+              "Optimized JPG",
+              "Source/vector when applicable (.svg/.ai upon request)"
+            ],
+            "preco_original": 50,
+            "preco": 45
+          },
+          {
+            "titulo": "10 images",
+            "titulo_venda": "Engagement Pack — 10 arts",
+            "descricao": "Series of 10 arts aligned with your visual identity or campaign. Includes visual treatment and slight variations for A/B testing.",
+            "inclui": [
+              "10 high-resolution images",
+              "Different layouts for publication variations",
+              "Simple lettering",
+              "Quick briefing for alignment"
+            ],
+            "beneficios": [
+              "Better performance in posting schedule",
+              "Variations to test engagement",
+              "Volume savings"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 3,
+            "tempo_estimado_horas_max": 6,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "PNG 1080x1080",
+              "PNG 1080x1920 (stories versions) when requested"
+            ],
+            "preco_original": 80,
+            "preco": 80
+          },
+          {
+            "titulo": "15 images",
+            "titulo_venda": "Growth Pack — 15 arts",
+            "descricao": "Solution for those needing a larger content bank: 15 arts with solid identity, ready for a monthly calendar.",
+            "inclui": [
+              "15 high-resolution images",
+              "2 variations per piece when applicable",
+              "Detailed visual briefing",
+              "Caption suggestions (optional)"
+            ],
+            "beneficios": [
+              "Content bank for 2–3 weeks",
+              "Volume savings",
+              "Cohesive visual planning"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 5,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "High-res PNG/JPG",
+              "Source file upon request"
+            ],
+            "preco_original": 110,
+            "preco": 110
+          }
+        ]
+      },
+      {
+        "nome": "Videos",
+        "servicos": [
+          {
+            "titulo": "Quick Video",
+            "titulo_venda": "Short Video — up to 15s",
+            "descricao": "Short video optimized for Reels / Shorts / Tiktok — ideal for quick ads, calls to action, and promotion announcements.",
+            "inclui": [
+              "Full clip editing (cuts, smooth transitions)",
+              "Basic embedded subtitles",
+              "Basic color correction",
+              "MP4 export optimized for social media"
+            ],
+            "beneficios": [
+              "High impact in short time",
+              "Fast content generation",
+              "Ready for boosting"
+            ],
+            "prazo_entrega": "1 business day",
+            "tempo_estimado_horas_min": 1,
+            "tempo_estimado_horas_max": 2,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "MP4 H.264 (1080p)",
+              "Vertical and square version when applicable"
+            ],
+            "preco_original": 70,
+            "preco": 70
+          },
+          {
+            "titulo": "Simple Video",
+            "titulo_venda": "Storytelling Video — up to 30s",
+            "descricao": "30-second video with simple narrative: ideal for presenting a product, service, or a quick use case.",
+            "inclui": [
+              "Editing with pacing and storytelling",
+              "Basic color correction",
+              "Embedded subtitles",
+              "Royalty-free music (standard library)"
+            ],
+            "beneficios": [
+              "Engagement with clear message",
+              "Versatile format for ads and organic",
+              "Fast delivery"
+            ],
+            "prazo_entrega": "1 business day",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Optimized file for Instagram/Facebook/YouTube Shorts"
+            ],
+            "preco_original": 140,
+            "preco": 125
+          },
+          {
+            "titulo": "Premium Video",
+            "titulo_venda": "Premium Video — up to 60s",
+            "descricao": "60-second video produced with care: structured narrative, refined editing, and sound design. Ideal service as a calculation base and reference.",
+            "inclui": [
+              "Full editing and narrative pacing",
+              "Sound treatment and light mixing",
+              "Basic color correction",
+              "Subtitles and lower thirds",
+              "Export in multiple formats"
+            ],
+            "beneficios": [
+              "High conversion piece for campaigns",
+              "1 business day delivery for urgency",
+              "Professional result with good retention"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 5,
+            "tempo_estimado_horas_max": 7,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Vertical/square MP4 upon request"
+            ],
+            "preco_original": 240,
+            "preco": 240
+          },
+          {
+            "titulo": "Elaborate Video",
+            "titulo_venda": "Pro Video — up to 120s (VFX)",
+            "descricao": "Video with special effects, compositions, and more elaborate scenes. Ideal for larger campaigns, institutional presentations, or more refined advertising pieces.",
+            "inclui": [
+              "Basic to intermediate visual effects",
+              "Detailed color correction",
+              "Audio mixing",
+              "Simple motion graphics",
+              "Delivery in broadcast-ready formats"
+            ],
+            "beneficios": [
+              "High visual impact",
+              "Appropriate for institutional use and wider reach ads",
+              "Technical support on delivery"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 8,
+            "tempo_estimado_horas_max": 20,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "MP4 1080/4K (quando aplicável)",
+              "Project file upon request"
+            ],
+            "preco_original": 380,
+            "preco": 380
+          }
+        ]
+      },
+      {
+        "nome": "Social Media Plans (Monthly Content)",
+        "servicos": [
+          {
+            "titulo": "Basic Plan",
+            "titulo_venda": "Basic Content Plan",
+            "descricao": "Monthly content for 3 to 4 weekly posts. Includes: 10 Custom Arts + 120 seconds of Videos.",
+            "inclui": [
+              "10 Custom Arts + 120 seconds of Videos per month",
+              "1 revision per Art and 1 revision per Video",
+              "1 weekly meeting"
+            ],
+            "beneficios": [
+              "Post consistency",
+              "Lower effective monthly price for long-term commitments"
+            ],
+            "prazo_entrega": "Staggered weekly delivery or total content within 7 business days/month",
+            "revisoes_incluidas": 1,
+            "tempo_estimado_horas_min": 10,
+            "tempo_estimado_horas_max": 20,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Monthly",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 400,
+                "preco_total_com_desc": 400,
+                "preco_mensal_efetivo": 400
+              },
+              {
+                "periodo": "Quarterly",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 1200.00,
+                "preco_total_com_desc": 1140.00,
+                "preco_mensal_efetivo": 380.00
+              },
+              {
+                "periodo": "Semiannual",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 2400.00,
+                "preco_total_com_desc": 2160.00,
+                "preco_mensal_efetivo": 360.00
+              },
+              {
+                "periodo": "Annual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 4800.00,
+                "preco_total_com_desc": 4080.00,
+                "preco_mensal_efetivo": 340.00
+              }
+            ]
+          },
+          {
+            "titulo": "Standard Plan",
+            "titulo_venda": "Standard Content Plan",
+            "descricao": "Monthly content for 7 to 8 weekly posts. Includes: 20 Custom Arts + 240 seconds of Videos.",
+            "inclui": [
+              "20 Custom Arts + 240 seconds of Videos per month",
+              "1 revision per Art and 2 revisions per Video",
+              "2 weekly meetings"
+            ],
+            "beneficios": [
+              "Increased posting frequency",
+              "Greater variety of content (images and videos)"
+            ],
+            "prazo_entrega": "Staggered weekly delivery or total content within 10 business days/month",
+            "revisoes_incluidas": 2,
+            "tempo_estimado_horas_min": 20,
+            "tempo_estimado_horas_max": 35,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Monthly",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 800,
+                "preco_total_com_desc": 800,
+                "preco_mensal_efetivo": 800
+              },
+              {
+                "periodo": "Quarterly",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 2400.00,
+                "preco_total_com_desc": 2280.00,
+                "preco_mensal_efetivo": 760.00
+              },
+              {
+                "periodo": "Semiannual",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 4800.00,
+                "preco_total_com_desc": 4320.00,
+                "preco_mensal_efetivo": 720.00
+              },
+              {
+                "periodo": "Annual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 9600.00,
+                "preco_total_com_desc": 8160.00,
+                "preco_mensal_efetivo": 680.00
+              }
+            ]
+          },
+          {
+            "titulo": "Premium Plan",
+            "titulo_venda": "Premium Content Plan",
+            "descricao": "Monthly content for 11 to 12 weekly posts. Includes: 40 Custom Arts + 320 seconds of Videos.",
+            "inclui": [
+              "40 Custom Arts + 320 seconds of Videos per month",
+              "1 revision per Art and 2 revisions per Video",
+              "2 weekly meetings"
+            ],
+            "beneficios": [
+              "Maximum frequency and visibility",
+              "Extended support with 2 weekly meetings"
+            ],
+            "prazo_entrega": "Staggered weekly delivery or total content within 15 business days/month",
+            "revisoes_incluidas": 2,
+            "tempo_estimado_horas_min": 35,
+            "tempo_estimado_horas_max": 60,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Monthly",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 1200,
+                "preco_total_com_desc": 1200,
+                "preco_mensal_efetivo": 1200
+              },
+              {
+                "periodo": "Quarterly",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 3600.00,
+                "preco_total_com_desc": 3420.00,
+                "preco_mensal_efetivo": 1140.00
+              },
+              {
+                "periodo": "Semiannual",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 7200.00,
+                "preco_total_com_desc": 6480.00,
+                "preco_mensal_efetivo": 1080.00
+              },
+              {
+                "periodo": "Annual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 14400.00,
+                "preco_total_com_desc": 12240.00,
+                "preco_mensal_efetivo": 1020.00
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nome": "Single Services",
+        "servicos": [
+          {
+            "titulo": "Professional AI Narration",
+            "titulo_venda": "Professional Voice (AI) — price per block",
+            "descricao": "AI-generated narration with natural intonation and voice options (male/female/neutral). Charged per 100 characters.",
+            "inclui": [
+              "WAV/MP3 audio file",
+              "Basic intonation adjustment",
+              "Simple sync with video (upon request)"
+            ],
+            "beneficios": [
+              "Fast and cost-effective",
+              "Alternative tone versions upon request"
+            ],
+            "prazo_entrega": "6–12 hours",
+            "tempo_estimado_horas_min": 0.5,
+            "tempo_estimado_horas_max": 1,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV upon request"
+            ],
+            "preco_original": 25,
+            "preco": 25
+          },
+          {
+            "titulo": "Promotional Poster",
+            "titulo_venda": "Promotional Poster — Custom Art",
+            "descricao": "Creation of a poster for events, promotions, or physical/digital dissemination based on a detailed briefing.",
+            "inclui": [
+              "1 custom art",
+              "Print version (300dpi) and web version",
+              "2 quick revisions"
+            ],
+            "beneficios": [
+              "Ready for print and digital dissemination",
+              "Professional image highlighting your offer"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PDF 300dpi",
+              "Web PNG/JPG"
+            ],
+            "preco_original": 50,
+            "preco": 50
+          },
+          {
+            "titulo": "AI Photo Editing",
+            "titulo_venda": "Quick Retouch — per photo",
+            "descricao": "Image enhancement and treatment with AI-assisted tools: blemish removal, color adjustment, and cropping.",
+            "inclui": [
+              "Basic retouching",
+              "Cropping and color adjustment",
+              "High-resolution delivery"
+            ],
+            "beneficios": [
+              "Instant product presentation improvement",
+              "Fast and cheap solution for catalogs"
+            ],
+            "prazo_entrega": "1 business day",
+            "tempo_estimado_horas_min": 0.5,
+            "tempo_estimado_horas_max": 1,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "High-res PNG/JPG"
+            ],
+            "preco_original": 25,
+            "preco": 25
+          },
+          {
+            "titulo": "Product Shoot",
+            "titulo_venda": "Shooting Compact — 10 photos + 2 videos",
+            "descricao": "Basic photo and video session for product catalog: 10 professional photos + 2 short videos (up to 30s). Ideal for e-commerce and social media.",
+            "inclui": [
+              "Photo session (location/studio upon request)",
+              "10 edited photos",
+              "2 edited videos up to 30s",
+              "Selection and delivery in online gallery"
+            ],
+            "beneficios": [
+              "Ready-to-use content for store and socials",
+              "Accelerates product market validation"
+            ],
+            "prazo_entrega": "3 business days (Rush)",
+            "tempo_estimado_horas_min": 4,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "JPG 300dpi",
+              "MP4 1080p"
+            ],
+            "preco_original": 330,
+            "preco": 299
+          },
+          {
+            "titulo": "Logo Creation",
+            "titulo_venda": "Basic Visual Identity — Logo",
+            "descricao": "Logo creation with concepts aligned to brand positioning. Delivered in vector files and web versions.",
+            "inclui": [
+              "3 initial proposals",
+              "1 final version with adjustments",
+              "PNG, JPG, and vector files (Basic SVG/AI)"
+            ],
+            "beneficios": [
+              "Solid base for visual identity",
+              "Files ready for digital application and print"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 10,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "SVG, PNG, JPG",
+              "Simple usage guide (colors and fonts)"
+            ],
+            "preco_original": 100,
+            "preco": 100
+          },
+          {
+            "titulo": "AI Soundtrack",
+            "titulo_venda": "Exclusive AI Soundtrack",
+            "descricao": "AI-generated musical composition, created based on briefing to match the tone of your video or campaign (royalty-free).",
+            "inclui": [
+              "Exclusive musical track",
+              "Loop versions and short version",
+              "Usage license for campaigns"
+            ],
+            "beneficios": [
+              "Economical solution for sound design",
+              "Music adapted to your video rhythm"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV upon request"
+            ],
+            "preco_original": 170,
+            "preco": 170
+          },
+          {
+            "titulo": "AI Dubbing",
+            "titulo_venda": "Professional AI Dubbing",
+            "descricao": "Dubbing in any language from video (up to 15 minutes duration)",
+            "inclui": [
+              "Dubbing in 1 chosen language",
+              "Speech timing editing",
+              "Subtitles"
+            ],
+            "beneficios": [
+              "Ideal for expanding your message to other countries",
+              "Dubbing voice is a clone of the original, maintaining tone and fluidity"
+            ],
+            "prazo_entrega": "3 business days (Rush)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV upon request"
+            ],
+            "preco_original": 300,
+            "preco": 300
+          },
+          {
+            "titulo": "Custom Business Website",
+            "titulo_venda": "Basic Corporate Website",
+            "descricao": "Institutional website with custom design, main pages, and basic integration. Content and arts optimized for professional online presentation.",
+            "inclui": [
+              "Home page + up to 4 inner pages",
+              "Responsive design",
+              "Arts and banners included",
+              "Delivery with hosting guidelines"
+            ],
+            "beneficios": [
+              "Professional online presence",
+              "Fast delivery for launch"
+            ],
+            "prazo_entrega": "5 business days (Rush)",
+            "tempo_estimado_horas_min": 20,
+            "tempo_estimado_horas_max": 40,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "Ready HTML/CSS/JS",
+              "Files and instructions for hosting"
+            ],
+            "preco_original": 650,
+            "preco": 590
+          }
+        ]
+      },
+      {
+        "nome": "Custom Character Creation",
+        "servicos": [
+          {
+            "titulo": "Static Character",
+            "titulo_venda": "Illustrated Mascot — 5 poses",
+            "descricao": "Development of a static character with 5 distinct poses, perfect for branding, stickers, or promotional materials.",
+            "inclui": [
+              "Initial concept",
+              "5 finalized poses",
+              "Color and monochrome versions"
+            ],
+            "beneficios": [
+              "Unique visual identity",
+              "Reusable material in various communications"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 10,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "High-res PNG",
+              "SVG/AI upon request"
+            ],
+            "preco_original": 170,
+            "preco": 170
+          },
+          {
+            "titulo": "Animated Character (Short)",
+            "titulo_venda": "Animated Mascot — 30s + narration",
+            "descricao": "Short character animation with basic narration — ideal for intros, vignettes, and brand materials.",
+            "inclui": [
+              "30s animation",
+              "AI narration included",
+              "Simple effects and loop when applicable"
+            ],
+            "beneficios": [
+              "Humanizes the brand",
+              "Improves recognition and engagement"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 12,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNG sequence or GIF upon request"
+            ],
+            "preco_original": 290,
+            "preco": 290
+          },
+          {
+            "titulo": "Animated Character (Long)",
+            "titulo_venda": "Cinematic Mascot — 1 min + narration",
+            "descricao": "1-minute animation with narrative and sound design. Recommended for campaigns, presentations, and institutional content with more presence.",
+            "inclui": [
+              "60s animation",
+              "AI narration",
+              "Basic audio mixing",
+              "Color correction when applicable"
+            ],
+            "beneficios": [
+              "High sharing potential",
+              "Complete piece for campaigns"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 10,
+            "tempo_estimado_horas_max": 18,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Project file upon request"
+            ],
+            "preco_original": 420,
+            "preco": 420
+          }
+        ]
+      },
+      {
+        "nome": "Custom Character Packages",
+        "servicos": [
+          {
+            "titulo": "Basic Package",
+            "titulo_venda": "Starter Pack — 1x 30s + 3 poses",
+            "descricao": "Initial combo to test the character in video and image: 1 video of 30s + narration and 3 poses for post usage.",
+            "inclui": [
+              "1 video 30s + narration",
+              "3 high-res poses",
+              "Briefing and concept"
+            ],
+            "beneficios": [
+              "Fast delivery of multimedia identity",
+              "Great cost-benefit"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 12,
+            "tempo_estimado_horas_max": 20,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNGs of poses"
+            ],
+            "preco_original": 420,
+            "preco": 420
+          },
+          {
+            "titulo": "Standard Package",
+            "titulo_venda": "Brand Pack — 1x 1min + 3 poses",
+            "descricao": "More complete package with 1-minute video, ideal for campaign usage and brand presentation.",
+            "inclui": [
+              "1 video 60s + narration",
+              "3 high-res poses",
+              "Detailed briefing"
+            ],
+            "beneficios": [
+              "Centerpiece for digital campaigns",
+              "Material ready for multiple applications"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 16,
+            "tempo_estimado_horas_max": 28,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNG image files"
+            ],
+            "preco_original": 550,
+            "preco": 550
+          },
+          {
+            "titulo": "Premium Package",
+            "titulo_venda": "Pro Pack — 3x 30s + 5 poses",
+            "descricao": "Package for those wanting consistent presence: 3 short videos, narrations, and 5 poses for wide usage.",
+            "inclui": [
+              "3 videos of 30s",
+              "5 character poses",
+              "Narrações e mixagem básica"
+            ],
+            "beneficios": [
+              "Strong multi-platform presence",
+              "Content ready for continuous campaign"
+            ],
+            "prazo_entrega": "3 dias úteis (Prazo Acelerado)",
+            "tempo_estimado_horas_min": 30,
+            "tempo_estimado_horas_max": 50,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNGs and source files upon request"
+            ],
+            "preco_original": 750,
+            "preco": 675
+          },
+          {
+            "titulo": "Deluxe Package",
+            "titulo_venda": "Deluxe Pack — 6x 30s or 3x 1min",
+            "descricao": "Top-tier package with volume and variety: ideal for launches, rebranding, or robust campaigns.",
+            "inclui": [
+              "6 videos of 30s or 3 videos of 60s",
+              "Narrations",
+              "Advanced editing and mixing",
+              "Support on delivery and placement guidelines"
+            ],
+            "beneficios": [
+              "Complete solution for high-impact campaigns",
+              "Technical delivery support"
+            ],
+            "prazo_entrega": "5 business days (Rush)",
+            "tempo_estimado_horas_min": 60,
+            "tempo_estimado_horas_max": 100,
+            "revisoes_incluidas": 6,
+            "formato_entrega": [
+              "MP4 1080/4K",
+              "Source files upon request"
+            ],
+            "preco_original": 1100,
+            "preco": 1100
+          }
+        ]
+      }
+    ],
+    "observacoes": "Progressive discounts on combos and on monthly, semiannual, or annual partnerships. Tell us your idea!"
+  }
+}

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next'; // <--- Import
 
 const ContactForm = () => {
+    const { t } = useTranslation(); // <--- Hook
     const primaryColor = '#06243d';
 
     const [status, setStatus] = useState({
@@ -27,18 +29,18 @@ const ContactForm = () => {
             });
 
             if (response.ok) {
-                setStatus({ isSubmitted: true, message: "Obrigado! Sua mensagem foi enviada." });
+                setStatus({ isSubmitted: true, message: t('form_success') });
                 form.reset();
             } else {
                 const result = await response.json();
                 if (result.errors) {
                     setStatus({ isSubmitted: false, message: "Erro: " + result.errors.map(e => e.message).join(", ") });
                 } else {
-                    setStatus({ isSubmitted: false, message: "Ocorreu um erro ao enviar a mensagem. Tente novamente." });
+                    setStatus({ isSubmitted: false, message: t('form_error_generic') });
                 }
             }
         } catch (error) {
-            setStatus({ isSubmitted: false, message: "Ocorreu um erro de conexão. Verifique sua rede." });
+            setStatus({ isSubmitted: false, message: t('form_error_connection') });
         }
     };
 
@@ -52,32 +54,32 @@ const ContactForm = () => {
 
             <Form onSubmit={handleSubmit} action="https://formspree.io/f/xkgzjyjn" method="POST">
                 <Form.Group className="mb-3">
-                    <Form.Label>Nome:</Form.Label>
+                    <Form.Label>{t('form_name')}</Form.Label>
                     <Form.Control type="text" name="Nome" required />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                    <Form.Label>Telefone:</Form.Label>
+                    <Form.Label>{t('form_phone')}</Form.Label>
                     <Form.Control type="tel" name="Telefone" />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                    <Form.Label>E-mail:</Form.Label>
+                    <Form.Label>{t('form_email')}</Form.Label>
                     <Form.Control type="email" name="E-mail" required />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                    <Form.Label>Empresa:</Form.Label>
+                    <Form.Label>{t('form_company')}</Form.Label>
                     <Form.Control type="text" name="Empresa" />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                    <Form.Label>Mensagem:</Form.Label>
+                    <Form.Label>{t('form_message')}</Form.Label>
                     <Form.Control as="textarea" name="Mensagem" rows={5} required />
                 </Form.Group>
                 
                 <Button type="submit" className="w-100 rounded-pill mt-3" style={{ backgroundColor: primaryColor, borderColor: primaryColor }}>
-                    Enviar
+                    {t('btn_send')}
                 </Button>
             </Form>
         </>
