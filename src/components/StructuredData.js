@@ -4,12 +4,15 @@ import { Helmet } from 'react-helmet-async';
 export const OrganizationSchema = () => {
   const schema = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Comerc IAs",
+    "@type": "VideoProductionService", // Mudança crítica: Tipo específico
+    "name": "Comerc IA's",
+    "alternateName": "Comerc IAs Produções",
     "url": "https://comercias.com.br",
     "logo": "https://comercias.com.br/logo.png",
+    "description": "Produtora de vídeos focada em comerciais, marketing digital e inteligência artificial.",
     "sameAs": [
       "https://www.instagram.com/comerc_ias",
+      "https://www.tiktok.com/@comerc.ias",
       "https://wa.me/5532984869192"
     ],
     "contactPoint": {
@@ -18,7 +21,8 @@ export const OrganizationSchema = () => {
       "contactType": "customer service",
       "areaServed": ["BR", "US"],
       "availableLanguage": ["Portuguese", "English"]
-    }
+    },
+    "priceRange": "$$"
   };
 
   return (
@@ -35,12 +39,12 @@ export const VideoSchema = ({ title, description, thumbUrl, videoUrl, uploadDate
     "name": title,
     "description": description,
     "thumbnailUrl": thumbUrl,
-    "uploadDate": uploadDate, // ISO 8601
-    "duration": duration, // ISO 8601 (PT1M30S)
+    "uploadDate": uploadDate, 
+    "duration": duration, 
     "contentUrl": videoUrl,
     "publisher": {
-      "@type": "Organization",
-      "name": "Comerc IAs",
+      "@type": "VideoProductionService",
+      "name": "Comerc IA's",
       "logo": {
         "@type": "ImageObject",
         "url": "https://comercias.com.br/logo.png"

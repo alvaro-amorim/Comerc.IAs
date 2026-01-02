@@ -11,7 +11,6 @@ import {
   Modal,
   Badge,
 } from 'react-bootstrap';
-// ALTERAÇÃO 1: Importamos os dois arquivos JSON
 import precosPT from '../data/precos.json'; 
 import precosEN from '../data/precos_en.json';
 
@@ -32,13 +31,12 @@ import '../styles/OrcamentoPage.css';
 const OrcamentoPage = () => {
   const { t, i18n } = useTranslation();
   
-  // ALTERAÇÃO 2: Lógica para escolher qual JSON usar
-  // Se o idioma começar com 'en', usamos o precosEN, senão usamos o precosPT.
+  // Lógica para escolher qual JSON usar
   const precosData = (i18n.language && i18n.language.startsWith('en')) 
     ? precosEN 
     : precosPT;
 
-  const currentLang = i18n.language || 'pt'; 
+  // REMOVIDO: const currentLang = i18n.language || 'pt'; (Não estava sendo usado)
 
   const [selectedServices, setSelectedServices] = useState({});
   const [openCategories, setOpenCategories] = useState({});
@@ -113,7 +111,7 @@ const OrcamentoPage = () => {
       }
     }
   // eslint-disable-next-line
-  }, []); // Executa apenas na montagem. Nota: Se mudar de idioma, os serviços URL podem não bater o título se forem strings traduzidas.
+  }, []); 
 
   const findPeriodDetails = (serviceObject, selectedPrice) => {
     if (serviceObject?.precos_por_periodo) {
@@ -123,9 +121,8 @@ const OrcamentoPage = () => {
   };
 
   const getReunioesSemanas = (categoryName, title) => {
-      // Ajuste para verificar strings em PT ou EN se necessário, ou manter lógica baseada em includes parciais
       if (categoryName.includes('Social Media') || categoryName.includes('Planos')) {
-          if (title.includes('Básico') || title.includes('Basic')) return '1 Meeting/Week'; // Exemplo misto, ajustável via i18n se quiser
+          if (title.includes('Básico') || title.includes('Basic')) return '1 Meeting/Week'; 
           if (title.includes('Standart') || title.includes('Standard')) return '2 Meetings/Week';
           if (title.includes('Premium')) return '2 Meetings/Week';
       }

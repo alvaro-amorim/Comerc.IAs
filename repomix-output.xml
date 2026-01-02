@@ -73,8 +73,10 @@ src/components/forms/ContactForm.js
 src/components/forms/ContactModal.js
 src/components/Header.js
 src/components/InfoTooltip.js
+src/components/ScrollToTop.js
 src/components/SEO.js
 src/components/StructuredData.js
+src/data/precos_en.json
 src/data/precos.json
 src/i18n.js
 src/index.css
@@ -390,116 +392,6 @@ test('renders learn react link', () => {
 });
 </file>
 
-<file path="src/components/forms/ContactForm.js">
-import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
-
-const ContactForm = () => {
-    const primaryColor = '#06243d';
-
-    const [status, setStatus] = useState({
-        isSubmitted: false,
-        message: null
-    });
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        setStatus({ isSubmitted: false, message: null });
-
-        const form = event.target;
-        const data = new FormData(form);
-
-        try {
-            const response = await fetch(form.action, {
-                method: form.method,
-                body: data,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                setStatus({ isSubmitted: true, message: "Obrigado! Sua mensagem foi enviada." });
-                form.reset();
-            } else {
-                const result = await response.json();
-                if (result.errors) {
-                    setStatus({ isSubmitted: false, message: "Erro: " + result.errors.map(e => e.message).join(", ") });
-                } else {
-                    setStatus({ isSubmitted: false, message: "Ocorreu um erro ao enviar a mensagem. Tente novamente." });
-                }
-            }
-        } catch (error) {
-            setStatus({ isSubmitted: false, message: "Ocorreu um erro de conexão. Verifique sua rede." });
-        }
-    };
-
-    return (
-        <>
-            {status.message && (
-                <Alert variant={status.isSubmitted ? "success" : "danger"} className="mb-3">
-                    {status.message}
-                </Alert>
-            )}
-
-            <Form onSubmit={handleSubmit} action="https://formspree.io/f/xkgzjyjn" method="POST">
-                <Form.Group className="mb-3">
-                    <Form.Label>Nome:</Form.Label>
-                    <Form.Control type="text" name="Nome" required />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                    <Form.Label>Telefone:</Form.Label>
-                    <Form.Control type="tel" name="Telefone" />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                    <Form.Label>E-mail:</Form.Label>
-                    <Form.Control type="email" name="E-mail" required />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                    <Form.Label>Empresa:</Form.Label>
-                    <Form.Control type="text" name="Empresa" />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                    <Form.Label>Mensagem:</Form.Label>
-                    <Form.Control as="textarea" name="Mensagem" rows={5} required />
-                </Form.Group>
-                
-                <Button type="submit" className="w-100 rounded-pill mt-3" style={{ backgroundColor: primaryColor, borderColor: primaryColor }}>
-                    Enviar
-                </Button>
-            </Form>
-        </>
-    );
-};
-
-export default ContactForm;
-</file>
-
-<file path="src/components/forms/ContactModal.js">
-import React from 'react';
-import { Modal } from 'react-bootstrap';
-
-const ContactModal = ({ show, handleClose, children }) => {
-    return (
-        <Modal show={show} onHide={handleClose} centered>
-            <Modal.Header closeButton>
-                <Modal.Title>Fale Conosco</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                {children}
-            </Modal.Body>
-        </Modal>
-    );
-};
-
-export default ContactModal;
-</file>
-
 <file path="src/components/InfoTooltip.js">
 // src/components/InfoTooltip.js
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
@@ -632,6 +524,22 @@ const InfoTooltip = ({ children, content, initialPlacement = 'right' }) => {
 export default InfoTooltip;
 </file>
 
+<file path="src/components/ScrollToTop.js">
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+export default function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Sempre que a rota mudar, joga a janela para o topo (0, 0)
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+</file>
+
 <file path="src/components/SEO.js">
 // src/components/SEO.js
 import React from 'react';
@@ -729,48 +637,760 @@ export const VideoSchema = ({ title, description, thumbUrl, videoUrl, uploadDate
 };
 </file>
 
-<file path="src/i18n.js">
-// src/i18n.js
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-
-// Aqui definimos os textos. Futuramente podemos mover para arquivos JSON separados.
-const resources = {
-  pt: {
-    translation: {
-      "hero_title": "VÍDEOS PROFISSIONAIS para impulsionar seu negócio!",
-      "hero_subtitle": "Conteúdo bem feito, entrega rápida e total customização.",
-      "btn_saiba_mais": "CONHEÇA NOSSOS SERVIÇOS"
-    }
-  },
-  en: {
-    translation: {
-      "hero_title": "PROFESSIONAL VIDEOS to boost your business!",
-      "hero_subtitle": "High-quality content, fast delivery, and full customization.",
-      "btn_saiba_mais": "KNOW OUR SERVICES"
-    }
+<file path="src/data/precos_en.json">
+{
+  "orcamento": {
+    "categorias": [
+      {
+        "nome": "Images",
+        "servicos": [
+          {
+            "titulo": "5 images",
+            "titulo_venda": "Quick Visual Pack — 5 arts",
+            "descricao": "Creation of up to 5 original arts designed for social media or ads. Ideal for those needing consistent and fast visual content.",
+            "inclui": [
+              "5 high-resolution images",
+              "1 version for feed (square) and 1 version for stories (vertical) when applicable",
+              "Optional simple lettering",
+              "Social media optimization"
+            ],
+            "beneficios": [
+              "Fast delivery",
+              "Visual consistency for campaigns",
+              "Files ready for publishing"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PNG 1080x1080",
+              "Optimized JPG",
+              "Source/vector when applicable (.svg/.ai upon request)"
+            ],
+            "preco_original": 50,
+            "preco": 45
+          },
+          {
+            "titulo": "10 images",
+            "titulo_venda": "Engagement Pack — 10 arts",
+            "descricao": "Series of 10 arts aligned with your visual identity or campaign. Includes visual treatment and slight variations for A/B testing.",
+            "inclui": [
+              "10 high-resolution images",
+              "Different layouts for publication variations",
+              "Simple lettering",
+              "Quick briefing for alignment"
+            ],
+            "beneficios": [
+              "Better performance in posting schedule",
+              "Variations to test engagement",
+              "Volume savings"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 3,
+            "tempo_estimado_horas_max": 6,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "PNG 1080x1080",
+              "PNG 1080x1920 (stories versions) when requested"
+            ],
+            "preco_original": 80,
+            "preco": 80
+          },
+          {
+            "titulo": "15 images",
+            "titulo_venda": "Growth Pack — 15 arts",
+            "descricao": "Solution for those needing a larger content bank: 15 arts with solid identity, ready for a monthly calendar.",
+            "inclui": [
+              "15 high-resolution images",
+              "2 variations per piece when applicable",
+              "Detailed visual briefing",
+              "Caption suggestions (optional)"
+            ],
+            "beneficios": [
+              "Content bank for 2–3 weeks",
+              "Volume savings",
+              "Cohesive visual planning"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 5,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "High-res PNG/JPG",
+              "Source file upon request"
+            ],
+            "preco_original": 110,
+            "preco": 110
+          }
+        ]
+      },
+      {
+        "nome": "Videos",
+        "servicos": [
+          {
+            "titulo": "Quick Video",
+            "titulo_venda": "Short Video — up to 15s",
+            "descricao": "Short video optimized for Reels / Shorts / Tiktok — ideal for quick ads, calls to action, and promotion announcements.",
+            "inclui": [
+              "Full clip editing (cuts, smooth transitions)",
+              "Basic embedded subtitles",
+              "Basic color correction",
+              "MP4 export optimized for social media"
+            ],
+            "beneficios": [
+              "High impact in short time",
+              "Fast content generation",
+              "Ready for boosting"
+            ],
+            "prazo_entrega": "1 business day",
+            "tempo_estimado_horas_min": 1,
+            "tempo_estimado_horas_max": 2,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "MP4 H.264 (1080p)",
+              "Vertical and square version when applicable"
+            ],
+            "preco_original": 70,
+            "preco": 70
+          },
+          {
+            "titulo": "Simple Video",
+            "titulo_venda": "Storytelling Video — up to 30s",
+            "descricao": "30-second video with simple narrative: ideal for presenting a product, service, or a quick use case.",
+            "inclui": [
+              "Editing with pacing and storytelling",
+              "Basic color correction",
+              "Embedded subtitles",
+              "Royalty-free music (standard library)"
+            ],
+            "beneficios": [
+              "Engagement with clear message",
+              "Versatile format for ads and organic",
+              "Fast delivery"
+            ],
+            "prazo_entrega": "1 business day",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Optimized file for Instagram/Facebook/YouTube Shorts"
+            ],
+            "preco_original": 140,
+            "preco": 125
+          },
+          {
+            "titulo": "Premium Video",
+            "titulo_venda": "Premium Video — up to 60s",
+            "descricao": "60-second video produced with care: structured narrative, refined editing, and sound design. Ideal service as a calculation base and reference.",
+            "inclui": [
+              "Full editing and narrative pacing",
+              "Sound treatment and light mixing",
+              "Basic color correction",
+              "Subtitles and lower thirds",
+              "Export in multiple formats"
+            ],
+            "beneficios": [
+              "High conversion piece for campaigns",
+              "1 business day delivery for urgency",
+              "Professional result with good retention"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 5,
+            "tempo_estimado_horas_max": 7,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Vertical/square MP4 upon request"
+            ],
+            "preco_original": 240,
+            "preco": 240
+          },
+          {
+            "titulo": "Elaborate Video",
+            "titulo_venda": "Pro Video — up to 120s (VFX)",
+            "descricao": "Video with special effects, compositions, and more elaborate scenes. Ideal for larger campaigns, institutional presentations, or more refined advertising pieces.",
+            "inclui": [
+              "Basic to intermediate visual effects",
+              "Detailed color correction",
+              "Audio mixing",
+              "Simple motion graphics",
+              "Delivery in broadcast-ready formats"
+            ],
+            "beneficios": [
+              "High visual impact",
+              "Appropriate for institutional use and wider reach ads",
+              "Technical support on delivery"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 8,
+            "tempo_estimado_horas_max": 20,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "MP4 1080/4K (quando aplicável)",
+              "Project file upon request"
+            ],
+            "preco_original": 380,
+            "preco": 380
+          }
+        ]
+      },
+      {
+        "nome": "Social Media Plans (Monthly Content)",
+        "servicos": [
+          {
+            "titulo": "Basic Plan",
+            "titulo_venda": "Basic Content Plan",
+            "descricao": "Monthly content for 3 to 4 weekly posts. Includes: 10 Custom Arts + 120 seconds of Videos.",
+            "inclui": [
+              "10 Custom Arts + 120 seconds of Videos per month",
+              "1 revision per Art and 1 revision per Video",
+              "1 weekly meeting"
+            ],
+            "beneficios": [
+              "Post consistency",
+              "Lower effective monthly price for long-term commitments"
+            ],
+            "prazo_entrega": "Staggered weekly delivery or total content within 7 business days/month",
+            "revisoes_incluidas": 1,
+            "tempo_estimado_horas_min": 10,
+            "tempo_estimado_horas_max": 20,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Monthly",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 400,
+                "preco_total_com_desc": 400,
+                "preco_mensal_efetivo": 400
+              },
+              {
+                "periodo": "Quarterly",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 1200.00,
+                "preco_total_com_desc": 1140.00,
+                "preco_mensal_efetivo": 380.00
+              },
+              {
+                "periodo": "Semiannual",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 2400.00,
+                "preco_total_com_desc": 2160.00,
+                "preco_mensal_efetivo": 360.00
+              },
+              {
+                "periodo": "Annual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 4800.00,
+                "preco_total_com_desc": 4080.00,
+                "preco_mensal_efetivo": 340.00
+              }
+            ]
+          },
+          {
+            "titulo": "Standard Plan",
+            "titulo_venda": "Standard Content Plan",
+            "descricao": "Monthly content for 7 to 8 weekly posts. Includes: 20 Custom Arts + 240 seconds of Videos.",
+            "inclui": [
+              "20 Custom Arts + 240 seconds of Videos per month",
+              "1 revision per Art and 2 revisions per Video",
+              "2 weekly meetings"
+            ],
+            "beneficios": [
+              "Increased posting frequency",
+              "Greater variety of content (images and videos)"
+            ],
+            "prazo_entrega": "Staggered weekly delivery or total content within 10 business days/month",
+            "revisoes_incluidas": 2,
+            "tempo_estimado_horas_min": 20,
+            "tempo_estimado_horas_max": 35,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Monthly",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 800,
+                "preco_total_com_desc": 800,
+                "preco_mensal_efetivo": 800
+              },
+              {
+                "periodo": "Quarterly",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 2400.00,
+                "preco_total_com_desc": 2280.00,
+                "preco_mensal_efetivo": 760.00
+              },
+              {
+                "periodo": "Semiannual",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 4800.00,
+                "preco_total_com_desc": 4320.00,
+                "preco_mensal_efetivo": 720.00
+              },
+              {
+                "periodo": "Annual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 9600.00,
+                "preco_total_com_desc": 8160.00,
+                "preco_mensal_efetivo": 680.00
+              }
+            ]
+          },
+          {
+            "titulo": "Premium Plan",
+            "titulo_venda": "Premium Content Plan",
+            "descricao": "Monthly content for 11 to 12 weekly posts. Includes: 40 Custom Arts + 320 seconds of Videos.",
+            "inclui": [
+              "40 Custom Arts + 320 seconds of Videos per month",
+              "1 revision per Art and 2 revisions per Video",
+              "2 weekly meetings"
+            ],
+            "beneficios": [
+              "Maximum frequency and visibility",
+              "Extended support with 2 weekly meetings"
+            ],
+            "prazo_entrega": "Staggered weekly delivery or total content within 15 business days/month",
+            "revisoes_incluidas": 2,
+            "tempo_estimado_horas_min": 35,
+            "tempo_estimado_horas_max": 60,
+            "formato_entrega": [
+              "PNG/JPG",
+              "MP4"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Monthly",
+                "meses": 1,
+                "desconto_perc": 0,
+                "preco_total_sem_desc": 1200,
+                "preco_total_com_desc": 1200,
+                "preco_mensal_efetivo": 1200
+              },
+              {
+                "periodo": "Quarterly",
+                "meses": 3,
+                "desconto_perc": 5,
+                "preco_total_sem_desc": 3600.00,
+                "preco_total_com_desc": 3420.00,
+                "preco_mensal_efetivo": 1140.00
+              },
+              {
+                "periodo": "Semiannual",
+                "meses": 6,
+                "desconto_perc": 10,
+                "preco_total_sem_desc": 7200.00,
+                "preco_total_com_desc": 6480.00,
+                "preco_mensal_efetivo": 1080.00
+              },
+              {
+                "periodo": "Annual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "preco_total_sem_desc": 14400.00,
+                "preco_total_com_desc": 12240.00,
+                "preco_mensal_efetivo": 1020.00
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nome": "Single Services",
+        "servicos": [
+          {
+            "titulo": "Professional AI Narration",
+            "titulo_venda": "Professional Voice (AI) — price per block",
+            "descricao": "AI-generated narration with natural intonation and voice options (male/female/neutral). Charged per 100 characters.",
+            "inclui": [
+              "WAV/MP3 audio file",
+              "Basic intonation adjustment",
+              "Simple sync with video (upon request)"
+            ],
+            "beneficios": [
+              "Fast and cost-effective",
+              "Alternative tone versions upon request"
+            ],
+            "prazo_entrega": "6–12 hours",
+            "tempo_estimado_horas_min": 0.5,
+            "tempo_estimado_horas_max": 1,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV upon request"
+            ],
+            "preco_original": 25,
+            "preco": 25
+          },
+          {
+            "titulo": "Promotional Poster",
+            "titulo_venda": "Promotional Poster — Custom Art",
+            "descricao": "Creation of a poster for events, promotions, or physical/digital dissemination based on a detailed briefing.",
+            "inclui": [
+              "1 custom art",
+              "Print version (300dpi) and web version",
+              "2 quick revisions"
+            ],
+            "beneficios": [
+              "Ready for print and digital dissemination",
+              "Professional image highlighting your offer"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "PDF 300dpi",
+              "Web PNG/JPG"
+            ],
+            "preco_original": 50,
+            "preco": 50
+          },
+          {
+            "titulo": "AI Photo Editing",
+            "titulo_venda": "Quick Retouch — per photo",
+            "descricao": "Image enhancement and treatment with AI-assisted tools: blemish removal, color adjustment, and cropping.",
+            "inclui": [
+              "Basic retouching",
+              "Cropping and color adjustment",
+              "High-resolution delivery"
+            ],
+            "beneficios": [
+              "Instant product presentation improvement",
+              "Fast and cheap solution for catalogs"
+            ],
+            "prazo_entrega": "1 business day",
+            "tempo_estimado_horas_min": 0.5,
+            "tempo_estimado_horas_max": 1,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "High-res PNG/JPG"
+            ],
+            "preco_original": 25,
+            "preco": 25
+          },
+          {
+            "titulo": "Product Shoot",
+            "titulo_venda": "Shooting Compact — 10 photos + 2 videos",
+            "descricao": "Basic photo and video session for product catalog: 10 professional photos + 2 short videos (up to 30s). Ideal for e-commerce and social media.",
+            "inclui": [
+              "Photo session (location/studio upon request)",
+              "10 edited photos",
+              "2 edited videos up to 30s",
+              "Selection and delivery in online gallery"
+            ],
+            "beneficios": [
+              "Ready-to-use content for store and socials",
+              "Accelerates product market validation"
+            ],
+            "prazo_entrega": "3 business days (Rush)",
+            "tempo_estimado_horas_min": 4,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "JPG 300dpi",
+              "MP4 1080p"
+            ],
+            "preco_original": 330,
+            "preco": 299
+          },
+          {
+            "titulo": "Logo Creation",
+            "titulo_venda": "Basic Visual Identity — Logo",
+            "descricao": "Logo creation with concepts aligned to brand positioning. Delivered in vector files and web versions.",
+            "inclui": [
+              "3 initial proposals",
+              "1 final version with adjustments",
+              "PNG, JPG, and vector files (Basic SVG/AI)"
+            ],
+            "beneficios": [
+              "Solid base for visual identity",
+              "Files ready for digital application and print"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 10,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "SVG, PNG, JPG",
+              "Simple usage guide (colors and fonts)"
+            ],
+            "preco_original": 100,
+            "preco": 100
+          },
+          {
+            "titulo": "AI Soundtrack",
+            "titulo_venda": "Exclusive AI Soundtrack",
+            "descricao": "AI-generated musical composition, created based on briefing to match the tone of your video or campaign (royalty-free).",
+            "inclui": [
+              "Exclusive musical track",
+              "Loop versions and short version",
+              "Usage license for campaigns"
+            ],
+            "beneficios": [
+              "Economical solution for sound design",
+              "Music adapted to your video rhythm"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 2,
+            "tempo_estimado_horas_max": 4,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV upon request"
+            ],
+            "preco_original": 170,
+            "preco": 170
+          },
+          {
+            "titulo": "AI Dubbing",
+            "titulo_venda": "Professional AI Dubbing",
+            "descricao": "Dubbing in any language from video (up to 15 minutes duration)",
+            "inclui": [
+              "Dubbing in 1 chosen language",
+              "Speech timing editing",
+              "Subtitles"
+            ],
+            "beneficios": [
+              "Ideal for expanding your message to other countries",
+              "Dubbing voice is a clone of the original, maintaining tone and fluidity"
+            ],
+            "prazo_entrega": "3 business days (Rush)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 8,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP3 320kbps",
+              "WAV upon request"
+            ],
+            "preco_original": 300,
+            "preco": 300
+          },
+          {
+            "titulo": "Custom Business Website",
+            "titulo_venda": "Basic Corporate Website",
+            "descricao": "Institutional website with custom design, main pages, and basic integration. Content and arts optimized for professional online presentation.",
+            "inclui": [
+              "Home page + up to 4 inner pages",
+              "Responsive design",
+              "Arts and banners included",
+              "Delivery with hosting guidelines"
+            ],
+            "beneficios": [
+              "Professional online presence",
+              "Fast delivery for launch"
+            ],
+            "prazo_entrega": "5 business days (Rush)",
+            "tempo_estimado_horas_min": 20,
+            "tempo_estimado_horas_max": 40,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "Ready HTML/CSS/JS",
+              "Files and instructions for hosting"
+            ],
+            "preco_original": 650,
+            "preco": 590
+          }
+        ]
+      },
+      {
+        "nome": "Custom Character Creation",
+        "servicos": [
+          {
+            "titulo": "Static Character",
+            "titulo_venda": "Illustrated Mascot — 5 poses",
+            "descricao": "Development of a static character with 5 distinct poses, perfect for branding, stickers, or promotional materials.",
+            "inclui": [
+              "Initial concept",
+              "5 finalized poses",
+              "Color and monochrome versions"
+            ],
+            "beneficios": [
+              "Unique visual identity",
+              "Reusable material in various communications"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 10,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "High-res PNG",
+              "SVG/AI upon request"
+            ],
+            "preco_original": 170,
+            "preco": 170
+          },
+          {
+            "titulo": "Animated Character (Short)",
+            "titulo_venda": "Animated Mascot — 30s + narration",
+            "descricao": "Short character animation with basic narration — ideal for intros, vignettes, and brand materials.",
+            "inclui": [
+              "30s animation",
+              "AI narration included",
+              "Simple effects and loop when applicable"
+            ],
+            "beneficios": [
+              "Humanizes the brand",
+              "Improves recognition and engagement"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 6,
+            "tempo_estimado_horas_max": 12,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNG sequence or GIF upon request"
+            ],
+            "preco_original": 290,
+            "preco": 290
+          },
+          {
+            "titulo": "Animated Character (Long)",
+            "titulo_venda": "Cinematic Mascot — 1 min + narration",
+            "descricao": "1-minute animation with narrative and sound design. Recommended for campaigns, presentations, and institutional content with more presence.",
+            "inclui": [
+              "60s animation",
+              "AI narration",
+              "Basic audio mixing",
+              "Color correction when applicable"
+            ],
+            "beneficios": [
+              "High sharing potential",
+              "Complete piece for campaigns"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 10,
+            "tempo_estimado_horas_max": 18,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "MP4 1080p",
+              "Project file upon request"
+            ],
+            "preco_original": 420,
+            "preco": 420
+          }
+        ]
+      },
+      {
+        "nome": "Custom Character Packages",
+        "servicos": [
+          {
+            "titulo": "Basic Package",
+            "titulo_venda": "Starter Pack — 1x 30s + 3 poses",
+            "descricao": "Initial combo to test the character in video and image: 1 video of 30s + narration and 3 poses for post usage.",
+            "inclui": [
+              "1 video 30s + narration",
+              "3 high-res poses",
+              "Briefing and concept"
+            ],
+            "beneficios": [
+              "Fast delivery of multimedia identity",
+              "Great cost-benefit"
+            ],
+            "prazo_entrega": "1 business day (Rush)",
+            "tempo_estimado_horas_min": 12,
+            "tempo_estimado_horas_max": 20,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNGs of poses"
+            ],
+            "preco_original": 420,
+            "preco": 420
+          },
+          {
+            "titulo": "Standard Package",
+            "titulo_venda": "Brand Pack — 1x 1min + 3 poses",
+            "descricao": "More complete package with 1-minute video, ideal for campaign usage and brand presentation.",
+            "inclui": [
+              "1 video 60s + narration",
+              "3 high-res poses",
+              "Detailed briefing"
+            ],
+            "beneficios": [
+              "Centerpiece for digital campaigns",
+              "Material ready for multiple applications"
+            ],
+            "prazo_entrega": "2 business days (Rush)",
+            "tempo_estimado_horas_min": 16,
+            "tempo_estimado_horas_max": 28,
+            "revisoes_incluidas": 3,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNG image files"
+            ],
+            "preco_original": 550,
+            "preco": 550
+          },
+          {
+            "titulo": "Premium Package",
+            "titulo_venda": "Pro Pack — 3x 30s + 5 poses",
+            "descricao": "Package for those wanting consistent presence: 3 short videos, narrations, and 5 poses for wide usage.",
+            "inclui": [
+              "3 videos of 30s",
+              "5 character poses",
+              "Narrações e mixagem básica"
+            ],
+            "beneficios": [
+              "Strong multi-platform presence",
+              "Content ready for continuous campaign"
+            ],
+            "prazo_entrega": "3 dias úteis (Prazo Acelerado)",
+            "tempo_estimado_horas_min": 30,
+            "tempo_estimado_horas_max": 50,
+            "revisoes_incluidas": 4,
+            "formato_entrega": [
+              "MP4 1080p",
+              "PNGs and source files upon request"
+            ],
+            "preco_original": 750,
+            "preco": 675
+          },
+          {
+            "titulo": "Deluxe Package",
+            "titulo_venda": "Deluxe Pack — 6x 30s or 3x 1min",
+            "descricao": "Top-tier package with volume and variety: ideal for launches, rebranding, or robust campaigns.",
+            "inclui": [
+              "6 videos of 30s or 3 videos of 60s",
+              "Narrations",
+              "Advanced editing and mixing",
+              "Support on delivery and placement guidelines"
+            ],
+            "beneficios": [
+              "Complete solution for high-impact campaigns",
+              "Technical delivery support"
+            ],
+            "prazo_entrega": "5 business days (Rush)",
+            "tempo_estimado_horas_min": 60,
+            "tempo_estimado_horas_max": 100,
+            "revisoes_incluidas": 6,
+            "formato_entrega": [
+              "MP4 1080/4K",
+              "Source files upon request"
+            ],
+            "preco_original": 1100,
+            "preco": 1100
+          }
+        ]
+      }
+    ],
+    "observacoes": "Progressive discounts on combos and on monthly, semiannual, or annual partnerships. Tell us your idea!"
   }
-};
-
-i18n
-  .use(LanguageDetector) // Detecta o idioma do navegador
-  .use(initReactI18next) // Passa a instância para o react-i18next
-  .init({
-    resources,
-    fallbackLng: 'pt', // Se não achar o idioma, usa PT
-    supportedLngs: ['pt', 'en'], // Idiomas permitidos
-    
-    interpolation: {
-      escapeValue: false // React já protege contra XSS
-    },
-    detection: {
-      order: ['path', 'navigator'], // Tenta ler da URL (/pt ou /en) primeiro
-      lookupFromPathIndex: 0
-    }
-  });
-
-export default i18n;
+}
 </file>
 
 <file path="src/logo.svg">
@@ -799,105 +1419,6 @@ export default reportWebVitals;
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
-</file>
-
-<file path="src/styles/ContactPage.css">
-/* ===== Estrutura geral ===== */
-.contact-page-section {
-    padding: 3rem 1rem;
-    background-color: #b5e9ff;
-    margin-bottom: -12%;
-    margin-top: 1%;
-}
-
-.contact-page-container {
-    max-width: 1200px;
-    margin-bottom: 1%;
-}
-
-.contact-page-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-}
-
-/* ===== Coluna do formulário ===== */
-.contact-form-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.contact-title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #0d6efd;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-/* ===== Card do formulário ===== */
-.contact-card {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    padding: 2rem;
-    width: 100%;
-}
-
-.contact-form-wrapper {
-    width: 100%;
-}
-
-/* ===== Coluna das informações ===== */
-.contact-info-col {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.contact-info-wrapper {
-    width: 100%;
-    max-width: 400px;
-}
-
-/* ===== Responsividade ===== */
-@media (max-width: 992px) {
-    .contact-page-row {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .contact-form-col,
-    .contact-info-col {
-        width: 100%;
-        max-width: 600px;
-    }
-
-    .contact-title {
-        font-size: 1.75rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .contact-page-section {
-        padding: 2rem 1rem;
-    }
-
-    .contact-title {
-        font-size: 1.5rem;
-    }
-
-    .contact-card {
-        padding: 1.5rem;
-    }
-
-    .contact-info-wrapper {
-        max-width: 100%;
-        text-align: center;
-    }
-}
 </file>
 
 <file path="src/styles/custom.css">
@@ -1073,34 +1594,391 @@ Sitemap: https://comercias.com.br/sitemap.xml
 }
 </file>
 
-<file path="src/components/ContactInfo.js">
-import React from 'react';
-import { Card } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { faPhone } from '@fortawesome/free-solid-svg-icons';
+<file path="src/components/forms/ContactForm.js">
+import React, { useState } from 'react';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next'; // <--- Import
 
-const ContactInfo = () => {
+const ContactForm = () => {
+    const { t } = useTranslation(); // <--- Hook
+    const primaryColor = '#06243d';
+
+    const [status, setStatus] = useState({
+        isSubmitted: false,
+        message: null
+    });
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        setStatus({ isSubmitted: false, message: null });
+
+        const form = event.target;
+        const data = new FormData(form);
+
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                setStatus({ isSubmitted: true, message: t('form_success') });
+                form.reset();
+            } else {
+                const result = await response.json();
+                if (result.errors) {
+                    setStatus({ isSubmitted: false, message: "Erro: " + result.errors.map(e => e.message).join(", ") });
+                } else {
+                    setStatus({ isSubmitted: false, message: t('form_error_generic') });
+                }
+            }
+        } catch (error) {
+            setStatus({ isSubmitted: false, message: t('form_error_connection') });
+        }
+    };
+
     return (
-        <Card className="p-4 text-center">
-            <h5 className="fw-bold">Outras maneiras de entrar em contato!</h5>
-            <p className="text-muted">(A resposta pode ser mais rápida.)</p>
-            <div className="d-flex justify-content-center mt-4">
-                <a href="https://wa.me/5532984869192" target="_blank" rel="noopener noreferrer" className="text-decoration-none me-4">
-                    <FontAwesomeIcon icon={faWhatsapp} size="3x" style={{ color: '#25D366' }} />
-                </a>
-                <a href="https://www.instagram.com/comerc_ias?igsh=MWFwZjVpYWJqaXh5aA==" target="_blank" rel="noopener noreferrer" className="text-decoration-none me-4">
-                    <FontAwesomeIcon icon={faInstagram} size="3x" style={{ color: '#E4405F' }} />
-                </a>
-                <a href="tel:+5532984869192" className="text-decoration-none">
-                    <FontAwesomeIcon icon={faPhone} size="3x" style={{ color: '#007ACC' }} />
-                </a>
-            </div>
-        </Card>
+        <>
+            {status.message && (
+                <Alert variant={status.isSubmitted ? "success" : "danger"} className="mb-3">
+                    {status.message}
+                </Alert>
+            )}
+
+            <Form onSubmit={handleSubmit} action="https://formspree.io/f/xkgzjyjn" method="POST">
+                <Form.Group className="mb-3">
+                    <Form.Label>{t('form_name')}</Form.Label>
+                    <Form.Control type="text" name="Nome" required />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                    <Form.Label>{t('form_phone')}</Form.Label>
+                    <Form.Control type="tel" name="Telefone" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                    <Form.Label>{t('form_email')}</Form.Label>
+                    <Form.Control type="email" name="E-mail" required />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                    <Form.Label>{t('form_company')}</Form.Label>
+                    <Form.Control type="text" name="Empresa" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                    <Form.Label>{t('form_message')}</Form.Label>
+                    <Form.Control as="textarea" name="Mensagem" rows={5} required />
+                </Form.Group>
+                
+                <Button type="submit" className="w-100 rounded-pill mt-3" style={{ backgroundColor: primaryColor, borderColor: primaryColor }}>
+                    {t('btn_send')}
+                </Button>
+            </Form>
+        </>
     );
 };
 
-export default ContactInfo;
+export default ContactForm;
+</file>
+
+<file path="src/components/forms/ContactModal.js">
+import React from 'react';
+import { Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next'; // <--- Import
+
+const ContactModal = ({ show, handleClose, children }) => {
+    const { t } = useTranslation(); // <--- Hook
+
+    return (
+        <Modal show={show} onHide={handleClose} centered>
+            <Modal.Header closeButton>
+                <Modal.Title>{t('contact_title')}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {children}
+            </Modal.Body>
+        </Modal>
+    );
+};
+
+export default ContactModal;
+</file>
+
+<file path="src/i18n.js">
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
+const resources = {
+  pt: {
+    translation: {
+      // --- MENU ---
+      "nav_home": "HOME",
+      "nav_about": "Sobre",
+      "nav_portfolio": "Portfólio",
+      "nav_orcamento": "Orçamento",
+      "nav_contact": "Contato",
+
+      // --- GERAL ---
+      "btn_know_services": "CONHEÇA NOSSOS SERVIÇOS",
+      "btn_check_work": "CONFIRA NOSSO TRABALHO",
+      "btn_send": "Enviar",
+      "btn_sending": "Enviando...",
+
+      // --- HOME PAGE ---
+      "hero_title": "VÍDEOS de ALTO IMPACTO para impulsionar seu negócio!",
+      "hero_desc_1": "Na Comerc IA's nós temos o compromisso de entrega rápida, um material de extrema qualidade e ótimo custo-benefício!",
+      "hero_desc_2": "Vídeos feitos por profissionais em Edição de Vídeo, com imagens e cenas geradas com Inteligência Artificial.",
+      "desktop_title": "IMPULSIONE SEU NEGÓCIO COM PUBLICIDADE DE QUALIDADE!",
+      "desktop_text": "Conteúdo bem feito, entrega rápida e total customização à sua necessidade",
+
+      // --- ABOUT PAGE ---
+      "about_seo_title": "Quem Somos - Produtora de Vídeos com IA",
+      "about_seo_desc": "Criamos vídeos hiper-realistas para empresas: comerciais, reels, vídeos institucionais e treinamentos com avatares e narração em português.",
+      "about_hero_title": "Transformamos ideias em vídeos que convertem",
+      "about_hero_subtitle": "Na <1>Comerc IA's</1> criamos comerciais e conteúdos em vídeo que contam histórias reais e vendem sem precisar gritar. Unimos roteiro estratégico, avatares e narração natural em português com as melhores tecnologias de inteligência artificial.",
+      "about_btn_portfolio": "Ver portfólio",
+      "about_btn_budget": "Simular orçamento",
+      "about_section_title": "Quem Somos",
+      "about_lead": "Somos uma produtora especializada em vídeos comerciais e conteúdo corporativo com suporte de IA. Criamos roteiros orientados a resultados, produções hiper-realistas e narrativas que aumentam engajamento, autoridade e conversões.",
+      
+      // SERVIÇOS (Tradução completa)
+      "about_service_1": "<1>Comerciais e reels para redes sociais</1> (Instagram, TikTok, YouTube) com linguagem dinâmica e foco em conversão.",
+      "about_service_2": "<1>Vídeos institucionais e corporativos</1> com personagens e avatares que falam a mesma língua do seu público.",
+      "about_service_3": "<1>Transformação de imagens em vídeos</1>: fotos estáticas que ganham movimento e narrativa.",
+      "about_service_4": "<1>Mini-documentários e cases</1> com narração profissional para reforçar credibilidade.",
+      "about_service_5": "<1>Videoclipes e peças criativas</1> com direção orientada por IA.",
+      "about_service_6": "<1>Treinamentos e apresentações personalizadas</1> para times e clientes.",
+      
+      "about_summary": "Entregamos roteiros detalhados, narração natural em português, realismo impressionante e total adaptação ao seu briefing — rapidamente e com qualidade escalável.",
+      "about_why_title": "Por que escolher a Comerc IAs",
+      "about_why_1": "Roteiros orientados a resultado (engajamento → conversão).",
+      "about_why_2": "Produção ágil e escalável sem perder personalidade.",
+      "about_why_3": "Criações que respeitam a identidade da marca — nada que pareça “feito por IA”.",
+      "about_cta_talk": "Fale com um de nossos especialistas!",
+      "about_cta_examples": "Ver exemplos",
+
+      // --- PORTFOLIO PAGE ---
+      "portfolio_seo_title": "Portfólio - Vídeos com IA e Storytelling",
+      "portfolio_seo_desc": "Veja exemplos reais dos nossos vídeos comerciais, campanhas de branding e efeitos visuais criados com Inteligência Artificial.",
+      "portfolio_title": "Portfólio",
+      "port_item_1_title": "Apresentação de Marca",
+      "port_item_1_desc": "Apresentar sua marca ao mundo nunca foi tão fácil — e tão inovador — faça o seu cliente conhecer o seu trabalho de forma prática!",
+      "port_item_2_title": "Vídeos Storytelling com IA",
+      "port_item_2_desc": "Transformamos ideias criativas em roteiros impactantes, misturando humor, storytelling e total identidade da sua marca!",
+      "port_item_3_title": "Branding e Propostas Criativas",
+      "port_item_3_desc": "Neste exemplo, usamos IA para desenvolver diversos cenários surreais mantendo o logotipo e branding da marca!",
+      "port_item_4_title": "Efeitos Especiais Para Prender a Atenção",
+      "port_item_4_desc": "Conteúdos realistas e que prendem o lead até ouvir sua mensagem! Infinitas possibilidades!",
+      "port_item_5_title": "Vídeo de Promoção ou Divulgação",
+      "port_item_5_desc": "Uma campanha de promoção ou divulgação que prende o seu cliente! Humor, Identidade e Conversão!",
+
+      // --- CONTACT PAGE & MODAL ---
+      "contact_title": "Fale Conosco",
+      "contact_other_ways": "Outras maneiras de entrar em contato!",
+      "contact_response_time": "(A resposta pode ser mais rápida.)",
+
+      // --- FORMS (Geral) ---
+      "form_name": "Nome:",
+      "form_phone": "Telefone:",
+      "form_email": "E-mail:",
+      "form_company": "Empresa:",
+      "form_message": "Mensagem:",
+      "form_success": "Obrigado! Sua mensagem foi enviada.",
+      "form_error_generic": "Ocorreu um erro ao enviar a mensagem. Tente novamente.",
+      "form_error_connection": "Ocorreu um erro de conexão. Verifique sua rede.",
+
+      // --- ORÇAMENTO PAGE ---
+      "orcamento_seo_title": "Orçamento Online - Vídeos e Marketing",
+      "orcamento_seo_desc": "Simule seu orçamento online para vídeos comerciais, gestão de redes sociais e serviços de design.",
+      "orcamento_page_title": "Gerador de Orçamento",
+      "orcamento_subtitle": "Escolha os serviços que você deseja!",
+      "orcamento_cat_options": "opções",
+      
+      "btn_details": "Detalhes",
+      "btn_close": "Fechar",
+      "label_includes": "O que inclui:",
+      "label_benefits": "Benefícios:",
+      "label_formats": "Formatos:",
+      "label_deadline": "Prazo:",
+      "label_period": "Escolha o Período:",
+
+      "form_title": "Suas Informações",
+      "label_name": "Nome:",
+      "label_email": "E-mail:",
+      "label_company": "Nome da Empresa ou Instagram:",
+      "label_phone": "Telefone:",
+      "label_coupon": "Cupom de Desconto:",
+      "label_message": "Mensagem / Briefing rápido:",
+      "label_agree": "Aceito ser contactado pelas formas de contato fornecidas.",
+      "btn_generate": "Gerar Orçamento",
+      "label_obs": "Observações:",
+
+      "result_title": "Seu Orçamento Final",
+      "btn_print": "Imprimir",
+      "btn_download": "Baixar",
+      "label_discount_applied": "Desconto Aplicado:",
+      "label_final_price": "Preço Final:",
+      "label_selected_services": "Serviços Selecionados",
+      "btn_share": "Compartilhar",
+      "btn_back_top": "Voltar ao topo",
+      
+      "alert_fill_data": "Por favor, preencha todos os seus dados.",
+      "alert_valid_email": "Digite um e-mail válido.",
+      "alert_accept_terms": "Você precisa aceitar ser contactado para gerar o orçamento.",
+      "alert_select_service": "Selecione pelo menos um serviço para gerar o orçamento.",
+      "alert_success": "Orçamento gerado com sucesso! Verifique abaixo!",
+      "alert_copy_success": "Orçamento copiado para a área de transferência!",
+      
+      "modal_share_title": "Compartilhar Orçamento",
+      "modal_share_desc": "Copie o texto abaixo para compartilhar o orçamento:",
+      "btn_copy": "Copiar"
+    }
+  },
+  en: {
+    translation: {
+      // --- MENU ---
+      "nav_home": "HOME",
+      "nav_about": "About Us",
+      "nav_portfolio": "Portfolio",
+      "nav_orcamento": "Get a Quote",
+      "nav_contact": "Contact",
+
+      // --- GENERAL ---
+      "btn_know_services": "KNOW OUR SERVICES",
+      "btn_check_work": "CHECK OUR WORK",
+      "btn_send": "Send",
+      "btn_sending": "Sending...",
+
+      // --- HOME PAGE ---
+      "hero_title": "HIGH IMPACT VIDEOS to boost your business!",
+      "hero_desc_1": "At Comerc IAs we are committed to fast delivery, extremely high quality material and great cost-benefit!",
+      "hero_desc_2": "Videos made by professionals in Video Editing, with images and scenes generated with Artificial Intelligence.",
+      "desktop_title": "BOOST YOUR BUSINESS WITH QUALITY ADVERTISING!",
+      "desktop_text": "Well-crafted content, fast delivery and full customization to your needs",
+
+      // --- ABOUT PAGE ---
+      "about_seo_title": "About Us - AI Video Production",
+      "about_seo_desc": "We create hyper-realistic videos for businesses: commercials, reels, institutional videos, and training with avatars and narration.",
+      "about_hero_title": "We transform ideas into videos that convert",
+      "about_hero_subtitle": "At <1>Comerc IA's</1> we create commercials and video content that tell real stories and sell without screaming. We combine strategic scripting, avatars, and natural narration with the best AI technologies.",
+      "about_btn_portfolio": "See portfolio",
+      "about_btn_budget": "Get a quote",
+      "about_section_title": "Who We Are",
+      "about_lead": "We are a production company specializing in commercial videos and corporate content supported by AI. We create result-oriented scripts, hyper-realistic productions, and narratives that increase engagement, authority, and conversions.",
+      
+      // SERVICES (Tradução corrigida)
+      "about_service_1": "<1>Commercials and reels for social media</1> (Instagram, TikTok, YouTube) with dynamic language focused on conversion.",
+      "about_service_2": "<1>Institutional and corporate videos</1> with characters and avatars that speak your audience's language.",
+      "about_service_3": "<1>Transformation of images into videos</1>: static photos that gain movement and narrative.",
+      "about_service_4": "<1>Mini-documentaries and case studies</1> with professional narration to reinforce credibility.",
+      "about_service_5": "<1>Music videos and creative pieces</1> with AI-oriented direction.",
+      "about_service_6": "<1>Personalized training and presentations</1> for teams and clients.",
+      
+      "about_summary": "We deliver detailed scripts, natural narration, impressive realism, and full adaptation to your briefing — quickly and with scalable quality.",
+      "about_why_title": "Why choose Comerc IAs",
+      "about_why_1": "Result-oriented scripts (engagement → conversion).",
+      "about_why_2": "Agile and scalable production without losing personality.",
+      "about_why_3": "Creations that respect brand identity — nothing that looks 'made by AI'.",
+      "about_cta_talk": "Talk to one of our specialists!",
+      "about_cta_examples": "See examples",
+
+      // --- PORTFOLIO PAGE ---
+      "portfolio_seo_title": "Portfolio - AI Videos and Storytelling",
+      "portfolio_seo_desc": "See real examples of our commercial videos, branding campaigns, and visual effects created with Artificial Intelligence.",
+      "portfolio_title": "Portfolio",
+      "port_item_1_title": "Brand Presentation",
+      "port_item_1_desc": "Presenting your brand to the world has never been easier — and so innovative — let your client know your work in a practical way!",
+      "port_item_2_title": "Storytelling Videos with AI",
+      "port_item_2_desc": "We transform creative ideas into impactful scripts, mixing humor, storytelling, and your brand's total identity!",
+      "port_item_3_title": "Branding and Creative Proposals",
+      "port_item_3_desc": "In this example, we use AI to develop several surreal scenarios while keeping the logo and brand branding!",
+      "port_item_4_title": "Special Effects to Grab Attention",
+      "port_item_4_desc": "Realistic content that holds the lead until they hear your message! Infinite possibilities!",
+      "port_item_5_title": "Promotional or Disclosure Video",
+      "port_item_5_desc": "A promotion or disclosure campaign that captivates your client! Humor, Identity, and Conversion!",
+
+      // --- CONTACT PAGE & MODAL ---
+      "contact_title": "Contact Us",
+      "contact_other_ways": "Other ways to contact us!",
+      "contact_response_time": "(Response time may be faster.)",
+
+      // --- FORMS (General) ---
+      "form_name": "Name:",
+      "form_phone": "Phone:",
+      "form_email": "E-mail:",
+      "form_company": "Company:",
+      "form_message": "Message:",
+      "form_success": "Thank you! Your message has been sent.",
+      "form_error_generic": "An error occurred while sending the message. Please try again.",
+      "form_error_connection": "A connection error occurred. Please check your network.",
+
+      // --- ORÇAMENTO PAGE & FORMS ---
+      "orcamento_seo_title": "Online Quote - Video & Marketing",
+      "orcamento_seo_desc": "Simulate your budget online for commercial videos, social media management, and design services.",
+      "orcamento_page_title": "Budget Generator",
+      "orcamento_subtitle": "Choose the services you desire!",
+      "orcamento_cat_options": "options",
+      
+      "btn_details": "Details",
+      "btn_close": "Close",
+      "label_includes": "Includes:",
+      "label_benefits": "Benefits:",
+      "label_formats": "Formats:",
+      "label_deadline": "Deadline:",
+      "label_period": "Choose Period:",
+
+      "form_title": "Your Information",
+      "label_name": "Name:",
+      "label_email": "E-mail:",
+      "label_company": "Company Name or Instagram:",
+      "label_phone": "Phone:",
+      "label_coupon": "Discount Coupon:",
+      "label_message": "Message / Quick Briefing:",
+      "label_agree": "I agree to be contacted via the provided contact methods.",
+      "btn_generate": "Generate Quote",
+      "label_obs": "Notes:",
+
+      "result_title": "Your Final Budget",
+      "btn_print": "Print",
+      "btn_download": "Download",
+      "label_discount_applied": "Discount Applied:",
+      "label_final_price": "Final Price:",
+      "label_selected_services": "Selected Services",
+      "btn_share": "Share",
+      "btn_back_top": "Back to top",
+
+      "alert_fill_data": "Please fill in all your details.",
+      "alert_valid_email": "Please enter a valid email.",
+      "alert_accept_terms": "You must agree to be contacted to generate the quote.",
+      "alert_select_service": "Select at least one service to generate the quote.",
+      "alert_success": "Budget generated successfully! Check below!",
+      "alert_copy_success": "Budget copied to clipboard!",
+
+      "modal_share_title": "Share Budget",
+      "modal_share_desc": "Copy the text below to share the budget:",
+      "btn_copy": "Copy"
+    }
+  }
+};
+
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources,
+    fallbackLng: 'pt',
+    supportedLngs: ['pt', 'en'],
+    interpolation: { escapeValue: false },
+    detection: { order: ['path', 'navigator'], lookupFromPathIndex: 0 }
+  });
+
+export default i18n;
 </file>
 
 <file path="src/index.css">
@@ -1183,21 +2061,163 @@ footer .logo-footer {
 }
 </file>
 
+<file path="src/styles/ContactPage.css">
+/* ===== Estrutura geral ===== */
+.contact-page-section {
+    padding: 3rem 1rem;
+    background-color: #b5e9ff;
+    margin-bottom: -4%;
+    margin-top: 1%;
+}
+
+.contact-page-container {
+    max-width: 1200px;
+    margin-bottom: 1%;
+}
+
+.contact-page-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+/* ===== Coluna do formulário ===== */
+.contact-form-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0d6efd;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* ===== Card do formulário ===== */
+.contact-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    width: 100%;
+}
+
+.contact-form-wrapper {
+    width: 100%;
+}
+
+/* ===== Coluna das informações ===== */
+.contact-info-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-info-wrapper {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 992px) {
+    .contact-page-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-page-section {
+    padding: 3rem 1rem;
+    background-color: #b5e9ff;
+    margin-bottom: -10%;
+    margin-top: 1%;
+}
+
+    .contact-form-col,
+    .contact-info-col {
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .contact-title {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .contact-page-section {
+        padding: 2rem 1rem;
+    }
+
+    .contact-title {
+        font-size: 1.5rem;
+    }
+
+    .contact-card {
+        padding: 1.5rem;
+    }
+
+    .contact-info-wrapper {
+        max-width: 100%;
+        text-align: center;
+    }
+}
+</file>
+
+<file path="src/components/ContactInfo.js">
+import React from 'react';
+import { Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next'; // <--- Import
+
+const ContactInfo = () => {
+    const { t } = useTranslation(); // <--- Hook
+
+    return (
+        <Card className="p-4 text-center">
+            <h5 className="fw-bold">{t('contact_other_ways')}</h5>
+            <p className="text-muted">{t('contact_response_time')}</p>
+            <div className="d-flex justify-content-center mt-4">
+                <a href="https://wa.me/5532984869192" target="_blank" rel="noopener noreferrer" className="text-decoration-none me-4">
+                    <FontAwesomeIcon icon={faWhatsapp} size="3x" style={{ color: '#25D366' }} />
+                </a>
+                <a href="https://www.instagram.com/comerc_ias?igsh=MWFwZjVpYWJqaXh5aA==" target="_blank" rel="noopener noreferrer" className="text-decoration-none me-4">
+                    <FontAwesomeIcon icon={faInstagram} size="3x" style={{ color: '#E4405F' }} />
+                </a>
+                <a href="tel:+5532984869192" className="text-decoration-none">
+                    <FontAwesomeIcon icon={faPhone} size="3x" style={{ color: '#007ACC' }} />
+                </a>
+            </div>
+        </Card>
+    );
+};
+
+export default ContactInfo;
+</file>
+
 <file path="src/pages/ContactPage.js">
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next'; // <--- Importação
 import ContactForm from '../components/forms/ContactForm';
 import ContactInfo from '../components/ContactInfo';
-import '../styles/ContactPage.css'; // import do CSS separado
+import '../styles/ContactPage.css';
 
 const ContactPage = () => {
+    const { t } = useTranslation(); // <--- Hook
+
     return (
         <section id="contact-page" className="contact-page-section">
             <Container className="contact-page-container">
                 <Row className="contact-page-row">
                     {/* Coluna do formulário */}
                     <Col md={6} className="contact-form-col">
-                        <h2 className="contact-title">Fale Conosco</h2>
+                        <h2 className="contact-title">{t('contact_title')}</h2>
                         <div className="contact-card">
                             <div className="contact-form-wrapper">
                                 <ContactForm />
@@ -1218,86 +2238,6 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
-</file>
-
-<file path="src/App.js">
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Hook para usar tradução
-import Header from './components/Header';
-import Footer from './components/Footer';
-import ContactModal from './components/forms/ContactModal';
-import ContactForm from './components/forms/ContactForm';
-
-// Páginas
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import PortfolioPage from './pages/PortfolioPage';
-import ContactPage from './pages/ContactPage';
-import OrcamentoPage from './pages/OrcamentoPage';
-
-import './styles/custom.css';
-
-// Componente "Wrapper" que verifica o idioma na URL e atualiza o site
-const LanguageLayout = () => {
-  const { lang } = useParams(); // Pega o "pt" ou "en" da URL
-  const { i18n } = useTranslation();
-  const [showModal, setShowModal] = React.useState(false);
-
-  const handleChatClick = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
-  // Efeito para trocar o idioma quando a URL muda
-  useEffect(() => {
-    if (lang && ['pt', 'en'].includes(lang)) {
-      if (i18n.language !== lang) {
-        i18n.changeLanguage(lang);
-      }
-    }
-  }, [lang, i18n]);
-
-  // Se o idioma na URL não for suportado (ex: /fr/), força volta para /pt
-  if (lang && !['pt', 'en'].includes(lang)) {
-    return <Navigate to="/pt" replace />;
-  }
-
-  return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header />
-      <main className="flex-grow-1" style={{ paddingTop: '56px' }}>
-        <Routes>
-          {/* Rotas internas (agora relativas ao /:lang) */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="portfolio" element={<PortfolioPage />} />
-          <Route path="orcamento" element={<OrcamentoPage />} />
-          <Route path="contact" element={<ContactPage />} />
-        </Routes>
-      </main>
-      <Footer onChatClick={handleChatClick} />
-      
-      <ContactModal show={showModal} handleClose={handleCloseModal}>
-          <ContactForm />
-      </ContactModal>
-    </div>
-  );
-};
-
-const App = () => {
-    return (
-        <Router>
-            <Routes>
-                {/* 1. Se acessar a raiz pura, redireciona para /pt */}
-                <Route path="/" element={<Navigate to="/pt" replace />} />
-
-                {/* 2. Qualquer rota começando com idioma cai no Layout */}
-                <Route path="/:lang/*" element={<LanguageLayout />} />
-            </Routes>
-        </Router>
-    );
-};
-
-export default App;
 </file>
 
 <file path="src/components/Footer.js">
@@ -1638,149 +2578,79 @@ if (container.hasChildNodes()) {
 .custom-tooltip .custom-tooltip-content em { display:block; margin-top:6px; font-style:italic; color:#555; }
 </file>
 
-<file path="src/styles/Header.css">
-/* ===== Navbar Principal ===== */
-.custom-navbar {
-  background-color: #06243d;        /* Fundo azul escuro */
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
-  padding: 0.8rem 1.5rem;      
-  max-width: 100%;     /* Espaço interno */
-}
+<file path="src/App.js">
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; 
+import Header from './components/Header';
+import Footer from './components/Footer';
+import ContactModal from './components/forms/ContactModal';
+import ContactForm from './components/forms/ContactForm';
+import ScrollToTop from './components/ScrollToTop'; // <--- 1. Importar
 
-.custom-navbar-container {
-  display: flex;
-  justify-content: space-between;   /* Logo à esquerda, links à direita */
-  align-items: center;
-  width: 100%;                      /* Ocupa todo espaço */
-  margin: 0 auto;                   /* Centralizado */
-}
+// Páginas
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import PortfolioPage from './pages/PortfolioPage';
+import ContactPage from './pages/ContactPage';
+import OrcamentoPage from './pages/OrcamentoPage';
 
-/* ===== Logo ===== */
-.navbar-logo {
-  height: 70px;                     /* Tamanho padrão */
-  border-radius: 0.375rem;
-}
+import './styles/custom.css';
 
-/* ===== Toggle Button (hamburguer) ===== */
-.navbar-toggle {
-  border: none;
-  background: blue;
-  color: white;
-  font-size: 1.8rem;
-  cursor: pointer;
-  display: none;                    /* Só aparece no mobile */
-}
+const LanguageLayout = () => {
+  const { lang } = useParams(); 
+  const { i18n } = useTranslation();
+  const [showModal, setShowModal] = React.useState(false);
 
-/* ===== Links Desktop ===== */
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;                        /* Espaço entre links */
-  margin-left: 60%;
-  font-size: 1.5rem;
-  font-weight: 200;
-}
+  const handleChatClick = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
-.navbar-link {
-  color: white !important;
-  font-size: 1.2rem;
-  font-weight: 400;
-  text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
+  useEffect(() => {
+    if (lang && ['pt', 'en'].includes(lang)) {
+      if (i18n.language !== lang) {
+        i18n.changeLanguage(lang);
+      }
+    }
+  }, [lang, i18n]);
 
-.navbar-link:hover,
-.navbar-link.active-link {
-  color: #0dcaf0 !important;        /* Azul claro no hover */
-}
-
-/* ===== Menu Mobile ===== */
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  height: 100vh;
-  width: 75%;
-  max-width: 320px;
-  background-color: #06243d;
-  display: flex;
-  flex-direction: column;
-  padding-top: 4rem;
-  transition: right 0.3s ease-in-out;
-  z-index: 1000;
-}
-
-.mobile-menu.open {
-  right: 0;
-}
-
-.close-menu-button {
-  background-color: #06243d;
-  color: white;
-  border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  position: absolute;
-  top: 1rem;
-  right: 1.5rem;
-  z-index: 1001;
-  cursor: pointer;
-}
-
-/* Links Mobile */
-.mobile-menu .nav-link {
-  color: white !important;
-  font-size: 1.5rem;
-  font-weight: 400;
-  padding: 1.2rem 2rem;
-  text-decoration: none;
-}
-
-.mobile-menu .nav-link:hover,
-.mobile-menu .nav-link.active-link {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* ===== Overlay ===== */
-.overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 999;
-}
-
-.overlay.active {
-  display: block;
-}
-
-/* ===== Responsividade ===== */
-@media (max-width: 991px) {
-  .navbar-links {
-    display: none;     /* Esconde os links no mobile */
+  if (lang && !['pt', 'en'].includes(lang)) {
+    return <Navigate to="/pt" replace />;
   }
 
-  .navbar-toggle {
-    display: block;    /* Mostra o botão hamburguer */
-  }
+  return (
+    <div className="d-flex flex-column min-vh-100">
+      <Header /> {/* O Header agora terá o seletor de idiomas */}
+      <main className="flex-grow-1" style={{ paddingTop: '56px' }}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="portfolio" element={<PortfolioPage />} />
+          <Route path="orcamento" element={<OrcamentoPage />} />
+          <Route path="contact" element={<ContactPage />} />
+        </Routes>
+      </main>
+      <Footer onChatClick={handleChatClick} />
+      
+      <ContactModal show={showModal} handleClose={handleCloseModal}>
+          <ContactForm />
+      </ContactModal>
+    </div>
+  );
+};
 
-  .navbar-logo {
-    height: 55px;      /* Logo menor */
-  }
-}
+const App = () => {
+    return (
+        <Router>
+            <ScrollToTop /> {/* <--- 2. Ativar o ScrollToTop aqui */}
+            <Routes>
+                <Route path="/" element={<Navigate to="/pt" replace />} />
+                <Route path="/:lang/*" element={<LanguageLayout />} />
+            </Routes>
+        </Router>
+    );
+};
 
-@media (max-width: 480px) {
-  .navbar-link {
-    font-size: 1rem;   /* Links menores em telas muito pequenas */
-  }
-}
+export default App;
 </file>
 
 <file path="src/styles/PortfolioPage.css">
@@ -1959,8 +2829,8 @@ if (container.hasChildNodes()) {
 
 <file path="src/components/Header.js">
 import React, { useState } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; // <--- Importante
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -1969,74 +2839,88 @@ import '../styles/Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { i18n } = useTranslation(); // <--- Pegar o idioma atual
+  const { t, i18n } = useTranslation(); // <--- Hook t() para traduzir
+  const location = useLocation();
+  const navigate = useNavigate();
   
-  // Garante que temos um idioma definido, ou usa 'pt' como padrão
   const currentLang = i18n.language || 'pt';
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const switchLanguage = (targetLang) => {
+    if (targetLang === currentLang) return;
+    const newPath = location.pathname.replace(`/${currentLang}`, `/${targetLang}`);
+    i18n.changeLanguage(targetLang);
+    navigate(newPath);
+    setIsMenuOpen(false);
+  };
+
   return (
-    <Navbar expand="md" fixed="top" className="custom-navbar">
+    <Navbar expand="lg" fixed="top" className="custom-navbar">
       <Container className="custom-navbar-container">
-        {/* Logo manda para a raiz do idioma atual */}
         <Navbar.Brand as={NavLink} to={`/${currentLang}`}>
-          <img
-            src={logoBranca}
-            alt="Comerc IAs Logo"
-            className="navbar-logo"
-          />
+          <img src={logoBranca} alt="Comerc IAs Logo" className="navbar-logo" />
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" onClick={toggleMenu} className="navbar-toggle">
-          <FontAwesomeIcon icon={faBars} color="white"/>
-        </Navbar.Toggle>
+        <div className="d-flex align-items-center gap-3">
+            {/* Seletor Mobile */}
+            <div className="d-md-none language-selector-mobile">
+                <span className={currentLang === 'pt' ? 'lang-active' : ''} onClick={() => switchLanguage('pt')}>🇧🇷</span>
+                <span className="divider">|</span>
+                <span className={currentLang === 'en' ? 'lang-active' : ''} onClick={() => switchLanguage('en')}>🇺🇸</span>
+            </div>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" onClick={toggleMenu} className="navbar-toggle">
+                <FontAwesomeIcon icon={faBars} color="white"/>
+            </Navbar.Toggle>
+        </div>
 
         <Navbar.Collapse id="responsive-navbar-nav" className="d-none d-md-flex">
-          <Nav className="navbar-links ms-auto">
-            {/* CORREÇÃO: Todos os links agora usam ${currentLang} antes */}
+          <Nav className="navbar-links ms-auto align-items-center">
+            {/* LINKS TRADUZIDOS COM t() */}
             <Nav.Link as={NavLink} to={`/${currentLang}`} className="navbar-link" end>
-              HOME
+              {t('nav_home')}
             </Nav.Link>
             <Nav.Link as={NavLink} to={`/${currentLang}/about`} className="navbar-link">
-              Sobre
+              {t('nav_about')}
             </Nav.Link>
             <Nav.Link as={NavLink} to={`/${currentLang}/portfolio`} className="navbar-link">
-              Portfólio
+              {t('nav_portfolio')}
             </Nav.Link>
             <Nav.Link as={NavLink} to={`/${currentLang}/orcamento`} className="navbar-link">
-              Orçamento
+              {t('nav_orcamento')}
             </Nav.Link>
             <Nav.Link as={NavLink} to={`/${currentLang}/contact`} className="navbar-link">
-              Contato
+              {t('nav_contact')}
             </Nav.Link>
+            
+            {/* Seletor Desktop */}
+            <div className="language-selector-desktop ms-4">
+                <Button variant="link" className={`lang-btn ${currentLang === 'pt' ? 'active' : ''}`} onClick={() => switchLanguage('pt')}>
+                    🇧🇷 PT
+                </Button>
+                <span className="text-white">|</span>
+                <Button variant="link" className={`lang-btn ${currentLang === 'en' ? 'active' : ''}`} onClick={() => switchLanguage('en')}>
+                    🇺🇸 EN
+                </Button>
+            </div>
           </Nav>
         </Navbar.Collapse>
       </Container>
 
-      {/* Menu Mobile também precisa ser corrigido */}
+      {/* Menu Mobile */}
       <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
         <button className="close-menu-button" onClick={toggleMenu}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
         <Nav className="d-flex flex-column">
-          <Nav.Link as={NavLink} to={`/${currentLang}`} onClick={toggleMenu} className="nav-link" end>
-            HOME
-          </Nav.Link>
-          <Nav.Link as={NavLink} to={`/${currentLang}/about`} onClick={toggleMenu} className="nav-link">
-            Sobre
-          </Nav.Link>
-          <Nav.Link as={NavLink} to={`/${currentLang}/portfolio`} onClick={toggleMenu} className="nav-link">
-            Portfólio
-          </Nav.Link>
-          <Nav.Link as={NavLink} to={`/${currentLang}/orcamento`} onClick={toggleMenu} className="nav-link">
-            Orçamento
-          </Nav.Link>
-          <Nav.Link as={NavLink} to={`/${currentLang}/contact`} onClick={toggleMenu} className="nav-link">
-            Contato
-          </Nav.Link>
+          <Nav.Link as={NavLink} to={`/${currentLang}`} onClick={toggleMenu} className="nav-link" end>{t('nav_home')}</Nav.Link>
+          <Nav.Link as={NavLink} to={`/${currentLang}/about`} onClick={toggleMenu} className="nav-link">{t('nav_about')}</Nav.Link>
+          <Nav.Link as={NavLink} to={`/${currentLang}/portfolio`} onClick={toggleMenu} className="nav-link">{t('nav_portfolio')}</Nav.Link>
+          <Nav.Link as={NavLink} to={`/${currentLang}/orcamento`} onClick={toggleMenu} className="nav-link">{t('nav_orcamento')}</Nav.Link>
+          <Nav.Link as={NavLink} to={`/${currentLang}/contact`} onClick={toggleMenu} className="nav-link">{t('nav_contact')}</Nav.Link>
         </Nav>
       </div>
 
@@ -2050,7 +2934,8 @@ export default Header;
 
 <file path="src/pages/PortfolioPage.js">
 import React, { useState } from 'react';
-import SEO from '../components/SEO'; // <--- Importação do componente SEO
+import { useTranslation } from 'react-i18next'; // <--- Hook
+import SEO from '../components/SEO';
 import '../styles/PortfolioPage.css';
 
 // Imagens
@@ -2060,48 +2945,49 @@ import fotoTom from '../assets/images/foto.tom.png';
 import fotoComerc from '../assets/images/foto.comerc.jpg';
 import promoComerc from '../assets/images/promoComerc.png';
 
-// Links do YouTube (embed)
-const portfolioItemsData = [
-  {
-    thumbnail: fotoComerc,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/uYZeMRy9g-E",
-    title: "Apresentação de Marca",
-    description: `Apresentar sua marca ao mundo nunca foi tão fácil — e tão inovador — faça o seu cliente conhecer o seu trabalho de forma prática!`,
-  },
-  {
-    thumbnail: tumbMarcos,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/pcl1pZejmgs",
-    title: "Vídeos Storytelling com IA",
-    description: `Transformamos ideias criativas em roteiros impactantes, misturando humor, storytelling e total identidade da sua marca!`,
-  },
-  {
-    thumbnail: blueMarine,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/HXK0NjQgCjE",
-    title: "Branding e Propostas Criativas",
-    description: 'Neste exemplo, usamos IA para desenvolver diversos cenários surreais mantendo o logotipo e branding da marca!',
-  },
-  {
-    thumbnail: fotoTom,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/55RzdM2dfKk",
-    title: "Efeitos Especiais Para Prender a Atenção",
-    description: `Conteúdos realistas e que prendem o lead até ouvir sua mensagem! Infinitas possibilidades!`,
-  },
-  {
-    thumbnail: promoComerc,
-    media_type: "video",
-    media_url: "https://www.youtube.com/embed/Xfmcg0axl-s",
-    title: "Vídeo de Promoção ou Divulgação",
-    description: "Uma campanha de promoção ou divulgação que prende o seu cliente! Humor, Identidade e Conversão!",
-  }
-];
-
 const PortfolioPage = () => {
+  const { t } = useTranslation(); // <--- Inicializa tradução
   const [showModal, setShowModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+
+  // Mover dados para DENTRO do componente para usar t()
+  const portfolioItemsData = [
+    {
+      thumbnail: fotoComerc,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/uYZeMRy9g-E",
+      title: t('port_item_1_title'),
+      description: t('port_item_1_desc'),
+    },
+    {
+      thumbnail: tumbMarcos,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/pcl1pZejmgs",
+      title: t('port_item_2_title'),
+      description: t('port_item_2_desc'),
+    },
+    {
+      thumbnail: blueMarine,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/HXK0NjQgCjE",
+      title: t('port_item_3_title'),
+      description: t('port_item_3_desc'),
+    },
+    {
+      thumbnail: fotoTom,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/55RzdM2dfKk",
+      title: t('port_item_4_title'),
+      description: t('port_item_4_desc'),
+    },
+    {
+      thumbnail: promoComerc,
+      media_type: "video",
+      media_url: "https://www.youtube.com/embed/Xfmcg0axl-s",
+      title: t('port_item_5_title'),
+      description: t('port_item_5_desc'),
+    }
+  ];
 
   const handleShow = (project) => {
     setSelectedProject(project);
@@ -2115,17 +3001,15 @@ const PortfolioPage = () => {
 
   return (
     <>
-      {/* Configuração de SEO para a página de Portfólio */}
       <SEO 
-        title="Portfólio - Vídeos com IA e Storytelling" 
-        description="Veja exemplos reais dos nossos vídeos comerciais, campanhas de branding e efeitos visuais criados com Inteligência Artificial. Inspire-se com o nosso portfólio."
+        title={t('portfolio_seo_title')} 
+        description={t('portfolio_seo_desc')}
         href="/portfolio"
       />
 
       <section id="portfolio" className="portfolio-section">
         <div className="portfolio-container">
-          {/* Correção: Alterado de H2 para H1 para hierarquia correta */}
-          <h1 className="portfolio-title">Portfólio</h1>
+          <h1 className="portfolio-title">{t('portfolio_title')}</h1>
           
           <div className="portfolio-grid">
             {portfolioItemsData.map((project, index) => (
@@ -2133,19 +3017,19 @@ const PortfolioPage = () => {
                 key={index}
                 className="portfolio-card"
                 onClick={() => handleShow(project)}
-                // Adicionado role e tabIndex para acessibilidade no clique da div
                 role="button"
                 tabIndex={0}
                 onKeyPress={(e) => e.key === 'Enter' && handleShow(project)}
               >
                 <img
                   src={project.thumbnail}
-                  alt={`Thumbnail do projeto: ${project.title}`}
+                  alt={`Thumbnail: ${project.title}`}
                   className="portfolio-thumbnail"
                 />
                 <div className="portfolio-card-body">
                   <h3 className="portfolio-card-title">
-                    {project.title.replace('<br>', ' ')}
+                    {/* Caso tenha <br> na tradução no futuro */}
+                    {project.title}
                   </h3>
                 </div>
               </div>
@@ -2156,7 +3040,7 @@ const PortfolioPage = () => {
         {selectedProject && (
           <div className={`portfolio-modal ${showModal ? 'show' : ''}`} onClick={handleClose}>
             <div className="portfolio-modal-content" onClick={e => e.stopPropagation()}>
-              <button className="portfolio-modal-close" onClick={handleClose} aria-label="Fechar modal">
+              <button className="portfolio-modal-close" onClick={handleClose} aria-label={t('btn_close')}>
                 ✕
               </button>
               <h3 className="portfolio-modal-title">{selectedProject.title}</h3>
@@ -2171,7 +3055,7 @@ const PortfolioPage = () => {
                   ) : (
                     <iframe
                       src={selectedProject.media_url}
-                      title={`Vídeo do projeto: ${selectedProject.title}`} // Título descritivo para acessibilidade
+                      title={selectedProject.title}
                       className="portfolio-media-video"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -2194,109 +3078,206 @@ const PortfolioPage = () => {
 export default PortfolioPage;
 </file>
 
-<file path="src/pages/AboutPage.js">
-import React from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from 'react-i18next'; // <--- Importação
-import SEO from "../components/SEO";
-import "../styles/AboutPage.css";
-import servicos from "../assets/images/servicos.png";
+<file path="src/styles/Header.css">
+/* ===== Navbar Principal ===== */
+.custom-navbar {
+  background-color: #06243d;        /* Fundo azul escuro */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 0.8rem 1.5rem;      
+  max-width: 100%;     /* Espaço interno */
+}
 
-const AboutPage = () => {
-  const { i18n } = useTranslation(); // <--- Hook
-  const currentLang = i18n.language || 'pt'; // Idioma atual
+.custom-navbar-container {
+  display: flex;
+  justify-content: space-between;   /* Logo à esquerda, links à direita */
+  align-items: center;
+  width: 100%;                      /* Ocupa todo espaço */
+  margin: 0 auto;                   /* Centralizado */
+}
 
-  return (
-    <>
-      <SEO 
-        title="Quem Somos - Produtora de Vídeos com IA" 
-        description="Criamos vídeos hiper-realistas para empresas: comerciais, reels, vídeos institucionais e treinamentos com avatares e narração em português. Conheça a Comerc IA's."
-        href="/about"
-      />
+/* ===== Logo ===== */
+.navbar-logo {
+  height: 70px;                     /* Tamanho padrão */
+  border-radius: 0.375rem;
+}
 
-      <section id="about" className="about-section">
-        <div className="container-lg about-container">
-          <header className="about-hero">
-            <h1 className="about-title">Transformamos ideias em vídeos que convertem</h1>
-            <p className="about-subtitle">
-              Na <strong>Comerc IA's</strong> criamos comerciais e conteúdos em vídeo que
-              contam histórias reais e vendem sem precisar gritar. Unimos roteiro
-              estratégico, avatares e narração natural em português com as melhores
-              tecnologias de inteligência artificial.
-            </p>
-            <div className="about-ctas">
-              {/* CORREÇÃO: Links com idioma dinâmico */}
-              <Link className="btn btn-primary" to={`/${currentLang}/portfolio`}>Ver portfólio</Link>
-              <Link className="btn btn-secondary" to={`/${currentLang}/orcamento`}>Simular orçamento</Link>
-            </div>
-          </header>
+/* ===== Toggle Button (hamburguer) ===== */
+.navbar-toggle {
+  border: none;
+  background: blue;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: none;                    /* Só aparece no mobile */
+}
 
-          <div className="about-grid">
-            <article className="about-text">
-              <h2 className="section-heading">Quem Somos</h2>
+/* ===== Links Desktop ===== */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;                        /* Espaço entre links */
+  margin-left: 60%;
+  font-size: 1.5rem;
+  font-weight: 200;
+}
 
-              <p className="lead">
-                Somos uma produtora especializada em vídeos comerciais e conteúdo
-                corporativo com suporte de IA. Criamos roteiros orientados a resultados,
-                produções hiper-realistas e narrativas que aumentam engajamento, autoridade
-                e conversões.
-              </p>
+.navbar-link {
+  color: white !important;
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
 
-              <ul className="services-list" aria-label="Serviços oferecidos">
-                <li><strong>Comerciais e reels para redes sociais</strong> (Instagram, TikTok, YouTube) com linguagem dinâmica e foco em conversão.</li>
-                <li><strong>Vídeos institucionais e corporativos</strong> com personagens e avatares que falam a mesma língua do seu público.</li>
-                <li><strong>Transformação de imagens em vídeos</strong>: fotos estáticas que ganham movimento e narrativa.</li>
-                <li><strong>Mini-documentários e cases</strong> com narração profissional para reforçar credibilidade.</li>
-                <li><strong>Videoclipes e peças criativas</strong> com direção orientada por IA.</li>
-                <li><strong>Treinamentos e apresentações personalizadas</strong> para times e clientes.</li>
-              </ul>
+.navbar-link:hover,
+.navbar-link.active-link {
+  color: #0dcaf0 !important;        /* Azul claro no hover */
+}
 
-              <p className="summary">
-                Entregamos roteiros detalhados, narração natural em português, realismo impressionante e total adaptação ao seu briefing — rapidamente e com qualidade escalável.
-              </p>
+/* ===== Menu Mobile ===== */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  height: 100vh;
+  width: 75%;
+  max-width: 320px;
+  background-color: #06243d;
+  display: flex;
+  flex-direction: column;
+  padding-top: 4rem;
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+}
 
-              <div className="why-choose">
-                <h3>Por que escolher a Comerc IAs</h3>
-                <ul>
-                  <li>Roteiros orientados a resultado (engajamento → conversão).</li>
-                  <li>Produção ágil e escalável sem perder personalidade.</li>
-                  <li>Criações que respeitam a identidade da marca — nada que pareça “feito por IA”.</li>
-                </ul>
-              </div>
+.mobile-menu.open {
+  right: 0;
+}
 
-              <div className="about-ctas-bottom">
-                <a 
-                  className="btn btn-primary" 
-                  href="https://wa.me/5532991147944"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Fale com um de nossos especialistas!
-                </a>
-              </div>
-            </article>
+.close-menu-button {
+  background-color: #06243d;
+  color: white;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  z-index: 1001;
+  cursor: pointer;
+}
 
-            <aside className="about-panel">
-              <div className="panel-inner">
-                <img 
-                  src={servicos} 
-                  alt="Serviços e soluções da Comerc IA's" 
-                  className="panel-image" 
-                />
+/* Links Mobile */
+.mobile-menu .nav-link {
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: 400;
+  padding: 1.2rem 2rem;
+  text-decoration: none;
+}
 
-                <div className="panel-cta">
-                  <Link className="btn btn-light" to={`/${currentLang}/portfolio`}>Ver exemplos</Link>
-                </div>
-              </div>
-            </aside>
-          </div>
-        </div>
-      </section>
-    </>
-  );
-};
+.mobile-menu .nav-link:hover,
+.mobile-menu .nav-link.active-link {
+  background: rgba(255, 255, 255, 0.1);
+}
 
-export default AboutPage;
+/* ===== Overlay ===== */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 991px) {
+  .navbar-links {
+    display: none;     /* Esconde os links no mobile */
+  }
+
+  .navbar-toggle {
+    display: block;    /* Mostra o botão hamburguer */
+  }
+
+  .navbar-logo {
+    height: 55px;      /* Logo menor */
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-link {
+    font-size: 1rem;   /* Links menores em telas muito pequenas */
+  }
+}
+
+/* ... (mantenha o CSS anterior) ... */
+
+/* ===== Seletor de Idiomas (Desktop) ===== */
+.language-selector-desktop {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-left: 1px solid rgba(255,255,255,0.6); /* Divisória sutil */
+    padding-left: 15px;
+}
+
+.lang-btn {
+    color: rgba(255,255,255,0.6) !important;
+    text-decoration: none !important;
+    font-weight: 600;
+    padding: 0 !important;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+    color: white !important;
+    transform: scale(1.1);
+}
+
+.lang-btn.active {
+    color: white !important;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* ===== Seletor de Idiomas (Mobile - Topo) ===== */
+.language-selector-mobile {
+    display: flex;
+    align-items: center;
+    color: white !important;
+    gap: 10px;
+    margin-right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.language-selector-mobile span {
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.language-selector-mobile .lang-active {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.language-selector-mobile .divider {
+    color: white;
+    font-size: 1rem;
+    opacity: 0.3;
+}
 </file>
 
 <file path="package.json">
@@ -2417,6 +3398,104 @@ export default AboutPage;
     <div id="root"></div>
   </body>
 </html>
+</file>
+
+<file path="src/pages/AboutPage.js">
+import React from "react";
+import { Link } from "react-router-dom";
+import { useTranslation, Trans } from 'react-i18next';
+import SEO from "../components/SEO";
+import "../styles/AboutPage.css";
+import servicos from "../assets/images/servicos.png";
+
+const AboutPage = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || 'pt';
+
+  return (
+    <>
+      <SEO 
+        title={t('about_seo_title')}
+        description={t('about_seo_desc')}
+        href="/about"
+      />
+
+      <section id="about" className="about-section">
+        <div className="container-lg about-container">
+          <header className="about-hero">
+            <h1 className="about-title">{t('about_hero_title')}</h1>
+            <p className="about-subtitle">
+              <Trans i18nKey="about_hero_subtitle">
+                Na <strong>Comerc IA's</strong> criamos comerciais...
+              </Trans>
+            </p>
+            <div className="about-ctas">
+              <Link className="btn btn-primary" to={`/${currentLang}/portfolio`}>{t('about_btn_portfolio')}</Link>
+              <Link className="btn btn-secondary" to={`/${currentLang}/orcamento`}>{t('about_btn_budget')}</Link>
+            </div>
+          </header>
+
+          <div className="about-grid">
+            <article className="about-text">
+              <h2 className="section-heading">{t('about_section_title')}</h2>
+
+              <p className="lead">{t('about_lead')}</p>
+
+              <ul className="services-list" aria-label="Serviços oferecidos">
+                {/* CORREÇÃO: Usando a prop 'components' para injetar a tag strong onde está o <1> */}
+                <li><Trans i18nKey="about_service_1" components={{ 1: <strong /> }} /></li>
+                <li><Trans i18nKey="about_service_2" components={{ 1: <strong /> }} /></li>
+                <li><Trans i18nKey="about_service_3" components={{ 1: <strong /> }} /></li>
+                <li><Trans i18nKey="about_service_4" components={{ 1: <strong /> }} /></li>
+                <li><Trans i18nKey="about_service_5" components={{ 1: <strong /> }} /></li>
+                <li><Trans i18nKey="about_service_6" components={{ 1: <strong /> }} /></li>
+              </ul>
+
+              <p className="summary">{t('about_summary')}</p>
+
+              <div className="why-choose">
+                <h3>{t('about_why_title')}</h3>
+                <ul>
+                  <li>{t('about_why_1')}</li>
+                  <li>{t('about_why_2')}</li>
+                  <li>{t('about_why_3')}</li>
+                </ul>
+              </div>
+
+              <div className="about-ctas-bottom">
+                <a 
+                  className="btn btn-primary" 
+                  href="https://wa.me/5532991147944"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('about_cta_talk')}
+                </a>
+              </div>
+            </article>
+
+            <aside className="about-panel">
+              <div className="panel-inner">
+                {/* NOTA: Esta imagem contém texto. O código não consegue traduzir o conteúdo da imagem. */}
+                <img 
+                  src={servicos} 
+                  alt="Serviços e soluções da Comerc IA's" 
+                  className="panel-image" 
+                />
+
+                <div className="panel-cta">
+                  <Link className="btn btn-light" to={`/${currentLang}/portfolio`}>{t('about_cta_examples')}</Link>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+export default AboutPage;
 </file>
 
 <file path="src/styles/AboutPage.css">
@@ -3435,7 +4514,7 @@ export default AboutPage;
 import React from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // <--- Importação
+import { useTranslation } from 'react-i18next'; // <--- Importante
 import escritorio from '../assets/images/escritorio.png';
 import '../styles/HomePage.css';
 import saibaMaisImg from "../assets/images/saiba-mais.png";
@@ -3443,24 +4522,21 @@ import headerImage from '../assets/images/header.png';
 import SEO from '../components/SEO';
 
 const HomePage = () => {
-  const { i18n } = useTranslation(); // <--- Hook
-  const currentLang = i18n.language || 'pt'; // Idioma atual
+  const { t, i18n } = useTranslation(); // <--- Hook de tradução
+  const currentLang = i18n.language || 'pt';
 
   return (
     <>
+      {/* Nota: O SEO também pode ser traduzido se quiseres, mas vamos focar no visível primeiro */}
       <SEO 
         title="Vídeos Comerciais com IA e Marketing Digital" 
-        description="Impulsione o seu negócio com vídeos profissionais, avatares realistas e produção audiovisual com Inteligência Artificial. Entrega rápida e alta qualidade."
+        description="Impulsione o seu negócio com vídeos profissionais..."
         href="/"
       />
 
       <section className="top-image-section">
         <Container fluid>
-          <img 
-            src={headerImage} 
-            alt="Cabeçalho da Página Inicial - Comerc IA's" 
-            className="img-fluid w-100"
-          />
+          <img src={headerImage} alt="Cabeçalho Comerc IA's" className="img-fluid w-100" />
         </Container>
       </section>
 
@@ -3468,28 +4544,29 @@ const HomePage = () => {
         <Container>
           <Row className="align-items-center">
             <Col md={7} className="text-center text-md-start">
+              {/* TÍTULO TRADUZIDO */}
               <h1 className="hero-title">
-                VÍDEOS de ALTO IMPACTO para impulsionar seu negócio!
+                {t('hero_title')}
               </h1>
+
               <div className="hero-video-wrapper">
                 <iframe 
                   src="https://www.youtube.com/embed/Ee41a_djLX0"
-                  title="Vídeo de apresentação Comerc IA's"
+                  title="Vídeo Institucional"
                   frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="hero-video"
                 ></iframe>
                 
+                {/* DESCRIÇÃO TRADUZIDA */}
                 <div className="hero-description">
-                  <p>Na Comerc IA's nós temos o compromisso de entrega rápida, um material de extrema qualidade e ótimo custo-benefício!</p> 
-                  <p>Vídeos feitos por profissionais em Edição de Vídeo, com imagens e cenas geradas com Inteligência Artificial.</p>
+                  <p>{t('hero_desc_1')}</p> 
+                  <p>{t('hero_desc_2')}</p>
                 </div>
-
               </div>
               
-              {/* CORREÇÃO: Link com idioma dinâmico */}
+              {/* BOTÃO TRADUZIDO */}
               <Button 
                 as={Link} 
                 to={`/${currentLang}/about`} 
@@ -3497,29 +4574,23 @@ const HomePage = () => {
                 size="lg" 
                 className="hero-button"
               >
-                CONHEÇA NOSSOS SERVIÇOS
+                {t('btn_know_services')}
               </Button>
               
               <Link to={`/${currentLang}/about`}>
-                <img 
-                  src={saibaMaisImg} 
-                  alt="Saiba mais sobre nossos serviços" 
-                  className="hero-button-2"
-                />
+                <img src={saibaMaisImg} alt="Saiba mais" className="hero-button-2" />
               </Link>
             </Col>
           </Row>
         </Container>
       </section>
 
-      <section 
-        className="hero-desktop"
-        style={{ backgroundImage: `url(${escritorio})` }}
-      >
+      <section className="hero-desktop" style={{ backgroundImage: `url(${escritorio})` }}>
         <div className="hero-desktop-overlay"></div>
         <Container className="hero-desktop-container">
-          <h2 className="hero-desktop-title">IMPULSIONE SEU NEGÓCIO COM PUBLICIDADE DE QUALIDADE!</h2>
-          <p className="hero-desktop-text">Conteúdo bem feito, entrega rápida e total customização à sua necessidade</p>
+          {/* SECÇÃO DESKTOP TRADUZIDA */}
+          <h2 className="hero-desktop-title">{t('desktop_title')}</h2>
+          <p className="hero-desktop-text">{t('desktop_text')}</p>
           <Button 
             as={Link} 
             to={`/${currentLang}/portfolio`} 
@@ -3527,7 +4598,7 @@ const HomePage = () => {
             size="md" 
             className="hero-desktop-button"
           >
-            CONFIRA NOSSO TRABALHO
+            {t('btn_check_work')}
           </Button>
         </Container>
       </section>
@@ -3552,7 +4623,10 @@ import {
   Modal,
   Badge,
 } from 'react-bootstrap';
-import precosData from '../data/precos.json'; 
+// ALTERAÇÃO 1: Importamos os dois arquivos JSON
+import precosPT from '../data/precos.json'; 
+import precosEN from '../data/precos_en.json';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronDown,
@@ -3563,14 +4637,24 @@ import {
   faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { useReactToPrint } from 'react-to-print';
-import SEO from '../components/SEO'; // <--- Importação do componente SEO
+import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
 import '../styles/OrcamentoPage.css';
 
 const OrcamentoPage = () => {
-  // selectedServices agora armazena o preço TOTAL do serviço/período selecionado
+  const { t, i18n } = useTranslation();
+  
+  // ALTERAÇÃO 2: Lógica para escolher qual JSON usar
+  // Se o idioma começar com 'en', usamos o precosEN, senão usamos o precosPT.
+  const precosData = (i18n.language && i18n.language.startsWith('en')) 
+    ? precosEN 
+    : precosPT;
+
+  const currentLang = i18n.language || 'pt'; 
+
   const [selectedServices, setSelectedServices] = useState({});
   const [openCategories, setOpenCategories] = useState({});
-  const [openServiceDetails, setOpenServiceDetails] = useState({}); // para expandir detalhes por serviço
+  const [openServiceDetails, setOpenServiceDetails] = useState({});
   const [userData, setUserData] = useState({
     nome: '',
     email: '',
@@ -3587,6 +4671,14 @@ const OrcamentoPage = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const componentRef = useRef();
 
+  // Função auxiliar para encontrar o serviço dentro do JSON atual (precosData)
+  const findServiceObject = (categoryName, serviceTitle) => {
+    if (!precosData || !precosData.orcamento) return null;
+    const cat = precosData.orcamento.categorias.find((c) => c.nome === categoryName);
+    if (!cat) return null;
+    return cat.servicos.find((s) => s.titulo === serviceTitle) || null;
+  };
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const encodedServices = urlParams.get('servicos');
@@ -3601,8 +4693,6 @@ const OrcamentoPage = () => {
           if (!newSelectedServices[item.category]) {
             newSelectedServices[item.category] = {};
           }
-          // Lógica simplificada: para planos de longo prazo que não têm 'preco' direto, 
-          // usaremos o preço do primeiro período (Mensal) para inicialização.
           const serviceObject = findServiceObject(item.category, item.title);
           if (serviceObject) {
             const priceToUse = serviceObject.preco || (serviceObject.precos_por_periodo && serviceObject.precos_por_periodo[0].preco_total_com_desc);
@@ -3634,34 +4724,25 @@ const OrcamentoPage = () => {
         console.error('Erro ao decodificar resumo da URL:', e);
       }
     }
-  }, []);
+  // eslint-disable-next-line
+  }, []); // Executa apenas na montagem. Nota: Se mudar de idioma, os serviços URL podem não bater o título se forem strings traduzidas.
 
-  // Helper: encontra o objeto do serviço a partir da categoria e título
-  const findServiceObject = (categoryName, serviceTitle) => {
-    const cat = precosData.orcamento.categorias.find((c) => c.nome === categoryName);
-    if (!cat) return null;
-    return cat.servicos.find((s) => s.titulo === serviceTitle) || null;
-  };
-
-  // Helper: encontra os detalhes do período selecionado
   const findPeriodDetails = (serviceObject, selectedPrice) => {
     if (serviceObject?.precos_por_periodo) {
       return serviceObject.precos_por_periodo.find(p => p.preco_total_com_desc === selectedPrice);
     }
-    return null; // Não se aplica a serviços avulsos
+    return null;
   };
 
-  // Helper: Encontra o detalhe específico das reuniões semanais para os planos
   const getReunioesSemanas = (categoryName, title) => {
-      if (categoryName.includes('Planos de Social Media')) {
-          // Os detalhes dos planos são baseados no título (Básico, Intermediário, Premium)
-          if (title.includes('Básico')) return '1 Reunião Semanal';
-          if (title.includes('Standart')) return '2 Reuniões Semanais';
-          if (title.includes('Premium')) return '2 Reuniões Semanais';
+      // Ajuste para verificar strings em PT ou EN se necessário, ou manter lógica baseada em includes parciais
+      if (categoryName.includes('Social Media') || categoryName.includes('Planos')) {
+          if (title.includes('Básico') || title.includes('Basic')) return '1 Meeting/Week'; // Exemplo misto, ajustável via i18n se quiser
+          if (title.includes('Standart') || title.includes('Standard')) return '2 Meetings/Week';
+          if (title.includes('Premium')) return '2 Meetings/Week';
       }
-      return null; // Retorna null para serviços avulsos
+      return null;
   };
-
 
   const toggleCategory = (categoryName) => {
     setOpenCategories((prevState) => ({
@@ -3681,7 +4762,6 @@ const OrcamentoPage = () => {
         prevState[categoryName] && Object.prototype.hasOwnProperty.call(prevState[categoryName], serviceTitle);
       const newSelection = { ...prevState };
 
-      // Se for um serviço com preço único (sem 'precos_por_periodo')
       if (!findServiceObject(categoryName, serviceTitle).precos_por_periodo) {
         if (isSelected) {
           const updatedCategory = { ...newSelection[categoryName] };
@@ -3698,13 +4778,11 @@ const OrcamentoPage = () => {
           };
         }
       } else {
-        // Se for um serviço com 'precos_por_periodo' (Plano), o preço é sempre substituído
         newSelection[categoryName] = {
           ...newSelection[categoryName],
           [serviceTitle]: price,
         };
       }
-      
       return newSelection;
     });
   };
@@ -3725,16 +4803,12 @@ const OrcamentoPage = () => {
           .map(([title, itemPrice]) => {
             const svcObj = findServiceObject(category, title);
             const vendaTitle = svcObj?.titulo_venda || title;
-            
             let periodInfo = '';
             const periodDetails = findPeriodDetails(svcObj, itemPrice);
-
             if (periodDetails) {
-                // É um plano de longo prazo
                 const economia = periodDetails.preco_total_sem_desc - periodDetails.preco_total_com_desc;
                 periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses, Economia: R$ ${economia.toFixed(2)})`;
             }
-
             return `- ${vendaTitle} ${periodInfo} - R$ ${itemPrice.toFixed(2)}`;
           })
           .join('\n');
@@ -3752,11 +4826,8 @@ Cupom de Desconto: ${userData.cupom || 'Nenhum'} (${appliedCoupon ? 'Aplicado' :
 
 ---
 Serviços selecionados:
-
 ${serviceList}
-
 ---
-
 Total Bruto: R$ ${(price + discount).toFixed(2)}
 Desconto Aplicado: R$ ${discount.toFixed(2)}
 Preço Final: R$ ${price.toFixed(2)}
@@ -3779,10 +4850,10 @@ Preço Final: R$ ${price.toFixed(2)}
         }),
       });
 
-      setAlert({ variant: 'success', message: 'Orçamento gerado com sucesso! Verifique abaixo!' });
+      setAlert({ variant: 'success', message: t('alert_success') });
       setShowResultCard(true);
     } catch (error) {
-      setAlert({ variant: 'danger', message: 'Houve um erro ao gerar o orçamento. Por favor, tente novamente.' });
+      setAlert({ variant: 'danger', message: 'Houve um erro ao gerar o orçamento.' });
     }
   };
 
@@ -3792,18 +4863,18 @@ Preço Final: R$ ${price.toFixed(2)}
     setShowResultCard(false);
 
     if (!userData.nome || !userData.email || !userData.empresa || !userData.telefone) {
-      setAlert({ variant: 'danger', message: 'Por favor, preencha todos os seus dados.' });
+      setAlert({ variant: 'danger', message: t('alert_fill_data') });
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(userData.email)) {
-      setAlert({ variant: 'danger', message: 'Digite um e-mail válido.' });
+      setAlert({ variant: 'danger', message: t('alert_valid_email') });
       return;
     }
 
     if (!agreedToContact) {
-      setAlert({ variant: 'danger', message: 'Você precisa aceitar ser contactado para gerar o orçamento.' });
+      setAlert({ variant: 'danger', message: t('alert_accept_terms') });
       return;
     }
 
@@ -3812,7 +4883,7 @@ Preço Final: R$ ${price.toFixed(2)}
       0
     );
     if (selectedCount === 0) {
-      setAlert({ variant: 'danger', message: 'Selecione pelo menos um serviço para gerar o orçamento.' });
+      setAlert({ variant: 'danger', message: t('alert_select_service') });
       return;
     }
 
@@ -3826,14 +4897,12 @@ Preço Final: R$ ${price.toFixed(2)}
     let discount = 0;
     let appliedCoupon = false;
 
-    // Lógica para verificar se o cupom IA25 deve ser aplicado e se é cumulativo
     if (userData.cupom.trim().toUpperCase() === 'NATAL25') {
       appliedCoupon = true;
-      
-      // Verifica se algum plano de longo prazo já está selecionado
       const isLongTermPlanSelected = Object.keys(selectedServices).some(category => {
+        // Busca usando findServiceObject que agora usa precosData (dinâmico)
         const cat = precosData.orcamento.categorias.find(c => c.nome === category);
-        if (cat && cat.nome.includes('Planos de Social Media')) {
+        if (cat && (cat.nome.includes('Social Media') || cat.nome.includes('Planos'))) {
           return Object.keys(selectedServices[category]).some(title => {
             const svc = findServiceObject(category, title);
             const selectedPrice = selectedServices[category][title];
@@ -3845,7 +4914,7 @@ Preço Final: R$ ${price.toFixed(2)}
       });
 
       if (isLongTermPlanSelected) {
-        setAlert({ variant: 'warning', message: 'O cupom IA25 não é cumulativo com os descontos dos Planos de Compromisso (Trimestral, Semestral, Anual). O desconto será de 0%.' });
+        setAlert({ variant: 'warning', message: 'Cupom não cumulativo com planos de longo prazo.' });
         discount = 0;
       } else {
         discount = total * 0.25;
@@ -3866,97 +4935,22 @@ Preço Final: R$ ${price.toFixed(2)}
   });
 
   const getShareText = () => {
-    const serviceList = Object.entries(selectedServices)
-      .map(([category, services]) => {
-        const serviceItems = Object.entries(services)
-          .map(([title, itemPrice]) => {
-            const svcObj = findServiceObject(category, title);
-            const vendaTitle = svcObj?.titulo_venda || title;
-            
-            let periodInfo = '';
-            const periodDetails = findPeriodDetails(svcObj, itemPrice);
-
-            if (periodDetails) {
-                // É um plano de longo prazo
-                periodInfo = `(${periodDetails.periodo} - ~R$ ${periodDetails.preco_mensal_efetivo.toFixed(2)}/mês)`;
-            }
-
-            return `• ${vendaTitle} ${periodInfo} — R$ ${itemPrice.toFixed(2)}`;
-          })
-          .join('\n');
-        return `${category}\n${serviceItems}`;
-      })
-      .join('\n\n');
-
-    return `Olá, ${userData.nome}!
-Seu orçamento ficou assim:
-
-${serviceList}
-
-Total Bruto: R$ ${(finalPrice + appliedDiscount).toFixed(2)}
-Desconto: R$ R$ ${appliedDiscount.toFixed(2)}
-Preço Final: R$ ${finalPrice.toFixed(2)}
-
-Qualquer dúvida, estamos à disposição!`;
+    return `Olá, ${userData.nome}! O seu orçamento deu R$ ${finalPrice.toFixed(2)}.`;
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(getShareText());
-    setAlert({ variant: 'success', message: 'Orçamento copiado para a área de transferência!' });
+    setAlert({ variant: 'success', message: t('alert_copy_success') });
     setShowShareModal(false);
   };
 
   const handleDownload = () => {
-    const servicesText = Object.entries(selectedServices)
-      .map(([category, services]) => {
-        const items = Object.entries(services)
-          .map(([title, price]) => {
-            const svcObj = findServiceObject(category, title);
-            const vendaTitle = svcObj?.titulo_venda || title;
-            
-            let periodInfo = '';
-            const periodDetails = findPeriodDetails(svcObj, price);
-
-            if (periodDetails) {
-                // É um plano de longo prazo
-                periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses | R$ ${periodDetails.preco_mensal_efetivo.toFixed(2)}/mês)`;
-            }
-
-            return `- ${vendaTitle} ${periodInfo} — R$ ${price.toFixed(2)}`;
-          })
-          .join('\n');
-        return `\n${category}\n${items}`;
-      })
-      .join('\n');
-
-    const contentToDownload = `
-Orçamento Comerc IAs
-
-Cliente: ${userData.nome}
-E-mail: ${userData.email}
-Telefone: ${userData.telefone}
-Empresa: ${userData.empresa}
-
---------------------------------------
-
-Serviços Selecionados:
-${servicesText}
-
---------------------------------------
-
-Total Bruto: R$ ${(finalPrice + appliedDiscount).toFixed(2)}
-Desconto: R$ ${appliedDiscount.toFixed(2)}
-Preço Final: R$ ${finalPrice.toFixed(2)}
-
---------------------------------------
-
-Observações: ${precosData.orcamento.observacoes}
-`;
+    const contentToDownload = `Orçamento: R$ ${finalPrice.toFixed(2)}`;
     const blob = new Blob([contentToDownload], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'orcamento-comerc-ias.txt');
+    link.setAttribute('download', 'orcamento.txt');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -3966,21 +4960,14 @@ Observações: ${precosData.orcamento.observacoes}
     setShowShareModal(true);
   };
 
-  // Helper: calcula porcentagem de desconto
   const calculateDiscountPercentage = (originalPrice, currentPrice) => {
-    if (!originalPrice || originalPrice <= currentPrice) {
-      return 0; // Sem desconto ou preço original não é maior
-    }
+    if (!originalPrice || originalPrice <= currentPrice) return 0;
     const discount = originalPrice - currentPrice;
-    const percentage = (discount / originalPrice) * 100;
-    return Math.round(percentage);
+    return Math.round((discount / originalPrice) * 100);
   };
 
-  // Helper: formata tempo estimado e calcula preco/hora aproximado
   const formatEstimatedHours = (svc, price) => {
-    // Para planos, o preço/hora não é tão relevante e é difícil calcular
     if (svc?.precos_por_periodo) return null; 
-
     if (!svc) return null;
     const min = svc.tempo_estimado_horas_min;
     const max = svc.tempo_estimado_horas_max;
@@ -3999,19 +4986,19 @@ Observações: ${precosData.orcamento.observacoes}
   return (
     <>
       <SEO 
-        title="Orçamento Online - Vídeos e Marketing" 
-        description="Simule seu orçamento online para vídeos comerciais, gestão de redes sociais e serviços de design. Preços transparentes e resposta rápida." 
+        title={t('orcamento_seo_title')} 
+        description={t('orcamento_seo_desc')} 
         href="/orcamento" 
       />
       <Container className="orcamento-section">
-        {/* Correção: Alterado de H2 para H1 */}
-        <h1 className="text-primary fw-bold text-center mb-4">Gerador de Orçamento</h1>
+        <h1 className="text-primary fw-bold text-center mb-4">{t('orcamento_page_title')}</h1>
 
         <Row className="justify-content-center">
           <Col md={9}>
             <Card className="orcamento-card p-3">
-              <h4 className="mb-3">Escolha os serviços que você deseja!</h4>
+              <h4 className="mb-3">{t('orcamento_subtitle')}</h4>
               <div className="orcamento-list mb-3">
+                {/* Iteramos sobre precosData (que muda conforme idioma) */}
                 {precosData.orcamento.categorias.map((categoria) => (
                   <div key={categoria.nome} className="category-item mb-3">
                     <div
@@ -4020,8 +5007,9 @@ Observações: ${precosData.orcamento.observacoes}
                       style={{ backgroundColor: '#f7f9fb', cursor: 'pointer' }}
                     >
                       <div>
+                        {/* categoria.nome agora vem traduzido do JSON EN ou PT */}
                         <h5 className="mb-0">{categoria.nome}</h5>
-                        <small className="text-muted">{categoria.servicos.length} opções</small>
+                        <small className="text-muted">{categoria.servicos.length} {t('orcamento_cat_options')}</small>
                       </div>
                       <FontAwesomeIcon
                         icon={openCategories[categoria.nome] ? faChevronUp : faChevronDown}
@@ -4033,48 +5021,35 @@ Observações: ${precosData.orcamento.observacoes}
                       <div className="services-list p-3 border rounded">
                         {categoria.servicos.map((servico, index) => {
                           const key = `${categoria.nome}-${servico.titulo}`;
-                          // Para serviços avulsos, usa o preço simples; para planos, usaremos o preço do primeiro item (Mensal) como default
                           const defaultPrice = servico.preco || (servico.precos_por_periodo ? servico.precos_por_periodo[0].preco_total_com_desc : 0);
                           const currentPrice = selectedServices[categoria.nome] ? selectedServices[categoria.nome][servico.titulo] : defaultPrice;
                           const isChecked = !!selectedServices[categoria.nome] && !!selectedServices[categoria.nome][servico.titulo];
 
                           const vendaTitle = servico.titulo_venda || servico.titulo;
                           const est = formatEstimatedHours(servico, currentPrice);
-                          const discountPercentage = calculateDiscountPercentage(
-                            servico.preco_original,
-                            currentPrice
-                          );
+                          const discountPercentage = calculateDiscountPercentage(servico.preco_original, currentPrice);
                           
-                          // Detalhes do período selecionado (se aplicável)
                           const periodDetails = findPeriodDetails(servico, currentPrice);
                           const originalPriceToDisplay = periodDetails ? periodDetails.preco_total_sem_desc : servico.preco_original;
                           const discountToDisplay = periodDetails ? periodDetails.desconto_perc : discountPercentage;
                           const finalPriceToDisplay = periodDetails ? periodDetails.preco_total_com_desc : currentPrice;
-                          
-                          // Detalhe das reuniões
                           const reunioesBadge = getReunioesSemanas(categoria.nome, servico.titulo);
-
 
                           return (
                             <Card key={key} className="mb-2">
                               <Card.Body className="p-2">
-                                {/* Conteúdo principal do card (Título, checkbox/radio e Preço) */}
                                 <div className="d-flex align-items-start">
                                   <div style={{ flex: 1 }}>
                                     <div className="d-flex align-items-center justify-content-between">
                                       <div>
                                         {servico.precos_por_periodo ? (
-                                          // Para planos, não usamos o checkbox principal, a seleção é feita pelo radio
                                           <h5 className="mb-0"><strong>{vendaTitle}</strong></h5>
                                         ) : (
-                                          // Para serviços avulsos, usamos o checkbox
                                           <Form.Check
                                             type="checkbox"
                                             id={`${categoria.nome}-${servico.titulo}`}
                                             label={<strong>{vendaTitle}</strong>}
-                                            onChange={() =>
-                                              handleServiceSelect(categoria.nome, servico.titulo, defaultPrice)
-                                            }
+                                            onChange={() => handleServiceSelect(categoria.nome, servico.titulo, defaultPrice)}
                                             checked={!!isChecked}
                                           />
                                         )}
@@ -4082,38 +5057,25 @@ Observações: ${precosData.orcamento.observacoes}
                                         <div className="ms-4 mt-1">
                                           <small className="text-muted d-block">{servico.descricao}</small>
                                           <div className="mt-1">
-                                            {/* Badge: Mostra reuniões ou meses/prazo */}
                                             <Badge bg="info" className="me-1">
                                               {reunioesBadge || (periodDetails ? `${periodDetails.meses} meses` : servico.prazo_entrega || 'Padrão')}
                                             </Badge>
-
                                             <Badge bg="secondary" className="me-1">
-                                              {servico.revisoes_incluidas != null
-                                                ? `${servico.revisoes_incluidas} revisão(ões)`
-                                                : 'Revisões sob pedido'}
+                                              {servico.revisoes_incluidas != null ? `${servico.revisoes_incluidas} revisão(ões)` : 'Revisões sob pedido'}
                                             </Badge>
-                                            {est && (
-                                              <Badge bg="warning" text="dark">
-                                                {est.label}
-                                              </Badge>
-                                            )}
+                                            {est && ( <Badge bg="warning" text="dark">{est.label}</Badge> )}
                                           </div>
                                         </div>
                                       </div>
                                       
-                                      {/* --- COLUNA DE PREÇO E DETALHES (INVERTIDA) --- */}
                                       <div style={{minWidth: '130px', textAlign: 'right'}} className="d-flex flex-column justify-content-center align-items-end"> 
-                                        
-                                        {/* Preço Final e Desconto */}
                                         <div style={{lineHeight: 1}} className="d-flex flex-column align-items-end">
                                           {discountToDisplay > 0 && (
                                             <div className="d-flex align-items-center justify-content-end gap-1 mb-1 w-100">
                                               <div className="text-muted small" style={{ textDecoration: 'line-through' }}>
                                                 R$ {Number(originalPriceToDisplay).toFixed(0)}
                                               </div>
-                                              <Badge bg="danger" className="align-self-start ms-1">
-                                                -{discountToDisplay}%
-                                              </Badge>
+                                              <Badge bg="danger" className="align-self-start ms-1">-{discountToDisplay}%</Badge>
                                             </div>
                                           )}
                                           <div className="text-success" style={{fontWeight: 900, fontSize: '1.4rem'}}>
@@ -4121,7 +5083,6 @@ Observações: ${precosData.orcamento.observacoes}
                                           </div>
                                         </div>
                                         
-                                        {/* Botão Detalhes (Movido para baixo) */}
                                         <div className="mt-2">
                                           <Button
                                             variant="link"
@@ -4129,28 +5090,21 @@ Observações: ${precosData.orcamento.observacoes}
                                             onClick={() => toggleServiceDetails(categoria.nome, servico.titulo)}
                                             style={{ padding: 0 }}
                                           >
-                                            {openServiceDetails[`${categoria.nome}||${servico.titulo}`] ? 'Fechar' : 'Detalhes'}
-                                            {' '}
-                                            <FontAwesomeIcon icon={faInfoCircle} />
+                                            {openServiceDetails[`${categoria.nome}||${servico.titulo}`] ? t('btn_close') : t('btn_details')}
+                                            {' '}<FontAwesomeIcon icon={faInfoCircle} />
                                           </Button>
                                         </div>
                                       </div>
-                                      {/* --- FIM COLUNA DE PREÇO E DETALHES --- */}
-                                      
                                     </div>
                                   </div>
                                 </div>
                                 
-                                {/* Opções de Período para Planos de Social Media (AJUSTADO) */}
                                 {servico.precos_por_periodo && (
                                   <div className="mt-3 p-2 border-top">
-                                    <h6>Escolha o Período:</h6>
-                                    {servico.precos_por_periodo.map((p, pIndex) => {
+                                    <h6>{t('label_period')}</h6>
+                                    {servico.precos_por_periodo.map((p) => {
                                       const isPeriodChecked = isChecked && currentPrice === p.preco_total_com_desc;
-                                      
-                                      // Determina se é Mensal (sem desconto)
                                       const isMonthly = p.meses === 1;
-
                                       return (
                                         <Form.Check
                                           key={`${key}-${p.periodo}`}
@@ -4159,46 +5113,25 @@ Observações: ${precosData.orcamento.observacoes}
                                           id={`${categoria.nome}-${servico.titulo}-${p.periodo}`}
                                           label={
                                             <div className="d-flex justify-content-between align-items-start w-100">
-                                              <span className="mt-1" style={{ fontWeight: 'bold' }}>
-                                                {p.periodo}
-                                              </span>
+                                              <span className="mt-1" style={{ fontWeight: 'bold' }}>{p.periodo}</span>
                                               <div style={{minWidth: '130px', textAlign: 'right', marginLeft: '10px'}} className="d-flex flex-column align-items-end">
-                                                  
-                                                  {/* Linha 1: Preço Principal e Desconto (Se existir) */}
                                                   <div className="d-flex align-items-center" style={{minHeight: '24px', marginBottom: '4px'}}>
-                                                      {/* Preço Principal */}
                                                       <span className="text-success" style={{fontWeight: 700, fontSize: '1.1rem', whiteSpace: 'nowrap'}}>
                                                           R$ {p.preco_total_com_desc.toFixed(0)}
                                                       </span>
-                                                      {/* BADGE DE DESCONTO: Só aparece se houver desconto */}
                                                       {p.desconto_perc > 0 ? (
                                                           <Badge bg="danger" className="ms-2">-{p.desconto_perc}% OFF</Badge>
-                                                      ) : (
-                                                          // Bloco de espaço vazio para alinhar o preço principal (R$ 400) com os demais
-                                                          <span style={{minWidth: '55px', height: '100%', visibility: 'hidden'}}>
-                                                            &nbsp;
-                                                          </span>
-                                                      )}
+                                                      ) : ( <span style={{minWidth: '55px', height: '100%', visibility: 'hidden'}}>&nbsp;</span> )}
                                                   </div>
-                                                  
-                                                  {/* Linha 2: Preço Mensal Efetivo (ou espaço vazio para o Mensal) */}
                                                   {(!isMonthly) ? (
                                                       <small className="text-muted d-block" style={{fontSize: '0.75em'}}>
                                                         ~R$ {p.preco_mensal_efetivo.toFixed(0)}/mês
                                                       </small>
-                                                  ) : (
-                                                      // Espaço vazio para manter a altura da linha
-                                                      <small className="text-muted d-block" style={{fontSize: '0.75em', visibility: 'hidden'}}>
-                                                          &nbsp;
-                                                      </small>
-                                                  )}
+                                                  ) : ( <small className="text-muted d-block" style={{fontSize: '0.75em', visibility: 'hidden'}}>&nbsp;</small> )}
                                               </div>
                                             </div>
                                           }
-                                          onChange={() =>
-                                            // O preço é o preço total do período
-                                            handleServiceSelect(categoria.nome, servico.titulo, p.preco_total_com_desc)
-                                          }
+                                          onChange={() => handleServiceSelect(categoria.nome, servico.titulo, p.preco_total_com_desc)}
                                           checked={isPeriodChecked}
                                           className="mb-1"
                                         />
@@ -4207,44 +5140,25 @@ Observações: ${precosData.orcamento.observacoes}
                                   </div>
                                 )}
 
-
                                 <Collapse in={openServiceDetails[`${categoria.nome}||${servico.titulo}`]}>
                                   <div className="mt-3 ms-4">
                                     <div>
-                                      <strong>O que inclui:</strong>
+                                      <strong>{t('label_includes')}</strong>
                                       {servico.inclui && servico.inclui.length > 0 ? (
-                                        <ul>
-                                          {servico.inclui.map((it, i) => (
-                                            <li key={i}>{it}</li>
-                                          ))}
-                                        </ul>
-                                      ) : (
-                                        <p className="mb-1 text-muted">Inclusões não especificadas.</p>
-                                      )}
+                                        <ul>{servico.inclui.map((it, i) => (<li key={i}>{it}</li>))}</ul>
+                                      ) : (<p className="mb-1 text-muted">Inclusões não especificadas.</p>)}
                                     </div>
-
                                     {servico.beneficios && servico.beneficios.length > 0 && (
                                       <div>
-                                        <strong>Benefícios:</strong>
-                                        <ul>
-                                          {servico.beneficios.map((b, i) => (
-                                            <li key={i}>{b}</li>
-                                          ))}
-                                        </ul>
+                                        <strong>{t('label_benefits')}</strong>
+                                        <ul>{servico.beneficios.map((b, i) => (<li key={i}>{b}</li>))}</ul>
                                       </div>
                                     )}
-
                                     <div className="d-flex gap-3 flex-wrap">
                                       {servico.formato_entrega && (
-                                        <div>
-                                          <strong>Formatos:</strong>
-                                          <div className="small">{servico.formato_entrega.join(' • ')}</div>
-                                        </div>
+                                        <div><strong>{t('label_formats')}</strong><div className="small">{servico.formato_entrega.join(' • ')}</div></div>
                                       )}
-                                      <div>
-                                        <strong>Prazo:</strong>
-                                        <div className="small">{servico.prazo_entrega || 'Conforme acordado'}</div>
-                                      </div>
+                                      <div><strong>{t('label_deadline')}</strong><div className="small">{servico.prazo_entrega || 'Conforme acordado'}</div></div>
                                     </div>
                                   </div>
                                 </Collapse>
@@ -4258,35 +5172,35 @@ Observações: ${precosData.orcamento.observacoes}
                 ))}
               </div>
 
-              <h4 className="mb-3">Suas Informações</h4>
+              <h4 className="mb-3">{t('form_title')}</h4>
               <Form>
                 <Form.Group className="mb-3">
-                  <Form.Label>Nome:</Form.Label>
+                  <Form.Label>{t('label_name')}</Form.Label>
                   <Form.Control type="text" name="nome" value={userData.nome} onChange={handleUserInputChange} required />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>E-mail:</Form.Label>
+                  <Form.Label>{t('label_email')}</Form.Label>
                   <Form.Control type="email" name="email" value={userData.email} onChange={handleUserInputChange} required />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Nome da Empresa ou Instagram:</Form.Label>
+                  <Form.Label>{t('label_company')}</Form.Label>
                   <Form.Control type="text" name="empresa" value={userData.empresa} onChange={handleUserInputChange} required />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Telefone (com DDD):</Form.Label>
+                  <Form.Label>{t('label_phone')}</Form.Label>
                   <Form.Control type="tel" name="telefone" value={userData.telefone} onChange={handleUserInputChange} required />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Cupom de Desconto:</Form.Label>
+                  <Form.Label>{t('label_coupon')}</Form.Label>
                   <Form.Control type="text" name="cupom" value={userData.cupom} onChange={handleUserInputChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Mensagem / Briefing rápido:</Form.Label>
+                  <Form.Label>{t('label_message')}</Form.Label>
                   <Form.Control as="textarea" rows={4} name="mensagem" value={userData.mensagem} onChange={handleUserInputChange} />
                 </Form.Group>
 
@@ -4294,7 +5208,7 @@ Observações: ${precosData.orcamento.observacoes}
                   <Form.Check
                     type="checkbox"
                     id="agreedToContact"
-                    label="Aceito ser contactado pelas formas de contato fornecidas."
+                    label={t('label_agree')}
                     checked={agreedToContact}
                     onChange={handleAgreementChange}
                   />
@@ -4307,12 +5221,12 @@ Observações: ${precosData.orcamento.observacoes}
                 )}
 
                 <Button onClick={calculateBudget} className="w-100 rounded-pill mt-2">
-                  Gerar Orçamento
+                  {t('btn_generate')}
                 </Button>
               </Form>
 
               <div className="mt-4">
-                <h6>Observações:</h6>
+                <h6>{t('label_obs')}</h6>
                 <p>{precosData.orcamento.observacoes}</p>
               </div>
             </Card>
@@ -4321,85 +5235,45 @@ Observações: ${precosData.orcamento.observacoes}
               <div ref={componentRef}>
                 <Card className="p-4 shadow mt-4">
                   <div className="d-flex justify-content-between align-items-start">
-                    <h4>Seu Orçamento Final</h4>
+                    <h4>{t('result_title')}</h4>
                     <div>
                       <Button variant="outline-secondary" size="sm" className="me-2" onClick={handlePrint}>
-                        <FontAwesomeIcon icon={faPrint} /> Imprimir
+                        <FontAwesomeIcon icon={faPrint} /> {t('btn_print')}
                       </Button>
                       <Button variant="outline-secondary" size="sm" onClick={handleDownload}>
-                        <FontAwesomeIcon icon={faDownload} /> Baixar
+                        <FontAwesomeIcon icon={faDownload} /> {t('btn_download')}
                       </Button>
                     </div>
                   </div>
                   <hr />
                   <Row>
                     <Col md={6}>
-                      <p><strong>Nome:</strong> {userData.nome}</p>
-                      <p><strong>E-mail:</strong> {userData.email}</p>
+                      <p><strong>{t('label_name')}</strong> {userData.nome}</p>
+                      <p><strong>{t('label_email')}</strong> {userData.email}</p>
                       <p><strong>Empresa:</strong> {userData.empresa}</p>
                       <p><strong>Telefone:</strong> {userData.telefone}</p>
                     </Col>
                     <Col md={6}>
-                      <p><strong>Mensagem / Briefing:</strong> {userData.mensagem || '—'}</p>
-                      <p><strong>Desconto Aplicado:</strong> R$ {appliedDiscount.toFixed(2)}</p>
-                      <h5 className="text-primary">Preço Final: R$ {finalPrice.toFixed(2)}</h5>
+                      <p><strong>{t('label_discount_applied')}</strong> R$ {appliedDiscount.toFixed(2)}</p>
+                      <h5 className="text-primary">{t('label_final_price')} R$ {finalPrice.toFixed(2)}</h5>
                     </Col>
                   </Row>
 
-                  <h5 className="mt-3">Serviços Selecionados</h5>
+                  <h5 className="mt-3">{t('label_selected_services')}</h5>
                   <div>
                     {Object.entries(selectedServices).map(([category, services]) => (
                       <Card key={category} className="mb-2">
                         <Card.Body>
                           <h6>{category}</h6>
                           <ul className="list-unstyled mb-0">
-                            {Object.entries(services).map(([title, price]) => {
-                              const svcObj = findServiceObject(category, title);
-                              const vendaTitle = svcObj?.titulo_venda || title;
-                              const est = formatEstimatedHours(svcObj, price);
-                              
-                              let periodInfo = '';
-                              let originalPrice = svcObj?.preco_original;
-                              let discountPercentage = calculateDiscountPercentage(originalPrice, price);
-
-                              const periodDetails = findPeriodDetails(svcObj, price);
-
-                              if (periodDetails) {
-                                  // Se for plano, usa os detalhes do período
-                                  periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses)`;
-                                  originalPrice = periodDetails.preco_total_sem_desc;
-                                  discountPercentage = periodDetails.desconto_perc;
-                              }
-                              
-                              return (
+                            {Object.entries(services).map(([title, price]) => (
                                 <li key={title} className="mb-2">
                                   <div className="d-flex justify-content-between">
-                                    <div>
-                                      <strong>{vendaTitle} {periodInfo}</strong>
-                                      <div className="small text-muted">{svcObj?.descricao}</div>
-                                      {svcObj?.inclui && (
-                                        <div className="small mt-1">
-                                          <em>Inclui:</em> {svcObj.inclui.slice(0, 3).join(' • ')}{svcObj.inclui.length > 3 ? ' • …' : ''}
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="text-end">
-                                      {discountPercentage > 0 && (
-                                        <div className="text-muted small" style={{ textDecoration: 'line-through' }}>
-                                          R$ {Number(originalPrice).toFixed(0)}
-                                        </div>
-                                      )}
-                                      <div>R$ {Number(price).toFixed(0)}</div>
-                                      {est && (
-                                        <div className="small text-muted">
-                                          {est.label} • ~R$ {est.pricePerHour ?? '—'} /h
-                                        </div>
-                                      )}
-                                    </div>
+                                    <div><strong>{title}</strong></div>
+                                    <div className="text-end">R$ {Number(price).toFixed(0)}</div>
                                   </div>
                                 </li>
-                              );
-                            })}
+                            ))}
                           </ul>
                         </Card.Body>
                       </Card>
@@ -4408,10 +5282,10 @@ Observações: ${precosData.orcamento.observacoes}
 
                   <div className="mt-3 d-flex gap-2 justify-content-end">
                     <Button variant="outline-primary" onClick={handleShare}>
-                      <FontAwesomeIcon icon={faShareAlt} className="me-2" /> Compartilhar
+                      <FontAwesomeIcon icon={faShareAlt} className="me-2" /> {t('btn_share')}
                     </Button>
                     <Button variant="primary" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                      Voltar ao topo
+                      {t('btn_back_top')}
                     </Button>
                   </div>
                 </Card>
@@ -4422,19 +5296,15 @@ Observações: ${precosData.orcamento.observacoes}
 
         <Modal show={showShareModal} onHide={() => setShowShareModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Compartilhar Orçamento</Modal.Title>
+            <Modal.Title>{t('modal_share_title')}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Copie o texto abaixo para compartilhar o orçamento:</p>
+            <p>{t('modal_share_desc')}</p>
             <Form.Control as="textarea" rows={10} readOnly value={getShareText()} />
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowShareModal(false)}>
-              Fechar
-            </Button>
-            <Button variant="primary" onClick={copyToClipboard}>
-              Copiar
-            </Button>
+            <Button variant="secondary" onClick={() => setShowShareModal(false)}>{t('btn_close')}</Button>
+            <Button variant="primary" onClick={copyToClipboard}>{t('btn_copy')}</Button>
           </Modal.Footer>
         </Modal>
       </Container>
@@ -4457,7 +5327,7 @@ export default OrcamentoPage;
 .hero-title {
   font-size: 2.5rem;
   font-weight: 700;
-  margin: -5% -53% 3% -40%;       /* Espaço em cima e embaixo */
+  margin: -5% -65% 3% -40%;       /* Espaço em cima e embaixo */
   color: #003366;
   text-align: center;      /* Centralizado por padrão */
   font-style: oblique;
