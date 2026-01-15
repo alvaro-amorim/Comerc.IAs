@@ -38,7 +38,7 @@ const HomePage = () => {
 
               <div className="hero-video-wrapper">
                 <iframe 
-                  src="https://youtube.com/embed/shorts/ZgXP3sqBH7Q?feature=share"
+                  src="https://youtube.com/embed/ZgXP3sqBH7Q"
                   title="Vídeo Institucional"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
