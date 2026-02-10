@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
-import './i18n'; 
+
+import './i18n';
 import App from './App';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
 /* ==========================================================================
    POLYFILL PARA REACT-SNAP
    Isso corrige o erro "e.replaceAll is not a function" durante o build.
-   O navegador do react-snap é antigo e precisa dessa ajuda.
-   ==========================================================================
-*/
+   ========================================================================== */
 if (!String.prototype.replaceAll) {
   // eslint-disable-next-line no-extend-native
   String.prototype.replaceAll = function (str, newStr) {
@@ -25,7 +25,6 @@ if (!String.prototype.replaceAll) {
 
 const container = document.getElementById('root');
 
-// Estrutura da aplicação encapsulada
 const app = (
   <React.StrictMode>
     <HelmetProvider>
@@ -34,11 +33,10 @@ const app = (
   </React.StrictMode>
 );
 
-// Lógica de Hidratação para SEO (react-snap)
-// Verifica se o react-snap já preencheu o HTML. Se sim, hidrata. Se não, renderiza.
-if (container.hasChildNodes()) {
+// Mantém sua lógica de hidratação (ótima para react-snap) :contentReference[oaicite:3]{index=3}
+if (container && container.hasChildNodes()) {
   ReactDOM.hydrateRoot(container, app);
-} else {
+} else if (container) {
   const root = ReactDOM.createRoot(container);
   root.render(app);
 }

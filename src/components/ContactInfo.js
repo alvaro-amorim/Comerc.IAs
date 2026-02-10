@@ -1,30 +1,66 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
-import { useTranslation } from 'react-i18next'; // <--- Import
 
 const ContactInfo = () => {
-    const { t } = useTranslation(); // <--- Hook
+  const { t } = useTranslation();
 
-    return (
-        <Card className="p-4 text-center">
-            <h5 className="fw-bold">{t('contact_other_ways')}</h5>
-            <p className="text-muted">{t('contact_response_time')}</p>
-            <div className="d-flex justify-content-center mt-4">
-                <a href="https://wa.me/5532984869192" target="_blank" rel="noopener noreferrer" className="text-decoration-none me-4">
-                    <FontAwesomeIcon icon={faWhatsapp} size="3x" style={{ color: '#25D366' }} />
-                </a>
-                <a href="https://www.instagram.com/comerc_ias?igsh=MWFwZjVpYWJqaXh5aA==" target="_blank" rel="noopener noreferrer" className="text-decoration-none me-4">
-                    <FontAwesomeIcon icon={faInstagram} size="3x" style={{ color: '#E4405F' }} />
-                </a>
-                <a href="tel:+5532984869192" className="text-decoration-none">
-                    <FontAwesomeIcon icon={faPhone} size="3x" style={{ color: '#007ACC' }} />
-                </a>
-            </div>
-        </Card>
-    );
+  return (
+    <div className="c-contactInfo">
+      <div className="c-contactInfo__row">
+        <a
+          className="c-contactInfo__item"
+          href="https://wa.me/5532984869192"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp"
+        >
+          <span className="c-contactInfo__icon" aria-hidden="true">
+            <FontAwesomeIcon icon={faWhatsapp} />
+          </span>
+          <span className="c-contactInfo__text">
+            <strong>{t('contact_whatsapp', 'WhatsApp')}</strong>
+            <small>{t('contact_whatsapp_hint', 'Clique para conversar')}</small>
+          </span>
+        </a>
+
+        <a
+          className="c-contactInfo__item"
+          href="https://www.instagram.com/comerc_ias"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+        >
+          <span className="c-contactInfo__icon" aria-hidden="true">
+            <FontAwesomeIcon icon={faInstagram} />
+          </span>
+          <span className="c-contactInfo__text">
+            <strong>{t('contact_instagram', 'Instagram')}</strong>
+            <small>{t('contact_instagram_hint', 'Veja nossos criativos')}</small>
+          </span>
+        </a>
+
+        <a className="c-contactInfo__item" href="tel:+5532984869192" aria-label="Telefone">
+          <span className="c-contactInfo__icon" aria-hidden="true">
+            <FontAwesomeIcon icon={faPhone} />
+          </span>
+          <span className="c-contactInfo__text">
+            <strong>{t('contact_phone', 'Telefone')}</strong>
+            <small>{t('contact_phone_hint', 'Ligar agora')}</small>
+          </span>
+        </a>
+      </div>
+
+      <div className="c-contactInfo__note">
+        {t(
+          'contact_note_fallback',
+          'Dica: se você enviar referência (exemplo) + objetivo, o retorno fica MUITO mais rápido.'
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ContactInfo;

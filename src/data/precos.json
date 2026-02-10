@@ -233,25 +233,25 @@
                 "periodo": "Trimestral",
                 "meses": 3,
                 "desconto_perc": 5,
-                "preco_total_sem_desc": 1200.00,
-                "preco_total_com_desc": 1140.00,
-                "preco_mensal_efetivo": 380.00
+                "preco_total_sem_desc": 1200.0,
+                "preco_total_com_desc": 1140.0,
+                "preco_mensal_efetivo": 380.0
               },
               {
                 "periodo": "Semestral",
                 "meses": 6,
                 "desconto_perc": 10,
-                "preco_total_sem_desc": 2400.00,
-                "preco_total_com_desc": 2160.00,
-                "preco_mensal_efetivo": 360.00
+                "preco_total_sem_desc": 2400.0,
+                "preco_total_com_desc": 2160.0,
+                "preco_mensal_efetivo": 360.0
               },
               {
                 "periodo": "Anual",
                 "meses": 12,
                 "desconto_perc": 15,
-                "preco_total_sem_desc": 4800.00,
-                "preco_total_com_desc": 4080.00,
-                "preco_mensal_efetivo": 340.00
+                "preco_total_sem_desc": 4800.0,
+                "preco_total_com_desc": 4080.0,
+                "preco_mensal_efetivo": 340.0
               }
             ]
           },
@@ -289,25 +289,25 @@
                 "periodo": "Trimestral",
                 "meses": 3,
                 "desconto_perc": 5,
-                "preco_total_sem_desc": 2400.00,
-                "preco_total_com_desc": 2280.00,
-                "preco_mensal_efetivo": 760.00
+                "preco_total_sem_desc": 2400.0,
+                "preco_total_com_desc": 2280.0,
+                "preco_mensal_efetivo": 760.0
               },
               {
                 "periodo": "Semestral",
                 "meses": 6,
                 "desconto_perc": 10,
-                "preco_total_sem_desc": 4800.00,
-                "preco_total_com_desc": 4320.00,
-                "preco_mensal_efetivo": 720.00
+                "preco_total_sem_desc": 4800.0,
+                "preco_total_com_desc": 4320.0,
+                "preco_mensal_efetivo": 720.0
               },
               {
                 "periodo": "Anual",
                 "meses": 12,
                 "desconto_perc": 15,
-                "preco_total_sem_desc": 9600.00,
-                "preco_total_com_desc": 8160.00,
-                "preco_mensal_efetivo": 680.00
+                "preco_total_sem_desc": 9600.0,
+                "preco_total_com_desc": 8160.0,
+                "preco_mensal_efetivo": 680.0
               }
             ]
           },
@@ -345,25 +345,25 @@
                 "periodo": "Trimestral",
                 "meses": 3,
                 "desconto_perc": 5,
-                "preco_total_sem_desc": 3600.00,
-                "preco_total_com_desc": 3420.00,
-                "preco_mensal_efetivo": 1140.00
+                "preco_total_sem_desc": 3600.0,
+                "preco_total_com_desc": 3420.0,
+                "preco_mensal_efetivo": 1140.0
               },
               {
                 "periodo": "Semestral",
                 "meses": 6,
                 "desconto_perc": 10,
-                "preco_total_sem_desc": 7200.00,
-                "preco_total_com_desc": 6480.00,
-                "preco_mensal_efetivo": 1080.00
+                "preco_total_sem_desc": 7200.0,
+                "preco_total_com_desc": 6480.0,
+                "preco_mensal_efetivo": 1080.0
               },
               {
                 "periodo": "Anual",
                 "meses": 12,
                 "desconto_perc": 15,
-                "preco_total_sem_desc": 14400.00,
-                "preco_total_com_desc": 12240.00,
-                "preco_mensal_efetivo": 1020.00
+                "preco_total_sem_desc": 14400.0,
+                "preco_total_com_desc": 12240.0,
+                "preco_mensal_efetivo": 1020.0
               }
             ]
           }
@@ -748,6 +748,19 @@
         ]
       }
     ],
-    "observacoes": "Descontos progressivos em combos e em parcerias mensais, semestrais ou anuais. Conte sua ideia para a gente!"
+    "observacoes": "Descontos progressivos em combos e em parcerias mensais, semestrais ou anuais. Conte sua ideia para a gente!",
+    "hero": {
+      "badge": "Orçamento Instantâneo",
+      "titulo": "Monte seu orçamento em 2 minutos",
+      "subtitulo": "Selecione os serviços, escolha o período (quando houver) e receba um resumo profissional por e-mail.",
+      "destaques": [
+        "Opções por volume e planos",
+        "Detalhes completos por serviço",
+        "Sem compromisso — você decide depois"
+      ],
+      "nota": "Dica: comece com 1–2 serviços e avance. Se quiser, descreva sua ideia no campo de mensagem.",
+      "cta_primario": "Gerar orçamento",
+      "cta_secundario": "Falar no WhatsApp"
+    }
   }
 }

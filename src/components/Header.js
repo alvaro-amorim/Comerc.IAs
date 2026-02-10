@@ -1,101 +1,169 @@
-import React, { useState } from 'react';
-import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Container } from 'react-bootstrap';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // <--- Importante
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+
 import logoBranca from '../assets/images/logo.branca.png';
 import '../styles/Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { t, i18n } = useTranslation(); // <--- Hook t() para traduzir
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  
-  const currentLang = i18n.language || 'pt';
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const currentLang = useMemo(() => {
+    const l = (i18n.language || 'pt').toLowerCase();
+    return l.startsWith('en') ? 'en' : 'pt';
+  }, [i18n.language]);
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const closeMenu = () => setIsMenuOpen(false);
+  const toggleMenu = () => setIsMenuOpen((v) => !v);
 
   const switchLanguage = (targetLang) => {
     if (targetLang === currentLang) return;
-    const newPath = location.pathname.replace(`/${currentLang}`, `/${targetLang}`);
+
+    // Troca somente o prefixo /pt ou /en no começo da URL
+    const newPath = location.pathname.replace(/^\/(pt|en)(?=\/|$)/, `/${targetLang}`);
     i18n.changeLanguage(targetLang);
     navigate(newPath);
-    setIsMenuOpen(false);
+    closeMenu();
   };
 
+  const navItems = [
+    { to: `/${currentLang}`, label: t('nav_home') },
+    { to: `/${currentLang}/about`, label: t('nav_about') },
+    { to: `/${currentLang}/portfolio`, label: t('nav_portfolio') },
+    { to: `/${currentLang}/contact`, label: t('nav_contact') },
+  ];
+
   return (
-    <Navbar expand="lg" fixed="top" className="custom-navbar">
-      <Container className="custom-navbar-container">
-        <Navbar.Brand as={NavLink} to={`/${currentLang}`}>
-          <img src={logoBranca} alt="Comerc IAs Logo" className="navbar-logo" />
-        </Navbar.Brand>
+    <>
+      <header className={`site-header ${isScrolled ? 'scrolled' : ''}`}>
+        <Container className="site-header__container">
+          {/* Brand */}
+          <NavLink to={`/${currentLang}`} className="brand" onClick={closeMenu} aria-label="Ir para Home">
+            <img src={logoBranca} alt="Comerc IAs" className="brand__logo" />
+          </NavLink>
 
-        <div className="d-flex align-items-center gap-3">
-            {/* Seletor Mobile */}
-            <div className="d-md-none language-selector-mobile">
-                <span className={currentLang === 'pt' ? 'lang-active' : ''} onClick={() => switchLanguage('pt')}>🇧🇷</span>
-                <span className="divider">|</span>
-                <span className={currentLang === 'en' ? 'lang-active' : ''} onClick={() => switchLanguage('en')}>🇺🇸</span>
+          {/* Desktop nav */}
+          <nav className="nav-desktop" aria-label="Menu principal">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === `/${currentLang}`}
+                className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* Right side */}
+          <div className="header-right">
+            {/* Desktop language pill */}
+            <div className="lang-pill" role="group" aria-label="Idioma">
+              <button
+                type="button"
+                className={`lang-btn ${currentLang === 'pt' ? 'active' : ''}`}
+                onClick={() => switchLanguage('pt')}
+              >
+                BR&nbsp;PT
+              </button>
+              <span className="lang-divider">|</span>
+              <button
+                type="button"
+                className={`lang-btn ${currentLang === 'en' ? 'active' : ''}`}
+                onClick={() => switchLanguage('en')}
+              >
+                US&nbsp;EN
+              </button>
             </div>
 
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" onClick={toggleMenu} className="navbar-toggle">
-                <FontAwesomeIcon icon={faBars} color="white"/>
-            </Navbar.Toggle>
-        </div>
-
-        <Navbar.Collapse id="responsive-navbar-nav" className="d-none d-md-flex">
-          <Nav className="navbar-links ms-auto align-items-center">
-            {/* LINKS TRADUZIDOS COM t() */}
-            <Nav.Link as={NavLink} to={`/${currentLang}`} className="navbar-link" end>
-              {t('nav_home')}
-            </Nav.Link>
-            <Nav.Link as={NavLink} to={`/${currentLang}/about`} className="navbar-link">
-              {t('nav_about')}
-            </Nav.Link>
-            <Nav.Link as={NavLink} to={`/${currentLang}/portfolio`} className="navbar-link">
-              {t('nav_portfolio')}
-            </Nav.Link>
-            <Nav.Link as={NavLink} to={`/${currentLang}/orcamento`} className="navbar-link">
+            {/* CTA único (sem repetir no menu) */}
+            <NavLink to={`/${currentLang}/orcamento`} className="header-cta" onClick={closeMenu}>
               {t('nav_orcamento')}
-            </Nav.Link>
-            <Nav.Link as={NavLink} to={`/${currentLang}/contact`} className="navbar-link">
-              {t('nav_contact')}
-            </Nav.Link>
-            
-            {/* Seletor Desktop */}
-            <div className="language-selector-desktop ms-4">
-                <Button variant="link" className={`lang-btn ${currentLang === 'pt' ? 'active' : ''}`} onClick={() => switchLanguage('pt')}>
-                    🇧🇷 PT
-                </Button>
-                <span className="text-white">|</span>
-                <Button variant="link" className={`lang-btn ${currentLang === 'en' ? 'active' : ''}`} onClick={() => switchLanguage('en')}>
-                    🇺🇸 EN
-                </Button>
-            </div>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
+            </NavLink>
 
-      {/* Menu Mobile */}
-      <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
-        <button className="close-menu-button" onClick={toggleMenu}>
+            {/* Burger (mobile) */}
+            <button
+              type="button"
+              className="burger"
+              onClick={toggleMenu}
+              aria-label="Abrir menu"
+              aria-expanded={isMenuOpen}
+            >
+              <FontAwesomeIcon icon={faBars} />
+            </button>
+          </div>
+        </Container>
+      </header>
+
+      {/* Overlay */}
+      <div className={`overlay ${isMenuOpen ? 'active' : ''}`} onClick={closeMenu} />
+
+      {/* Mobile drawer */}
+      <aside className={`mobile-menu ${isMenuOpen ? 'open' : ''}`} aria-hidden={!isMenuOpen}>
+        <button className="close-menu-button" onClick={closeMenu} aria-label="Fechar menu">
           <FontAwesomeIcon icon={faTimes} />
         </button>
-        <Nav className="d-flex flex-column">
-          <Nav.Link as={NavLink} to={`/${currentLang}`} onClick={toggleMenu} className="nav-link" end>{t('nav_home')}</Nav.Link>
-          <Nav.Link as={NavLink} to={`/${currentLang}/about`} onClick={toggleMenu} className="nav-link">{t('nav_about')}</Nav.Link>
-          <Nav.Link as={NavLink} to={`/${currentLang}/portfolio`} onClick={toggleMenu} className="nav-link">{t('nav_portfolio')}</Nav.Link>
-          <Nav.Link as={NavLink} to={`/${currentLang}/orcamento`} onClick={toggleMenu} className="nav-link">{t('nav_orcamento')}</Nav.Link>
-          <Nav.Link as={NavLink} to={`/${currentLang}/contact`} onClick={toggleMenu} className="nav-link">{t('nav_contact')}</Nav.Link>
-        </Nav>
-      </div>
 
-      <div className={`overlay ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}></div>
-    </Navbar>
+        <div className="mobile-menu__head">
+          <div className="mobile-menu__brand">
+            <img src={logoBranca} alt="Comerc IAs" className="mobile-menu__logo" />
+          </div>
+
+          <div className="mobile-menu__langs" role="group" aria-label="Idioma">
+            <button
+              type="button"
+              className={`mobile-lang ${currentLang === 'pt' ? 'active' : ''}`}
+              onClick={() => switchLanguage('pt')}
+            >
+              BR&nbsp;PT
+            </button>
+            <button
+              type="button"
+              className={`mobile-lang ${currentLang === 'en' ? 'active' : ''}`}
+              onClick={() => switchLanguage('en')}
+            >
+              US&nbsp;EN
+            </button>
+          </div>
+        </div>
+
+        <nav className="mobile-menu__nav" aria-label="Menu mobile">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === `/${currentLang}`}
+              className="nav-link"
+              onClick={closeMenu}
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="mobile-menu__cta">
+          <NavLink to={`/${currentLang}/orcamento`} className="mobile-cta" onClick={closeMenu}>
+            {t('nav_orcamento')}
+          </NavLink>
+        </div>
+      </aside>
+    </>
   );
 };
 

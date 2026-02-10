@@ -1,10 +1,10 @@
-/* ===== Rodapé Principal ===== */
 .custom-footer {
   background-color: #06243d;
   color: white;
-  padding: 1rem 0;
-  margin-top: 2.9rem;
+  padding: 1.2rem 0;
+  margin-top: 2.25rem;
   width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .footer-row {
@@ -16,97 +16,49 @@
 }
 
 .footer-col {
-  margin-bottom: 5px;
-  width: 230px;
-  margin-top: 5px;
+  margin: 6px 0;
 }
 
-/* ===== Ícones Sociais ===== */
+/* Ícones */
 .footer-socials {
   display: flex;
-  gap: 1rem;
-  justify-content: right;
-  margin-bottom: -50px;
-  margin-top: -20px;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-social-link {
-  color: white;
+  color: rgba(255, 255, 255, 0.92);
   text-decoration: none;
-  transition: color 0.3s ease-in-out;
+  transition: color 0.15s ease, transform 0.15s ease;
 }
 
 .footer-social-link:hover {
   color: #0dcaf0;
+  transform: translateY(-2px);
 }
 
-/* ===== Botão de Chat ===== */
+/* Chat */
 .footer-chat {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  color: white;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.92);
   cursor: pointer;
-  font-weight: 700;
-  font-size: 1.5rem;
-  transition: color 0.3s ease-in-out;
+  font-weight: 900;
+  font-size: 1.25rem;
+  transition: color 0.15s ease, transform 0.15s ease;
 }
 
 .footer-chat:hover {
   color: #0dcaf0;
+  transform: translateY(-2px);
 }
 
-.footer-chat span {
-  margin-right: 0.5rem;
-}
-
-/* ===== Responsividade ===== */
-@media (min-width: 768px) {
-  .footer-col {
-    margin-bottom: 0;
-    text-align: center;
-  }
-
-  .footer-socials {
-    justify-content: flex-start;
-    gap: 2rem;
-  }
-
-  .footer-chat {
-    display: flex;
-    justify-content: right;
-  }
-}
-
-/* Telas menores que 768px (mobile) */
+/* Mobile */
 @media (max-width: 767px) {
   .footer-row {
     flex-direction: column;
-    /* Adicionamos o gap para manter a separação entre os elementos */
-    gap: 20px;
-  }
-
-  /* Usamos a propriedade "order" para mudar a ordem de exibição */
-  .footer-row > .footer-col:first-child {
-    order: 2; /* Move a coluna das redes sociais para a segunda posição */
-  }
-
-  .footer-row > .footer-col:nth-child(2) {
-    order: 1; /* Move a coluna do chat para a primeira posição */
-  }
-
-  /* Centralizamos os elementos */
-  .footer-socials {
-    justify-content: center;
-    gap: 15%;
-    margin-top: 1%;
-    margin-bottom: 1%;
-
-  }
-
-  .footer-chat {
-    justify-content: center;
-    margin: 2% 0 0 0;
-  
-    display: flex;
+    gap: 14px;
   }
 }

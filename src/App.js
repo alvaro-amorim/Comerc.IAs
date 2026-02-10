@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; 
+import { useTranslation } from 'react-i18next';
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ContactModal from './components/forms/ContactModal';
 import ContactForm from './components/forms/ContactForm';
-import ScrollToTop from './components/ScrollToTop'; // <--- 1. Importar
+import ScrollToTop from './components/ScrollToTop';
 
-// Páginas
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import PortfolioPage from './pages/PortfolioPage';
@@ -16,57 +16,72 @@ import OrcamentoPage from './pages/OrcamentoPage';
 
 import './styles/custom.css';
 
+const SUPPORTED_LANGS = ['pt', 'en'];
+
+function normalizeLang(lang) {
+  return SUPPORTED_LANGS.includes(lang) ? lang : 'pt';
+}
+
 const LanguageLayout = () => {
-  const { lang } = useParams(); 
+  const { lang } = useParams();
   const { i18n } = useTranslation();
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const currentLang = useMemo(() => normalizeLang(lang), [lang]);
 
   const handleChatClick = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
   useEffect(() => {
-    if (lang && ['pt', 'en'].includes(lang)) {
-      if (i18n.language !== lang) {
-        i18n.changeLanguage(lang);
-      }
+    // Garante que o i18n e a URL fiquem sempre alinhados :contentReference[oaicite:4]{index=4}
+    if (i18n.language !== currentLang) {
+      i18n.changeLanguage(currentLang);
     }
-  }, [lang, i18n]);
 
-  if (lang && !['pt', 'en'].includes(lang)) {
+    // Ajuda SEO/acessibilidade: <html lang="...">
+    document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en';
+  }, [currentLang, i18n]);
+
+  // Se vier /xx/... joga pra /pt
+  if (lang && !SUPPORTED_LANGS.includes(lang)) {
     return <Navigate to="/pt" replace />;
   }
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <Header /> {/* O Header agora terá o seletor de idiomas */}
-      <main className="flex-grow-1" style={{ paddingTop: '56px' }}>
+      <Header />
+      <main className="flex-grow-1" style={{ paddingTop: '72px' }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
           <Route path="orcamento" element={<OrcamentoPage />} />
           <Route path="contact" element={<ContactPage />} />
+
+          {/* Fallback dentro do idioma */}
+          <Route path="*" element={<Navigate to={`/${currentLang}`} replace />} />
         </Routes>
       </main>
+
       <Footer onChatClick={handleChatClick} />
-      
+
       <ContactModal show={showModal} handleClose={handleCloseModal}>
-          <ContactForm />
+        <ContactForm />
       </ContactModal>
     </div>
   );
 };
 
 const App = () => {
-    return (
-        <Router>
-            <ScrollToTop /> {/* <--- 2. Ativar o ScrollToTop aqui */}
-            <Routes>
-                <Route path="/" element={<Navigate to="/pt" replace />} />
-                <Route path="/:lang/*" element={<LanguageLayout />} />
-            </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Navigate to="/pt" replace />} />
+        <Route path="/:lang/*" element={<LanguageLayout />} />
+      </Routes>
+    </Router>
+  );
 };
 
 export default App;
