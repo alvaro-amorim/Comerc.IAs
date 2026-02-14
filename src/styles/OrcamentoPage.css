@@ -713,3 +713,44 @@
   .orc-card-body{ padding: 18px 16px; }
   .orc-hero{ padding: 20px 18px; }
 }
+/* --- CTA Quiz Funil (Premium) --- */
+.orc-quizCard{
+  display: block;
+  text-decoration: none;
+  border-radius: 18px;
+  padding: 16px 16px;
+  margin-top: 14px;
+
+  background: linear-gradient(180deg, rgba(0,136,255,0.10), rgba(0,136,255,0.03));
+  border: 1px dashed rgba(0,136,255,0.35);
+
+  box-shadow: 0 10px 30px rgba(0, 30, 60, 0.10);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.orc-quizCard:hover{
+  transform: translateY(-2px);
+  border-color: rgba(0,136,255,0.55);
+  box-shadow: 0 16px 40px rgba(0, 30, 60, 0.16);
+}
+
+.orc-quizCard__title{
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.2px;
+  color: #0b2a4a;
+  margin-bottom: 6px;
+}
+
+.orc-quizCard__desc{
+  font-size: 13px;
+  line-height: 1.35;
+  color: rgba(11,42,74,0.78);
+  margin-bottom: 10px;
+}
+
+.orc-quizCard__cta{
+  font-weight: 800;
+  font-size: 13px;
+  color: #007bff;
+}

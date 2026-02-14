@@ -423,11 +423,6 @@ Preço Final: ${formatCurrency(price)}
               </div>
             </section>
 
-            {/* MARCADOR: PROVA SOCIAL / LOGOS / DEPOIMENTOS (adicione aqui depois) */}
-            <div className="premium-marker">
-              MARCADOR: Prova social (logos / números / depoimentos curtos)
-            </div>
-
             <Row className="g-4 mt-2">
               {/* COLUNA PRINCIPAL */}
               <Col lg={8}>
@@ -898,9 +893,19 @@ Preço Final: ${formatCurrency(price)}
                       </div>
 
                       {/* MARCADOR: mini funil / bot / CTA adicional */}
-                      <div className="premium-marker premium-marker--small mt-3">
-                        MARCADOR: Mini funil (bot / perguntas rápidas / recomendação automática)
-                      </div>
+                          <a
+                            className="orc-quizCard"
+                            href="https://auxiliar-de-escolha.vercel.app/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <div className="orc-quizCard__title">Não sabe por onde começar?</div>
+                            <div className="orc-quizCard__desc">
+                              Faça um quiz rápido e receba a melhor recomendação de pacote para o seu objetivo.
+                            </div>
+                            <div className="orc-quizCard__cta">Abrir quiz de escolha →</div>
+                          </a>
+
                     </Card.Body>
                   </Card>
                 </div>

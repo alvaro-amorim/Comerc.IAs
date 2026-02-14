@@ -13,6 +13,7 @@ import AboutPage from './pages/AboutPage';
 import PortfolioPage from './pages/PortfolioPage';
 import ContactPage from './pages/ContactPage';
 import OrcamentoPage from './pages/OrcamentoPage';
+import PortfolioMaintenancePage from './pages/PortfolioMaintenancePage';
 
 import './styles/custom.css';
 
@@ -54,7 +55,7 @@ const LanguageLayout = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
-          <Route path="portfolio" element={<PortfolioPage />} />
+          <Route path="portfolio" element={<PortfolioMaintenancePage />} />
           <Route path="orcamento" element={<OrcamentoPage />} />
           <Route path="contact" element={<ContactPage />} />
 
