@@ -31,7 +31,7 @@ const ContactPage = () => {
       infoDesc:
         'Se preferir, fale direto por WhatsApp. Respondemos rápido em dias úteis e já organizamos o briefing com você.',
       quickTitle: 'O que acontece depois?',
-      quick1Title: 'Briefing em 2 minutos',
+      quick1Title: 'Briefing em 15 minutos',
       quick1Desc: 'Você envia o essencial e eu devolvo um plano de execução.',
       quick2Title: 'Proposta enxuta',
       quick2Desc: 'Formato, prazo e valor — sem enrolação, com clareza.',
