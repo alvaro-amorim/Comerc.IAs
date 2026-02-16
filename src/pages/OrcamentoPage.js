@@ -12,7 +12,7 @@ import {
   Badge,
 } from 'react-bootstrap';
 
-// Dados dos produtos (JSONs já corrigidos)
+// Dados dos produtos
 import precosPT from '../data/precos.json';
 import precosEN from '../data/precos_en.json';
 
@@ -47,10 +47,8 @@ const OrcamentoPage = () => {
     return l.startsWith('en') ? 'en' : 'pt';
   }, [i18n.language]);
 
-  // Seleciona o JSON correto de dados (Preços/Serviços)
+  // Seleciona o JSON correto de dados
   const precosData = currentLang === 'en' ? precosEN : precosPT;
-  
-  // Hero vindo do JSON (mas temos fallback no content se precisar)
   const heroData = precosData?.orcamento?.hero || {};
 
   // ===== TRADUÇÃO DE INTERFACE (UI) =====
@@ -58,22 +56,15 @@ const OrcamentoPage = () => {
     const pt = {
       seoTitle: 'Orçamento Online | Comerc IA’s',
       seoDesc: 'Monte seu orçamento em poucos cliques. Escolha serviços, veja detalhes e receba um resumo por e-mail.',
-      
-      // Hero (UI Elements)
       hlFast: 'Rápido e intuitivo',
       hlPro: 'Resumo profissional',
       hlClear: 'Detalhes por serviço',
-      
-      // Passos
       step1: '1',
       step1Title: 'Escolha seus serviços',
       step1Sub: 'Expanda uma categoria, selecione itens e veja detalhes completos.',
-      
       step2: '2',
       step2Title: 'Seus dados',
       step2Sub: 'Preencha e clique em “Gerar orçamento”.',
-      
-      // Labels Serviço
       lblIncludes: 'Inclui',
       lblBenefits: 'Benefícios',
       lblFormats: 'Formatos',
@@ -82,8 +73,6 @@ const OrcamentoPage = () => {
       btnDetails: 'Detalhes',
       btnClose: 'Fechar',
       catOptions: 'opções',
-      
-      // Formulário
       labelName: 'Nome',
       labelEmail: 'E-mail',
       labelCompany: 'Empresa / Instagram',
@@ -92,25 +81,17 @@ const OrcamentoPage = () => {
       labelMessage: 'Mensagem',
       labelAgree: 'Concordo em ser contatado para finalizar detalhes do orçamento.',
       labelObs: 'Obs:',
-      
-      // Botões Ação
       btnGenerate: 'Gerar orçamento',
       btnWhats: 'Falar no WhatsApp',
-      
-      // Resumo Lateral
       summaryTitle: 'Resumo',
       summarySelected: 'Selecionados',
       summarySubtotal: 'Subtotal',
       summaryHint: 'Finalize no Passo 2 para receber seu orçamento por e-mail.',
       btnGoForm: 'Ir para o formulário',
       btnBackServices: 'Voltar aos serviços',
-      
-      // Quiz Card
       quizTitle: 'Não sabe qual serviço escolher?',
       quizDesc: 'Responda um quiz rápido e receba uma recomendação do melhor pacote para o seu objetivo.',
       quizCta: 'Abrir quiz de escolha →',
-      
-      // Resultado Final
       resTitle: 'Resumo do orçamento',
       resHint: 'Guarde este resumo para comparar opções.',
       btnPrint: 'Imprimir',
@@ -121,12 +102,9 @@ const OrcamentoPage = () => {
       lblSubtotalRaw: 'Subtotal (antes de cupons)',
       btnShare: 'Compartilhar',
       btnBackTop: 'Voltar ao topo',
-      
-      // Modals / Alerts
       modalShareTitle: 'Compartilhar orçamento',
       modalShareDesc: 'Copie a mensagem abaixo e envie para o cliente.',
       btnCopy: 'Copiar',
-      
       alertSuccess: 'Orçamento gerado! Já enviamos um resumo por e-mail.',
       alertError: 'Houve um erro ao gerar o orçamento.',
       alertFill: 'Preencha todos os dados obrigatórios.',
@@ -140,22 +118,15 @@ const OrcamentoPage = () => {
     const en = {
       seoTitle: 'Instant Quote | Comerc IA’s',
       seoDesc: 'Build your quote in a few clicks. Choose services, check details, and get a summary by email.',
-      
-      // Hero (UI Elements)
       hlFast: 'Fast & intuitive',
       hlPro: 'Professional summary',
       hlClear: 'Details per service',
-      
-      // Steps
       step1: '1',
       step1Title: 'Choose your services',
       step1Sub: 'Expand a category, select items, and view full details.',
-      
       step2: '2',
       step2Title: 'Your details',
       step2Sub: 'Fill in and click “Generate quote”.',
-      
-      // Service Labels
       lblIncludes: 'Includes',
       lblBenefits: 'Benefits',
       lblFormats: 'Formats',
@@ -164,8 +135,6 @@ const OrcamentoPage = () => {
       btnDetails: 'Details',
       btnClose: 'Close',
       catOptions: 'options',
-      
-      // Form
       labelName: 'Name',
       labelEmail: 'E-mail',
       labelCompany: 'Company / Instagram',
@@ -174,25 +143,17 @@ const OrcamentoPage = () => {
       labelMessage: 'Message',
       labelAgree: 'I agree to be contacted to finalize quote details.',
       labelObs: 'Note:',
-      
-      // Action Buttons
       btnGenerate: 'Generate quote',
       btnWhats: 'Chat on WhatsApp',
-      
-      // Sidebar Summary
       summaryTitle: 'Summary',
       summarySelected: 'Selected',
       summarySubtotal: 'Subtotal',
       summaryHint: 'Finish in Step 2 to receive your quote via email.',
       btnGoForm: 'Go to form',
       btnBackServices: 'Back to services',
-      
-      // Quiz Card
       quizTitle: 'Not sure what to choose?',
       quizDesc: 'Take a quick quiz and get a package recommendation based on your goal.',
       quizCta: 'Open choice quiz →',
-      
-      // Final Result
       resTitle: 'Quote Summary',
       resHint: 'Keep this summary to compare options.',
       btnPrint: 'Print',
@@ -203,12 +164,9 @@ const OrcamentoPage = () => {
       lblSubtotalRaw: 'Subtotal (before coupons)',
       btnShare: 'Share',
       btnBackTop: 'Back to top',
-      
-      // Modals / Alerts
       modalShareTitle: 'Share quote',
       modalShareDesc: 'Copy the message below and send it to the client.',
       btnCopy: 'Copy',
-      
       alertSuccess: 'Quote generated! We sent a summary to your email.',
       alertError: 'There was an error generating the quote.',
       alertFill: 'Please fill in all required fields.',
@@ -244,19 +202,17 @@ const OrcamentoPage = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const componentRef = useRef();
 
-  // Formatador de Moeda
+  // Formatador de Moeda CORRIGIDO (Sem variável unused)
   const formatCurrency = (value) => {
     try {
       const locale = currentLang === 'en' ? 'en-US' : 'pt-BR';
-      const currency = currentLang === 'en' ? 'USD' : 'BRL'; // Ajuste se quiser manter BRL no inglês
-      // Nota: Mantendo BRL mesmo no inglês pois a empresa é BR, mas formatação US
+      // Removida a variável 'currency' que causava erro no Vercel
       return new Intl.NumberFormat(locale, { style: 'currency', currency: 'BRL' }).format(value || 0);
     } catch (e) {
       return `R$ ${Number(value || 0).toFixed(2)}`;
     }
   };
 
-  // Helper para encontrar objeto do serviço no JSON
   const findServiceObject = (categoryName, serviceTitle) => {
     if (!precosData || !precosData.orcamento) return null;
     const cat = precosData.orcamento.categorias.find((c) => c.nome === categoryName);
@@ -264,7 +220,6 @@ const OrcamentoPage = () => {
     return cat.servicos.find((s) => s.titulo === serviceTitle) || null;
   };
 
-  // Processar URL params (para quando vem do Quiz externo)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const encodedServices = urlParams.get('servicos');
@@ -287,7 +242,6 @@ const OrcamentoPage = () => {
         });
 
         setSelectedServices(newSelectedServices);
-
         const newOpenCategories = {};
         Object.keys(newSelectedServices).forEach((cat) => { newOpenCategories[cat] = true; });
         setOpenCategories(newOpenCategories);
@@ -315,7 +269,6 @@ const OrcamentoPage = () => {
   };
 
   const getReunioesSemanas = (categoryName, title) => {
-    // Lógica simples para detectar planos e exibir badge de reuniões
     const nameLower = (categoryName || '').toLowerCase();
     const titleLower = (title || '').toLowerCase();
     
@@ -361,7 +314,6 @@ const OrcamentoPage = () => {
           };
         }
       } else {
-        // Se tem período, apenas atualiza o preço (radio behavior implícito na UI)
         newSelection[categoryName] = {
           ...newSelection[categoryName],
           [serviceTitle]: price,
@@ -483,11 +435,8 @@ Preço Final: ${formatCurrency(price)}
     let discount = 0;
     let appliedCoupon = false;
 
-    // Lógica de cupom (exemplo simples)
     if (userData.cupom.trim().toUpperCase() === 'NATAL25') {
       appliedCoupon = true;
-
-      // Verifica se há planos de longo prazo (onde cupom não se aplica)
       const isLongTermPlanSelected = Object.keys(selectedServices).some((category) => {
         const cat = precosData.orcamento.categorias.find((c) => c.nome === category);
         if (cat && (cat.nome.toLowerCase().includes('social') || cat.nome.toLowerCase().includes('planos') || cat.nome.toLowerCase().includes('plans'))) {
@@ -564,8 +513,6 @@ Preço Final: ${formatCurrency(price)}
       <div className="orcamento-page">
         <Container>
           <div className="orc-wrap">
-
-            {/* HERO PREMIUM */}
             <section className="orc-hero">
               <div className="orc-hero-inner">
                 <div className="orc-hero-badge">
@@ -603,9 +550,7 @@ Preço Final: ${formatCurrency(price)}
             </section>
 
             <Row className="g-4 mt-2">
-              {/* COLUNA PRINCIPAL */}
               <Col lg={8}>
-                {/* PASSO 1 */}
                 <Card className="orc-card">
                   <Card.Body className="orc-card-body">
                     <div className="orc-card-head">
@@ -812,7 +757,6 @@ Preço Final: ${formatCurrency(price)}
                       ))}
                     </div>
 
-                    {/* CTA premium dentro do passo 1 */}
                     <a
                       className="orc-quizCard orc-quizCard--inline"
                       href={QUIZ_URL}
@@ -831,7 +775,6 @@ Preço Final: ${formatCurrency(price)}
                   </Card.Body>
                 </Card>
 
-                {/* PASSO 2 */}
                 <Card className="orc-card mt-4">
                   <Card.Body className="orc-card-body">
                     <div className="orc-card-head">
@@ -932,7 +875,6 @@ Preço Final: ${formatCurrency(price)}
                   </Card.Body>
                 </Card>
 
-                {/* PASSO 3 - RESULTADO */}
                 {showResultCard && (
                   <div ref={componentRef} className="mt-4">
                     <Card className="orc-card orc-card-result">
@@ -1030,7 +972,6 @@ Preço Final: ${formatCurrency(price)}
                 )}
               </Col>
 
-              {/* ASIDE PREMIUM (RESUMO / STICKY) */}
               <Col lg={4}>
                 <div className="orc-aside">
                   <Card className="orc-card orc-card-sticky">
@@ -1072,7 +1013,6 @@ Preço Final: ${formatCurrency(price)}
                         </Button>
                       </div>
 
-                      {/* QUIZ FUNIL (substitui o marcador) */}
                       <a
                         className="orc-quizCard"
                         href={QUIZ_URL}
