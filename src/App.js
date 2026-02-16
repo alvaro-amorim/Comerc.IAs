@@ -2,16 +2,18 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Routes, Route, Navigate, Outlet, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+// Componentes Estruturais
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import SEO from './components/SEO';
 import StructuredData from './components/StructuredData';
 
-// ✅ GARANTA QUE ESSES ARQUIVOS EXISTAM EXATAMENTE NESTES CAMINHOS:
-import ContactModal from './components/ContactModal';
-import ContactForm from './components/ContactForm';
+// Componentes de Contato (OS QUE ESTAVAM A FALTAR)
+import ContactModal from './components/forms/ContactModal';
+import ContactForm from './components/forms/ContactForm';
 
+// Páginas
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import PortfolioMaintenancePage from './pages/PortfolioMaintenancePage';
@@ -88,6 +90,7 @@ export default function App() {
         </Route>
       </Routes>
 
+      {/* O Modal recebe o Formulário como "child" (filho) */}
       <ContactModal show={showContact} handleClose={closeContact}>
         <ContactForm />
       </ContactModal>

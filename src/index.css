@@ -1,18 +1,43 @@
+/* =========================================
+   RESET E CONFIGURAÇÕES GLOBAIS
+   ========================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* Base estrutural da app */
 body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  background-color: #f6fbff;
+  color: #0b1522;
+  
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
+/* CORREÇÃO: Removemos o padding-top global.
+   Cada página tratará do seu próprio espaçamento para evitar conflitos na Home.
+*/
 main {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 0; 
 }
 
-/* Tipografia padrão mais “moderna” */
-body,
-button,
-input,
-textarea {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+button, input, textarea {
+  font-family: inherit;
 }

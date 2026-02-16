@@ -1,5 +1,6 @@
 .pm-page {
-  padding: 36px 16px 72px;
+  /* CORREÇÃO: Aumentado de 36px para 110px */
+  padding: 110px 16px 72px;
   background: #f6fbff;
   min-height: 86vh;
 }

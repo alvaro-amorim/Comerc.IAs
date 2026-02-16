@@ -1,6 +1,29 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
+/* ==========================================================================
+   1. COMPONENTE PADRÃO (Necessário para o App.js funcionar)
+   Este componente recebe os dados dinâmicos do App.js (multi-idioma)
+   ========================================================================== */
+const StructuredData = ({ data }) => {
+  if (!data) return null;
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">
+        {JSON.stringify(data)}
+      </script>
+    </Helmet>
+  );
+};
+
+export default StructuredData;
+
+/* ==========================================================================
+   2. SEUS SCHEMAS ESPECÍFICOS (Exports Nomeados)
+   Podes importar estes especificamente onde precisares no futuro.
+   ========================================================================== */
+
 export const OrganizationSchema = () => {
   const schema = {
     "@context": "https://schema.org",

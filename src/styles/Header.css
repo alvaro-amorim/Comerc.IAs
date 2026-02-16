@@ -15,7 +15,7 @@
 }
 
 .site-header.scrolled {
-  background: rgba(6, 36, 61, 0.92);
+  background: rgba(6, 36, 61, 0.95); /* Aumentei a opacidade para leitura */
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
   border-color: rgba(255, 255, 255, 0.12);
 }
@@ -152,7 +152,7 @@
 
 /* Burger (mobile only) */
 .burger {
-  display: none;
+  display: none; /* Escondido por padrão no desktop */
   width: 42px;
   height: 42px;
   border-radius: 999px;
@@ -172,9 +172,68 @@
   background: rgba(255, 255, 255, 0.10);
 }
 
-/* ====== Mobile drawer additions ====== */
+/* =========================================
+   PARTE QUE ESTAVA A FALTAR (MOBILE DRAWER)
+   ========================================= */
+
+/* Fundo escuro atrás do menu */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1150;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* O Menu Mobile em si */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  max-width: 85vw;
+  background: #06243d; /* Cor sólida do teu tema */
+  z-index: 1200;
+  
+  display: flex;
+  flex-direction: column;
+  
+  transform: translateX(100%); /* Esconde para a direita */
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+}
+
+.mobile-menu.open {
+  transform: translateX(0); /* Traz para a tela */
+}
+
+/* Botão de fechar dentro do menu */
+.close-menu-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
 .mobile-menu__head {
-  padding: 0 1.25rem 1rem;
+  padding: 1.5rem 1.25rem 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.10);
 }
 
@@ -204,6 +263,7 @@
   color: rgba(255, 255, 255, 0.86);
   font-weight: 900;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .mobile-lang.active {
@@ -213,12 +273,31 @@
 }
 
 .mobile-menu__nav {
-  padding-top: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-menu__nav .nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.mobile-menu__nav .nav-link:hover,
+.mobile-menu__nav .nav-link.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .mobile-menu__cta {
   margin-top: auto;
-  padding: 1rem 1.25rem 1.25rem;
+  padding: 1rem 1.25rem 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.10);
 }
 

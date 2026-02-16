@@ -1,9 +1,10 @@
-/* AboutPage — Premium alinhado com Home/Header (sem marcadores) */
+/* AboutPage — Premium alinhado com Home/Header */
 
 .about-page {
   background: #f6fbff;
   color: #0b1522;
-  padding: 36px 16px 60px;
+  /* CORREÇÃO: Aumentado de 36px para 110px para descer o conteúdo abaixo do Header */
+  padding: 110px 16px 60px;
 }
 
 .about-wrap {
@@ -406,7 +407,7 @@
   }
 }
 
-/* Acessibilidade: reduz movimento */
+/* Acessibilidade */
 @media (prefers-reduced-motion: reduce) {
   .about-sideCard { transition: none; }
 }
