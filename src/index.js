@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -36,10 +36,8 @@ const app = (
   </React.StrictMode>
 );
 
-// Mantém sua lógica de hidratação (ótima para react-snap)
 if (container && container.hasChildNodes()) {
-  ReactDOM.hydrateRoot(container, app);
+  hydrateRoot(container, app);
 } else if (container) {
-  const root = ReactDOM.createRoot(container);
-  root.render(app);
+  createRoot(container).render(app);
 }

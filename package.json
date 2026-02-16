@@ -28,7 +28,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "CI=false react-scripts build && node scripts/generate-sitemap.js",
+    "build": "react-scripts build && (react-snap || echo '⚠️ AVISO: React-Snap falhou, mas continuando o deploy...') && node scripts/generate-sitemap.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
