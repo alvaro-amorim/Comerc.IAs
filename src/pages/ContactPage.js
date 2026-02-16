@@ -7,7 +7,7 @@ import ContactInfo from '../components/ContactInfo';
 import '../styles/ContactPage.css';
 
 const ContactPage = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { lang } = useParams();
 
   const currentLang = useMemo(() => {
@@ -16,72 +16,139 @@ const ContactPage = () => {
     return l.startsWith('en') ? 'en' : 'pt';
   }, [lang, i18n.language]);
 
-  const inventedCopy = useMemo(
-    () => ({
+  const content = useMemo(() => {
+    const pt = {
+      seoTitle: 'Contato | Comerc IA’s',
+      seoDesc: 'Fale com a Comerc IA’s: orçamento, dúvidas e produção de criativos, vídeos e sites com padrão premium.',
+      
       badge: 'Contato',
       title: 'Vamos transformar sua ideia em um material que vende.',
-      subtitle:
-        'Conte seu objetivo e eu retorno com um caminho claro: conceito, referências, prazo e o melhor formato pra sua campanha.',
+      subtitle: 'Conte seu objetivo e eu retorno com um caminho claro: conceito, referências, prazo e o melhor formato pra sua campanha.',
+      
       ctaBudget: 'Fazer orçamento',
       ctaWhats: 'WhatsApp',
+      
       formTitle: 'Envie sua mensagem',
-      formDesc:
-        'Para eu te responder com precisão, me diga: nicho, objetivo (venda, marca, tráfego), prazo e onde vai postar.',
-      infoTitle: 'Atendimento',
-      infoDesc:
-        'Se preferir, fale direto por WhatsApp. Respondemos rápido em dias úteis e já organizamos o briefing com você.',
-      quickTitle: 'O que acontece depois?',
-      quick1Title: 'Briefing em 15 minutos',
-      quick1Desc: 'Você envia o essencial e eu devolvo um plano de execução.',
-      quick2Title: 'Proposta enxuta',
-      quick2Desc: 'Formato, prazo e valor — sem enrolação, com clareza.',
-      quick3Title: 'Produção e entrega',
-      quick3Desc: 'Criativos, vídeos e páginas no padrão premium.',
+      formTag: 'Resposta rápida',
+      formDesc: 'Para eu te responder com precisão, me diga: nicho, objetivo (venda, marca, tráfego), prazo e onde vai postar.',
+      formNote: 'Dica: se você tiver referência (site, vídeo, reel), cole o link na mensagem — eu uso isso para acertar o estilo mais rápido.',
+      
+      infoTitle: 'Outros canais',
+      infoDesc: 'Se preferir, fale direto por WhatsApp. Respondemos rápido em dias úteis e já organizamos o briefing com você.',
+      
+      miniCtaTitle: 'Quer acelerar o processo?',
+      miniCtaDesc: 'Se você já quer chegar no objetivo final, faça o orçamento e eu te conduzo pelas opções.',
+      miniCtaBtn: 'Ir para orçamento',
+      
+      processTitle: 'O que acontece depois?',
+      steps: [
+        { num: '01', title: 'Briefing em 15 minutos', desc: 'Você envia o essencial e eu devolvo um plano de execução.' },
+        { num: '02', title: 'Proposta enxuta', desc: 'Formato, prazo e valor — sem enrolação, com clareza.' },
+        { num: '03', title: 'Produção e entrega', desc: 'Criativos, vídeos e páginas no padrão premium.' },
+      ],
+      
       trustTitle: 'Resultados que importam',
-      trustDesc:
-        'Projetos com foco em conversão, retenção e percepção de marca. Direção + estética + execução rápida.',
+      trustDesc: 'Projetos com foco em conversão, retenção e percepção de marca. Direção + estética + execução rápida.',
       trustBullets: [
         'Criativos e vídeos com “cara de marca grande”',
         'Landing pages e sites pensados para conversão',
         'Roteiro, motion, design e entrega com consistência',
       ],
+      
       testimonialsTitle: 'Depoimentos',
       testimonials: [
         {
           name: 'Clínica Aurora',
           role: 'Saúde • Tráfego local',
-          quote:
-            'Em uma semana a percepção da marca mudou. O criativo ficou “premium” e o atendimento ficou mais fácil.',
+          quote: 'Em uma semana a percepção da marca mudou. O criativo ficou “premium” e o atendimento ficou mais fácil.',
         },
         {
           name: 'Vitta Store',
           role: 'E-commerce • Performance',
-          quote:
-            'A estética ficou absurda. Melhorou CTR e o público passou a confiar mais na oferta.',
+          quote: 'A estética ficou absurda. Melhorou CTR e o público passou a confiar mais na oferta.',
         },
         {
           name: 'NeoFit Studio',
           role: 'Fitness • Conteúdo',
-          quote:
-            'Ritmo de entrega muito acima do normal. Os vídeos ficaram com energia e clareza de CTA.',
+          quote: 'Ritmo de entrega muito acima do normal. Os vídeos ficaram com energia e clareza de CTA.',
         },
       ],
-      bottomTitle: 'Quer acelerar o processo?',
-      bottomDesc:
-        'Se você já quer chegar no objetivo final, faça o orçamento e eu te conduzo pelas opções.',
-      bottomBtn: 'Ir para orçamento',
-    }),
-    []
-  );
+      
+      bottomTitle: 'Pronto para elevar o nível da sua presença digital?',
+      bottomDesc: 'Me diga o que você quer vender e eu monto uma direção criativa com entrega premium.',
+      bottomBtn: 'Chamar no WhatsApp',
+    };
+
+    const en = {
+      seoTitle: 'Contact | Comerc IA’s',
+      seoDesc: 'Contact Comerc IA’s: quotes, questions, and premium production of creatives, videos, and websites.',
+      
+      badge: 'Contact',
+      title: 'Let’s turn your idea into an asset that sells.',
+      subtitle: 'Tell us your goal and we’ll return with a clear path: concept, references, timeline, and the best format for your campaign.',
+      
+      ctaBudget: 'Get a quote',
+      ctaWhats: 'WhatsApp',
+      
+      formTitle: 'Send a message',
+      formTag: 'Fast reply',
+      formDesc: 'For a precise answer, tell me: niche, goal (sales, branding, traffic), deadline, and where you will post it.',
+      formNote: 'Tip: if you have a reference (site, video, reel), paste the link in the message — I use it to nail the style faster.',
+      
+      infoTitle: 'Other channels',
+      infoDesc: 'If you prefer, talk directly via WhatsApp. We reply fast on business days and organize the briefing with you.',
+      
+      miniCtaTitle: 'Want to speed it up?',
+      miniCtaDesc: 'If you want to get straight to the point, generate a quote and I will guide you through the options.',
+      miniCtaBtn: 'Go to Quote',
+      
+      processTitle: 'What happens next?',
+      steps: [
+        { num: '01', title: '15-minute Briefing', desc: 'You send the essentials, and I return an execution plan.' },
+        { num: '02', title: 'Lean Proposal', desc: 'Format, timeline, and value — no fluff, just clarity.' },
+        { num: '03', title: 'Production & Delivery', desc: 'Creatives, videos, and pages with a premium standard.' },
+      ],
+      
+      trustTitle: 'Results that matter',
+      trustDesc: 'Projects focused on conversion, retention, and brand perception. Direction + aesthetics + fast execution.',
+      trustBullets: [
+        'Creatives and videos with a "big brand" look',
+        'Landing pages and sites designed for conversion',
+        'Script, motion, design, and consistent delivery',
+      ],
+      
+      testimonialsTitle: 'Testimonials',
+      testimonials: [
+        {
+          name: 'Aurora Clinic',
+          role: 'Health • Local Ads',
+          quote: 'Brand perception changed in a week. The creative looked "premium" and customer service became easier.',
+        },
+        {
+          name: 'Vitta Store',
+          role: 'E-commerce • Performance',
+          quote: 'The aesthetics are insane. CTR improved and the audience started trusting the offer more.',
+        },
+        {
+          name: 'NeoFit Studio',
+          role: 'Fitness • Content',
+          quote: 'Delivery pace way above average. The videos have energy and clear CTAs.',
+        },
+      ],
+      
+      bottomTitle: 'Ready to level up your digital presence?',
+      bottomDesc: 'Tell me what you want to sell, and I will build a creative direction with premium delivery.',
+      bottomBtn: 'Chat on WhatsApp',
+    };
+
+    return currentLang === 'en' ? en : pt;
+  }, [currentLang]);
 
   return (
     <>
       <SEO
-        title={t('contact_seo_title', 'Contato | Comerc IA’s')}
-        description={t(
-          'contact_seo_desc',
-          'Fale com a Comerc IA’s: orçamento, dúvidas e produção de criativos, vídeos e sites com padrão premium.'
-        )}
+        title={content.seoTitle}
+        description={content.seoDesc}
         href={`/${currentLang}/contact`}
       />
 
@@ -91,19 +158,19 @@ const ContactPage = () => {
           <header className="c-contact__hero">
             <div className="c-contact__heroBg" aria-hidden="true" />
             <div className="c-contact__heroContent">
-              <div className="c-contact__badge">{t('contact_badge', inventedCopy.badge)}</div>
+              <div className="c-contact__badge">{content.badge}</div>
 
               <h1 className="c-contact__title">
-                {t('contact_title', inventedCopy.title)}
+                {content.title}
               </h1>
 
               <p className="c-contact__subtitle">
-                {t('contact_subtitle', inventedCopy.subtitle)}
+                {content.subtitle}
               </p>
 
               <div className="c-contact__heroCtas">
                 <Link className="c-contactBtn c-contactBtn--primary" to={`/${currentLang}/orcamento`}>
-                  {t('btn_budget_fallback', inventedCopy.ctaBudget)}
+                  {content.ctaBudget}
                 </Link>
 
                 <a
@@ -112,7 +179,7 @@ const ContactPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {t('btn_whatsapp_fallback', inventedCopy.ctaWhats)}
+                  {content.ctaWhats}
                 </a>
               </div>
             </div>
@@ -124,23 +191,21 @@ const ContactPage = () => {
             <article className="c-contactCard c-contactCard--form">
               <div className="c-contactCard__head">
                 <h2 className="c-contactCard__title">
-                  {t('contact_form_title', inventedCopy.formTitle)}
+                  {content.formTitle}
                 </h2>
-                <span className="c-contactChip">{t('contact_fast_reply', 'Resposta rápida')}</span>
+                <span className="c-contactChip">{content.formTag}</span>
               </div>
 
               <p className="c-contactCard__desc">
-                {t('contact_form_desc', inventedCopy.formDesc)}
+                {content.formDesc}
               </p>
 
               <div className="c-contactDivider" />
 
               <ContactForm />
 
-              {/* mini bloco premium (sem marcador) */}
               <div className="c-contactInlineNote">
-                Dica: se você tiver referência (site, vídeo, reel), cole o link na mensagem — eu uso isso para acertar o estilo
-                mais rápido.
+                {content.formNote}
               </div>
             </article>
 
@@ -149,12 +214,12 @@ const ContactPage = () => {
               <div className="c-contactSticky">
                 <div className="c-contactCard__head">
                   <h2 className="c-contactCard__title">
-                    {t('contact_other_ways', inventedCopy.infoTitle)}
+                    {content.infoTitle}
                   </h2>
                 </div>
 
                 <p className="c-contactCard__desc">
-                  {t('contact_response_time', inventedCopy.infoDesc)}
+                  {content.infoDesc}
                 </p>
 
                 <ContactInfo />
@@ -162,15 +227,15 @@ const ContactPage = () => {
                 <div className="c-contactMiniCta">
                   <div className="c-contactMiniCta__text">
                     <h3 className="c-contactMiniCta__title">
-                      {t('contact_mini_cta_title', inventedCopy.bottomTitle)}
+                      {content.miniCtaTitle}
                     </h3>
                     <p className="c-contactMiniCta__desc">
-                      {t('contact_mini_cta_desc', inventedCopy.bottomDesc)}
+                      {content.miniCtaDesc}
                     </p>
                   </div>
 
                   <Link className="c-contactBtn c-contactBtn--primary" to={`/${currentLang}/orcamento`}>
-                    {t('btn_budget_fallback', inventedCopy.bottomBtn)}
+                    {content.miniCtaBtn}
                   </Link>
                 </div>
               </div>
@@ -181,47 +246,33 @@ const ContactPage = () => {
           <div className="c-contactSplit">
             <div className="c-contactCard c-contactCard--soft">
               <div className="c-contactCard__head">
-                <h2 className="c-contactCard__title">{inventedCopy.quickTitle}</h2>
+                <h2 className="c-contactCard__title">{content.processTitle}</h2>
                 <span className="c-contactChip">Fluxo</span>
               </div>
 
               <div className="c-contactSteps">
-                <div className="c-contactStep">
-                  <div className="c-contactStep__num">01</div>
-                  <div>
-                    <h3 className="c-contactStep__title">{inventedCopy.quick1Title}</h3>
-                    <p className="c-contactStep__desc">{inventedCopy.quick1Desc}</p>
+                {content.steps.map((step) => (
+                  <div className="c-contactStep" key={step.num}>
+                    <div className="c-contactStep__num">{step.num}</div>
+                    <div>
+                      <h3 className="c-contactStep__title">{step.title}</h3>
+                      <p className="c-contactStep__desc">{step.desc}</p>
+                    </div>
                   </div>
-                </div>
-
-                <div className="c-contactStep">
-                  <div className="c-contactStep__num">02</div>
-                  <div>
-                    <h3 className="c-contactStep__title">{inventedCopy.quick2Title}</h3>
-                    <p className="c-contactStep__desc">{inventedCopy.quick2Desc}</p>
-                  </div>
-                </div>
-
-                <div className="c-contactStep">
-                  <div className="c-contactStep__num">03</div>
-                  <div>
-                    <h3 className="c-contactStep__title">{inventedCopy.quick3Title}</h3>
-                    <p className="c-contactStep__desc">{inventedCopy.quick3Desc}</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
             <div className="c-contactCard c-contactCard--dark">
               <div className="c-contactDarkGlow" aria-hidden="true" />
               <div className="c-contactCard__head">
-                <h2 className="c-contactCard__title c-contactCard__title--dark">{inventedCopy.trustTitle}</h2>
+                <h2 className="c-contactCard__title c-contactCard__title--dark">{content.trustTitle}</h2>
                 <span className="c-contactChip c-contactChip--dark">Premium</span>
               </div>
-              <p className="c-contactCard__desc c-contactCard__desc--dark">{inventedCopy.trustDesc}</p>
+              <p className="c-contactCard__desc c-contactCard__desc--dark">{content.trustDesc}</p>
 
               <ul className="c-contactBullets">
-                {inventedCopy.trustBullets.map((b) => (
+                {content.trustBullets.map((b) => (
                   <li key={b}>{b}</li>
                 ))}
               </ul>
@@ -231,12 +282,12 @@ const ContactPage = () => {
           {/* TESTIMONIALS */}
           <div className="c-contactCard c-contactCard--testimonials">
             <div className="c-contactCard__head">
-              <h2 className="c-contactCard__title">{inventedCopy.testimonialsTitle}</h2>
+              <h2 className="c-contactCard__title">{content.testimonialsTitle}</h2>
               <span className="c-contactChip">Prova social</span>
             </div>
 
             <div className="c-contactTestimonials">
-              {inventedCopy.testimonials.map((tt) => (
+              {content.testimonials.map((tt) => (
                 <div key={tt.name} className="c-contactTestimonial">
                   <p className="c-contactTestimonial__quote">“{tt.quote}”</p>
                   <div className="c-contactTestimonial__meta">
@@ -252,13 +303,10 @@ const ContactPage = () => {
           <div className="c-contactCtaBar">
             <div className="c-contactCtaBar__left">
               <h2 className="c-contactCtaBar__title">
-                {t('contact_bottom_title', 'Pronto para elevar o nível da sua presença digital?')}
+                {content.bottomTitle}
               </h2>
               <p className="c-contactCtaBar__desc">
-                {t(
-                  'contact_bottom_desc',
-                  'Me diga o que você quer vender e eu monto uma direção criativa com entrega premium.'
-                )}
+                {content.bottomDesc}
               </p>
             </div>
 
@@ -268,7 +316,7 @@ const ContactPage = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {t('btn_whatsapp_fallback', 'Chamar no WhatsApp')}
+              {content.bottomBtn}
             </a>
           </div>
         </div>

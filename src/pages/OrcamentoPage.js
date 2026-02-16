@@ -12,6 +12,7 @@ import {
   Badge,
 } from 'react-bootstrap';
 
+// Dados dos produtos (JSONs já corrigidos)
 import precosPT from '../data/precos.json';
 import precosEN from '../data/precos_en.json';
 
@@ -38,16 +39,190 @@ import '../styles/OrcamentoPage.css';
 const QUIZ_URL = 'https://auxiliar-de-escolha.vercel.app/';
 
 const OrcamentoPage = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
-  const currentLang = ((i18n.language || 'pt').split('-')[0] || 'pt').toLowerCase();
+  // Determina idioma atual
+  const currentLang = useMemo(() => {
+    const l = (i18n.language || 'pt').toLowerCase();
+    return l.startsWith('en') ? 'en' : 'pt';
+  }, [i18n.language]);
 
-  const precosData = (i18n.language && i18n.language.startsWith('en'))
-    ? precosEN
-    : precosPT;
+  // Seleciona o JSON correto de dados (Preços/Serviços)
+  const precosData = currentLang === 'en' ? precosEN : precosPT;
+  
+  // Hero vindo do JSON (mas temos fallback no content se precisar)
+  const heroData = precosData?.orcamento?.hero || {};
 
-  const hero = precosData?.orcamento?.hero || {};
+  // ===== TRADUÇÃO DE INTERFACE (UI) =====
+  const content = useMemo(() => {
+    const pt = {
+      seoTitle: 'Orçamento Online | Comerc IA’s',
+      seoDesc: 'Monte seu orçamento em poucos cliques. Escolha serviços, veja detalhes e receba um resumo por e-mail.',
+      
+      // Hero (UI Elements)
+      hlFast: 'Rápido e intuitivo',
+      hlPro: 'Resumo profissional',
+      hlClear: 'Detalhes por serviço',
+      
+      // Passos
+      step1: '1',
+      step1Title: 'Escolha seus serviços',
+      step1Sub: 'Expanda uma categoria, selecione itens e veja detalhes completos.',
+      
+      step2: '2',
+      step2Title: 'Seus dados',
+      step2Sub: 'Preencha e clique em “Gerar orçamento”.',
+      
+      // Labels Serviço
+      lblIncludes: 'Inclui',
+      lblBenefits: 'Benefícios',
+      lblFormats: 'Formatos',
+      lblDeadline: 'Prazo',
+      lblPeriod: 'Período',
+      btnDetails: 'Detalhes',
+      btnClose: 'Fechar',
+      catOptions: 'opções',
+      
+      // Formulário
+      labelName: 'Nome',
+      labelEmail: 'E-mail',
+      labelCompany: 'Empresa / Instagram',
+      labelPhone: 'Telefone',
+      labelCoupon: 'Cupom',
+      labelMessage: 'Mensagem',
+      labelAgree: 'Concordo em ser contatado para finalizar detalhes do orçamento.',
+      labelObs: 'Obs:',
+      
+      // Botões Ação
+      btnGenerate: 'Gerar orçamento',
+      btnWhats: 'Falar no WhatsApp',
+      
+      // Resumo Lateral
+      summaryTitle: 'Resumo',
+      summarySelected: 'Selecionados',
+      summarySubtotal: 'Subtotal',
+      summaryHint: 'Finalize no Passo 2 para receber seu orçamento por e-mail.',
+      btnGoForm: 'Ir para o formulário',
+      btnBackServices: 'Voltar aos serviços',
+      
+      // Quiz Card
+      quizTitle: 'Não sabe qual serviço escolher?',
+      quizDesc: 'Responda um quiz rápido e receba uma recomendação do melhor pacote para o seu objetivo.',
+      quizCta: 'Abrir quiz de escolha →',
+      
+      // Resultado Final
+      resTitle: 'Resumo do orçamento',
+      resHint: 'Guarde este resumo para comparar opções.',
+      btnPrint: 'Imprimir',
+      btnDownload: 'Baixar',
+      lblDiscount: 'Desconto aplicado',
+      lblFinalPrice: 'Preço final',
+      lblSelected: 'Serviços selecionados',
+      lblSubtotalRaw: 'Subtotal (antes de cupons)',
+      btnShare: 'Compartilhar',
+      btnBackTop: 'Voltar ao topo',
+      
+      // Modals / Alerts
+      modalShareTitle: 'Compartilhar orçamento',
+      modalShareDesc: 'Copie a mensagem abaixo e envie para o cliente.',
+      btnCopy: 'Copiar',
+      
+      alertSuccess: 'Orçamento gerado! Já enviamos um resumo por e-mail.',
+      alertError: 'Houve um erro ao gerar o orçamento.',
+      alertFill: 'Preencha todos os dados obrigatórios.',
+      alertEmail: 'Digite um e-mail válido.',
+      alertTerms: 'Você precisa aceitar os termos para continuar.',
+      alertSelect: 'Selecione pelo menos 1 serviço.',
+      alertCoupon: 'Cupom não cumulativo com planos de longo prazo.',
+      alertCopied: 'Texto copiado!',
+    };
 
+    const en = {
+      seoTitle: 'Instant Quote | Comerc IA’s',
+      seoDesc: 'Build your quote in a few clicks. Choose services, check details, and get a summary by email.',
+      
+      // Hero (UI Elements)
+      hlFast: 'Fast & intuitive',
+      hlPro: 'Professional summary',
+      hlClear: 'Details per service',
+      
+      // Steps
+      step1: '1',
+      step1Title: 'Choose your services',
+      step1Sub: 'Expand a category, select items, and view full details.',
+      
+      step2: '2',
+      step2Title: 'Your details',
+      step2Sub: 'Fill in and click “Generate quote”.',
+      
+      // Service Labels
+      lblIncludes: 'Includes',
+      lblBenefits: 'Benefits',
+      lblFormats: 'Formats',
+      lblDeadline: 'Deadline',
+      lblPeriod: 'Period',
+      btnDetails: 'Details',
+      btnClose: 'Close',
+      catOptions: 'options',
+      
+      // Form
+      labelName: 'Name',
+      labelEmail: 'E-mail',
+      labelCompany: 'Company / Instagram',
+      labelPhone: 'Phone',
+      labelCoupon: 'Coupon',
+      labelMessage: 'Message',
+      labelAgree: 'I agree to be contacted to finalize quote details.',
+      labelObs: 'Note:',
+      
+      // Action Buttons
+      btnGenerate: 'Generate quote',
+      btnWhats: 'Chat on WhatsApp',
+      
+      // Sidebar Summary
+      summaryTitle: 'Summary',
+      summarySelected: 'Selected',
+      summarySubtotal: 'Subtotal',
+      summaryHint: 'Finish in Step 2 to receive your quote via email.',
+      btnGoForm: 'Go to form',
+      btnBackServices: 'Back to services',
+      
+      // Quiz Card
+      quizTitle: 'Not sure what to choose?',
+      quizDesc: 'Take a quick quiz and get a package recommendation based on your goal.',
+      quizCta: 'Open choice quiz →',
+      
+      // Final Result
+      resTitle: 'Quote Summary',
+      resHint: 'Keep this summary to compare options.',
+      btnPrint: 'Print',
+      btnDownload: 'Download',
+      lblDiscount: 'Discount applied',
+      lblFinalPrice: 'Final price',
+      lblSelected: 'Selected services',
+      lblSubtotalRaw: 'Subtotal (before coupons)',
+      btnShare: 'Share',
+      btnBackTop: 'Back to top',
+      
+      // Modals / Alerts
+      modalShareTitle: 'Share quote',
+      modalShareDesc: 'Copy the message below and send it to the client.',
+      btnCopy: 'Copy',
+      
+      alertSuccess: 'Quote generated! We sent a summary to your email.',
+      alertError: 'There was an error generating the quote.',
+      alertFill: 'Please fill in all required fields.',
+      alertEmail: 'Please enter a valid email.',
+      alertTerms: 'You must accept the terms to continue.',
+      alertSelect: 'Select at least 1 service.',
+      alertCoupon: 'Coupon does not stack with long-term plans.',
+      alertCopied: 'Text copied!',
+    };
+
+    return currentLang === 'en' ? en : pt;
+  }, [currentLang]);
+
+  // Estados
   const [selectedServices, setSelectedServices] = useState({});
   const [openCategories, setOpenCategories] = useState({});
   const [openServiceDetails, setOpenServiceDetails] = useState({});
@@ -69,15 +244,19 @@ const OrcamentoPage = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const componentRef = useRef();
 
+  // Formatador de Moeda
   const formatCurrency = (value) => {
     try {
       const locale = currentLang === 'en' ? 'en-US' : 'pt-BR';
+      const currency = currentLang === 'en' ? 'USD' : 'BRL'; // Ajuste se quiser manter BRL no inglês
+      // Nota: Mantendo BRL mesmo no inglês pois a empresa é BR, mas formatação US
       return new Intl.NumberFormat(locale, { style: 'currency', currency: 'BRL' }).format(value || 0);
     } catch (e) {
       return `R$ ${Number(value || 0).toFixed(2)}`;
     }
   };
 
+  // Helper para encontrar objeto do serviço no JSON
   const findServiceObject = (categoryName, serviceTitle) => {
     if (!precosData || !precosData.orcamento) return null;
     const cat = precosData.orcamento.categorias.find((c) => c.nome === categoryName);
@@ -85,6 +264,7 @@ const OrcamentoPage = () => {
     return cat.servicos.find((s) => s.titulo === serviceTitle) || null;
   };
 
+  // Processar URL params (para quando vem do Quiz externo)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const encodedServices = urlParams.get('servicos');
@@ -112,7 +292,6 @@ const OrcamentoPage = () => {
         Object.keys(newSelectedServices).forEach((cat) => { newOpenCategories[cat] = true; });
         setOpenCategories(newOpenCategories);
       } catch (e) {
-        // eslint-disable-next-line no-console
         console.error('Erro ao decodificar serviços da URL:', e);
       }
     }
@@ -122,12 +301,11 @@ const OrcamentoPage = () => {
         const resumoDecodificado = decodeURIComponent(encodedResumo);
         setUserData((prev) => ({ ...prev, mensagem: resumoDecodificado }));
       } catch (e) {
-        // eslint-disable-next-line no-console
         console.error('Erro ao decodificar resumo da URL:', e);
       }
     }
     // eslint-disable-next-line
-  }, []);
+  }, [precosData]);
 
   const findPeriodDetails = (serviceObject, selectedPrice) => {
     if (serviceObject?.precos_por_periodo) {
@@ -137,10 +315,14 @@ const OrcamentoPage = () => {
   };
 
   const getReunioesSemanas = (categoryName, title) => {
-    if (categoryName.includes('Social Media') || categoryName.includes('Planos')) {
-      if (title.includes('Básico') || title.includes('Basic')) return '1 reunião/semana';
-      if (title.includes('Standart') || title.includes('Standard')) return '2 reuniões/semana';
-      if (title.includes('Premium')) return '2 reuniões/semana';
+    // Lógica simples para detectar planos e exibir badge de reuniões
+    const nameLower = (categoryName || '').toLowerCase();
+    const titleLower = (title || '').toLowerCase();
+    
+    if (nameLower.includes('social') || nameLower.includes('planos') || nameLower.includes('plans')) {
+      if (titleLower.includes('básico') || titleLower.includes('basic')) return currentLang === 'en' ? '1 meeting/week' : '1 reunião/semana';
+      if (titleLower.includes('standart') || titleLower.includes('standard')) return currentLang === 'en' ? '2 meetings/week' : '2 reuniões/semana';
+      if (titleLower.includes('premium')) return currentLang === 'en' ? '2 meetings/week' : '2 reuniões/semana';
     }
     return null;
   };
@@ -179,6 +361,7 @@ const OrcamentoPage = () => {
           };
         }
       } else {
+        // Se tem período, apenas atualiza o preço (radio behavior implícito na UI)
         newSelection[categoryName] = {
           ...newSelection[categoryName],
           [serviceTitle]: price,
@@ -221,7 +404,7 @@ const OrcamentoPage = () => {
             const periodDetails = findPeriodDetails(svcObj, itemPrice);
             if (periodDetails) {
               const economia = periodDetails.preco_total_sem_desc - periodDetails.preco_total_com_desc;
-              periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} meses, Economia: ${formatCurrency(economia)})`;
+              periodInfo = `(${periodDetails.periodo} - ${periodDetails.meses} ${currentLang === 'en' ? 'months' : 'meses'}, Econ: ${formatCurrency(economia)})`;
             }
             return `- ${vendaTitle} ${periodInfo} - ${formatCurrency(itemPrice)}`;
           })
@@ -231,12 +414,12 @@ const OrcamentoPage = () => {
       .join('\n\n');
 
     const emailContent = `
-Novo Orçamento de ${userData.nome}
+Novo Orçamento (${currentLang.toUpperCase()}) de ${userData.nome}
 E-mail: ${userData.email}
 Telefone: ${userData.telefone || 'Não informado'}
 Empresa/Instagram: ${userData.empresa || 'Não informado'}
 Mensagem do Cliente: ${userData.mensagem || '—'}
-Cupom de Desconto: ${userData.cupom || 'Nenhum'} (${appliedCoupon ? 'Aplicado' : 'Não aplicado ou Inválido'})
+Cupom de Desconto: ${userData.cupom || 'Nenhum'} (${appliedCoupon ? 'Aplicado' : 'Não aplicado'})
 
 ---
 Serviços selecionados:
@@ -259,15 +442,15 @@ Preço Final: ${formatCurrency(price)}
           from: 'comerc.ias.prod@gmail.com',
           to: 'comerc.ias.prod@gmail.com',
           _replyto: userData.email,
-          subject: 'Novo Orçamento - Comerc IAs',
+          subject: `Novo Orçamento (${currentLang.toUpperCase()}) - Comerc IAs`,
           body: emailContent,
         }),
       });
 
-      setAlert({ variant: 'success', message: t('alert_success', { defaultValue: 'Orçamento gerado! Já enviamos um resumo por e-mail.' }) });
+      setAlert({ variant: 'success', message: content.alertSuccess });
       setShowResultCard(true);
     } catch (error) {
-      setAlert({ variant: 'danger', message: t('alert_error', { defaultValue: 'Houve um erro ao gerar o orçamento.' }) });
+      setAlert({ variant: 'danger', message: content.alertError });
     }
   };
 
@@ -276,37 +459,38 @@ Preço Final: ${formatCurrency(price)}
     setShowResultCard(false);
 
     if (!userData.nome || !userData.email || !userData.empresa || !userData.telefone) {
-      setAlert({ variant: 'danger', message: t('alert_fill_data', { defaultValue: 'Preencha todos os dados obrigatórios.' }) });
+      setAlert({ variant: 'danger', message: content.alertFill });
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(userData.email)) {
-      setAlert({ variant: 'danger', message: t('alert_valid_email', { defaultValue: 'Digite um e-mail válido.' }) });
+      setAlert({ variant: 'danger', message: content.alertEmail });
       return;
     }
 
     if (!agreedToContact) {
-      setAlert({ variant: 'danger', message: t('alert_accept_terms', { defaultValue: 'Você precisa aceitar os termos para continuar.' }) });
+      setAlert({ variant: 'danger', message: content.alertTerms });
       return;
     }
 
     if (selectedCount === 0) {
-      setAlert({ variant: 'danger', message: t('alert_select_service', { defaultValue: 'Selecione pelo menos 1 serviço.' }) });
+      setAlert({ variant: 'danger', message: content.alertSelect });
       return;
     }
 
     let total = selectedSubtotal;
-
     let discount = 0;
     let appliedCoupon = false;
 
+    // Lógica de cupom (exemplo simples)
     if (userData.cupom.trim().toUpperCase() === 'NATAL25') {
       appliedCoupon = true;
 
+      // Verifica se há planos de longo prazo (onde cupom não se aplica)
       const isLongTermPlanSelected = Object.keys(selectedServices).some((category) => {
         const cat = precosData.orcamento.categorias.find((c) => c.nome === category);
-        if (cat && (cat.nome.includes('Social Media') || cat.nome.includes('Planos'))) {
+        if (cat && (cat.nome.toLowerCase().includes('social') || cat.nome.toLowerCase().includes('planos') || cat.nome.toLowerCase().includes('plans'))) {
           return Object.keys(selectedServices[category]).some((title) => {
             const svc = findServiceObject(category, title);
             const selectedPrice = selectedServices[category][title];
@@ -318,7 +502,7 @@ Preço Final: ${formatCurrency(price)}
       });
 
       if (isLongTermPlanSelected) {
-        setAlert({ variant: 'warning', message: t('coupon_not_stack', { defaultValue: 'Cupom não cumulativo com planos de longo prazo.' }) });
+        setAlert({ variant: 'warning', message: content.alertCoupon });
         discount = 0;
       } else {
         discount = total * 0.25;
@@ -335,19 +519,19 @@ Preço Final: ${formatCurrency(price)}
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: `Orçamento Comerc IAs - ${userData.nome}`,
+    documentTitle: `Orcamento_ComercIAs_${userData.nome}`,
   });
 
-  const getShareText = () => `Olá, ${userData.nome}! O seu orçamento deu ${formatCurrency(finalPrice)}.`;
+  const getShareText = () => `${userData.nome}, seu orçamento na Comerc IA's ficou em ${formatCurrency(finalPrice)}.`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(getShareText());
-    setAlert({ variant: 'success', message: t('alert_copy_success', { defaultValue: 'Texto copiado!' }) });
+    setAlert({ variant: 'success', message: content.alertCopied });
     setShowShareModal(false);
   };
 
   const handleDownload = () => {
-    const contentToDownload = `Orçamento: ${formatCurrency(finalPrice)}`;
+    const contentToDownload = `Orçamento Comerc IA's\nCliente: ${userData.nome}\nValor Final: ${formatCurrency(finalPrice)}`;
     const blob = new Blob([contentToDownload], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -372,8 +556,8 @@ Preço Final: ${formatCurrency(price)}
   return (
     <>
       <SEO
-        title={t('orcamento_seo_title', { defaultValue: 'Orçamento Online | Comerc IA’s' })}
-        description={t('orcamento_seo_desc', { defaultValue: 'Monte seu orçamento em poucos cliques. Escolha serviços, veja detalhes e receba um resumo por e-mail.' })}
+        title={content.seoTitle}
+        description={content.seoDesc}
         href={`/${currentLang}/orcamento`}
       />
 
@@ -386,34 +570,34 @@ Preço Final: ${formatCurrency(price)}
               <div className="orc-hero-inner">
                 <div className="orc-hero-badge">
                   <FontAwesomeIcon icon={faBolt} className="me-2" />
-                  {hero.badge || t('orcamento_hero_badge', { defaultValue: 'Orçamento Instantâneo' })}
+                  {heroData.badge}
                 </div>
 
                 <h1 className="orc-hero-title">
-                  {hero.titulo || t('orcamento_page_title', { defaultValue: 'Orçamento de Vídeo Online' })}
+                  {heroData.titulo}
                 </h1>
 
                 <p className="orc-hero-subtitle">
-                  {hero.subtitulo || t('orcamento_subtitle', { defaultValue: 'Selecione serviços, compare opções e receba um resumo por e-mail.' })}
+                  {heroData.subtitulo}
                 </p>
 
                 <div className="orc-hero-highlights">
                   <div className="orc-hero-highlight">
                     <FontAwesomeIcon icon={faClock} />
-                    <span>{t('orc_hl_fast', { defaultValue: 'Rápido e intuitivo' })}</span>
+                    <span>{content.hlFast}</span>
                   </div>
                   <div className="orc-hero-highlight">
                     <FontAwesomeIcon icon={faShieldAlt} />
-                    <span>{t('orc_hl_pro', { defaultValue: 'Resumo profissional' })}</span>
+                    <span>{content.hlPro}</span>
                   </div>
                   <div className="orc-hero-highlight">
                     <FontAwesomeIcon icon={faListCheck} />
-                    <span>{t('orc_hl_clear', { defaultValue: 'Detalhes por serviço' })}</span>
+                    <span>{content.hlClear}</span>
                   </div>
                 </div>
 
                 <div className="orc-hero-note">
-                  {hero.nota || t('orcamento_hero_note', { defaultValue: 'Dica: descreva seu objetivo no campo de mensagem para um orçamento mais preciso.' })}
+                  {heroData.nota}
                 </div>
               </div>
             </section>
@@ -426,12 +610,12 @@ Preço Final: ${formatCurrency(price)}
                   <Card.Body className="orc-card-body">
                     <div className="orc-card-head">
                       <div>
-                        <div className="orc-step">1</div>
+                        <div className="orc-step">{content.step1}</div>
                       </div>
                       <div className="flex-grow-1">
-                        <h2 className="orc-card-title">{t('orc_step_services', { defaultValue: 'Escolha seus serviços' })}</h2>
+                        <h2 className="orc-card-title">{content.step1Title}</h2>
                         <p className="orc-card-subtitle">
-                          {t('orc_step_services_sub', { defaultValue: 'Expanda uma categoria, selecione itens e veja detalhes completos.' })}
+                          {content.step1Sub}
                         </p>
                       </div>
                     </div>
@@ -447,7 +631,7 @@ Preço Final: ${formatCurrency(price)}
                             <div className="orc-catLeft">
                               <h3 className="orc-catTitle">{categoria.nome}</h3>
                               <span className="orc-catMeta">
-                                {categoria.servicos.length} {t('orcamento_cat_options', { defaultValue: 'opções' })}
+                                {categoria.servicos.length} {content.catOptions}
                               </span>
                             </div>
                             <span className="orc-catIcon">
@@ -503,11 +687,13 @@ Preço Final: ${formatCurrency(price)}
 
                                         <div className="orc-badges">
                                           <Badge bg="info" className="orc-badge">
-                                            {reunioesBadge || (periodDetails ? `${periodDetails.meses} meses` : servico.prazo_entrega || 'Padrão')}
+                                            {reunioesBadge || (periodDetails ? `${periodDetails.meses} m` : servico.prazo_entrega || 'Padrão')}
                                           </Badge>
 
                                           <Badge bg="secondary" className="orc-badge">
-                                            {servico.revisoes_incluidas != null ? `${servico.revisoes_incluidas} revisão(ões)` : 'Revisões sob pedido'}
+                                            {servico.revisoes_incluidas != null 
+                                              ? `${servico.revisoes_incluidas} revs` 
+                                              : 'Revisões inclusas'}
                                           </Badge>
                                         </div>
                                       </div>
@@ -529,8 +715,8 @@ Preço Final: ${formatCurrency(price)}
                                           onClick={() => toggleServiceDetails(categoria.nome, servico.titulo)}
                                         >
                                           {openServiceDetails[`${categoria.nome}||${servico.titulo}`]
-                                            ? t('btn_close', { defaultValue: 'Fechar' })
-                                            : t('btn_details', { defaultValue: 'Detalhes' })}{' '}
+                                            ? content.btnClose
+                                            : content.btnDetails}{' '}
                                           <FontAwesomeIcon icon={faInfoCircle} />
                                         </button>
                                       </div>
@@ -538,7 +724,7 @@ Preço Final: ${formatCurrency(price)}
 
                                     {servico.precos_por_periodo && (
                                       <div className="orc-periods">
-                                        <div className="orc-periodsTitle">{t('label_period', { defaultValue: 'Período' })}</div>
+                                        <div className="orc-periodsTitle">{content.lblPeriod}</div>
 
                                         {servico.precos_por_periodo.map((p) => {
                                           const isPeriodChecked = isChecked && currentPrice === p.preco_total_com_desc;
@@ -559,7 +745,7 @@ Preço Final: ${formatCurrency(price)}
                                                       <div className="orc-periodName">{p.periodo}</div>
                                                       {!isMonthly && (
                                                         <div className="orc-periodMini">
-                                                          ~{formatCurrency(p.preco_mensal_efetivo)}/mês
+                                                          ~{formatCurrency(p.preco_mensal_efetivo)}/{currentLang === 'en' ? 'mo' : 'mês'}
                                                         </div>
                                                       )}
                                                     </div>
@@ -582,19 +768,19 @@ Preço Final: ${formatCurrency(price)}
                                       <div className="orc-details">
                                         <div className="orc-detailsGrid">
                                           <div>
-                                            <div className="orc-detailsTitle">{t('label_includes', { defaultValue: 'Inclui' })}</div>
+                                            <div className="orc-detailsTitle">{content.lblIncludes}</div>
                                             {servico.inclui && servico.inclui.length > 0 ? (
                                               <ul className="orc-detailsList">
                                                 {servico.inclui.map((it, i) => (<li key={i}>{it}</li>))}
                                               </ul>
                                             ) : (
-                                              <div className="orc-muted">Inclusões não especificadas.</div>
+                                              <div className="orc-muted">—</div>
                                             )}
                                           </div>
 
                                           {servico.beneficios && servico.beneficios.length > 0 && (
                                             <div>
-                                              <div className="orc-detailsTitle">{t('label_benefits', { defaultValue: 'Benefícios' })}</div>
+                                              <div className="orc-detailsTitle">{content.lblBenefits}</div>
                                               <ul className="orc-detailsList">
                                                 {servico.beneficios.map((b, i) => (<li key={i}>{b}</li>))}
                                               </ul>
@@ -605,14 +791,14 @@ Preço Final: ${formatCurrency(price)}
                                         <div className="orc-detailsMeta">
                                           {servico.formato_entrega && (
                                             <div>
-                                              <div className="orc-detailsTitle">{t('label_formats', { defaultValue: 'Formatos' })}</div>
+                                              <div className="orc-detailsTitle">{content.lblFormats}</div>
                                               <div className="orc-small">{servico.formato_entrega.join(' • ')}</div>
                                             </div>
                                           )}
 
                                           <div>
-                                            <div className="orc-detailsTitle">{t('label_deadline', { defaultValue: 'Prazo' })}</div>
-                                            <div className="orc-small">{servico.prazo_entrega || 'Conforme acordado'}</div>
+                                            <div className="orc-detailsTitle">{content.lblDeadline}</div>
+                                            <div className="orc-small">{servico.prazo_entrega || '—'}</div>
                                           </div>
                                         </div>
                                       </div>
@@ -626,7 +812,7 @@ Preço Final: ${formatCurrency(price)}
                       ))}
                     </div>
 
-                    {/* CTA premium dentro do passo 1 (opcional, mas ajuda conversão) */}
+                    {/* CTA premium dentro do passo 1 */}
                     <a
                       className="orc-quizCard orc-quizCard--inline"
                       href={QUIZ_URL}
@@ -634,13 +820,13 @@ Preço Final: ${formatCurrency(price)}
                       rel="noopener noreferrer"
                     >
                       <div className="orc-quizCard__top">
-                        <div className="orc-quizCard__title">Ainda em dúvida do melhor caminho?</div>
+                        <div className="orc-quizCard__title">{content.quizTitle}</div>
                         <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                       </div>
                       <div className="orc-quizCard__desc">
-                        Responda um quiz rápido e receba uma recomendação de pacote baseada no seu objetivo.
+                        {content.quizDesc}
                       </div>
-                      <div className="orc-quizCard__cta">Abrir quiz de escolha →</div>
+                      <div className="orc-quizCard__cta">{content.quizCta}</div>
                     </a>
                   </Card.Body>
                 </Card>
@@ -650,12 +836,12 @@ Preço Final: ${formatCurrency(price)}
                   <Card.Body className="orc-card-body">
                     <div className="orc-card-head">
                       <div>
-                        <div className="orc-step">2</div>
+                        <div className="orc-step">{content.step2}</div>
                       </div>
                       <div className="flex-grow-1">
-                        <h2 className="orc-card-title">{t('form_title', { defaultValue: 'Seus dados' })}</h2>
+                        <h2 className="orc-card-title">{content.step2Title}</h2>
                         <p className="orc-card-subtitle">
-                          {t('orc_step_form_sub', { defaultValue: 'Preencha e clique em “Gerar orçamento”.' })}
+                          {content.step2Sub}
                         </p>
                       </div>
                     </div>
@@ -664,42 +850,42 @@ Preço Final: ${formatCurrency(price)}
                       <Row className="g-3">
                         <Col md={6}>
                           <Form.Group>
-                            <Form.Label>{t('label_name', { defaultValue: 'Nome' })}</Form.Label>
+                            <Form.Label>{content.labelName}</Form.Label>
                             <Form.Control type="text" name="nome" value={userData.nome} onChange={handleUserInputChange} required />
                           </Form.Group>
                         </Col>
 
                         <Col md={6}>
                           <Form.Group>
-                            <Form.Label>{t('label_email', { defaultValue: 'E-mail' })}</Form.Label>
+                            <Form.Label>{content.labelEmail}</Form.Label>
                             <Form.Control type="email" name="email" value={userData.email} onChange={handleUserInputChange} required />
                           </Form.Group>
                         </Col>
 
                         <Col md={6}>
                           <Form.Group>
-                            <Form.Label>{t('label_company', { defaultValue: 'Empresa / Instagram' })}</Form.Label>
+                            <Form.Label>{content.labelCompany}</Form.Label>
                             <Form.Control type="text" name="empresa" value={userData.empresa} onChange={handleUserInputChange} required />
                           </Form.Group>
                         </Col>
 
                         <Col md={6}>
                           <Form.Group>
-                            <Form.Label>{t('label_phone', { defaultValue: 'Telefone' })}</Form.Label>
+                            <Form.Label>{content.labelPhone}</Form.Label>
                             <Form.Control type="tel" name="telefone" value={userData.telefone} onChange={handleUserInputChange} required />
                           </Form.Group>
                         </Col>
 
                         <Col md={6}>
                           <Form.Group>
-                            <Form.Label>{t('label_coupon', { defaultValue: 'Cupom' })}</Form.Label>
+                            <Form.Label>{content.labelCoupon}</Form.Label>
                             <Form.Control type="text" name="cupom" value={userData.cupom} onChange={handleUserInputChange} placeholder="Ex: NATAL25" />
                           </Form.Group>
                         </Col>
 
                         <Col md={12}>
                           <Form.Group>
-                            <Form.Label>{t('label_message', { defaultValue: 'Mensagem' })}</Form.Label>
+                            <Form.Label>{content.labelMessage}</Form.Label>
                             <Form.Control as="textarea" rows={4} name="mensagem" value={userData.mensagem} onChange={handleUserInputChange} />
                           </Form.Group>
                         </Col>
@@ -710,7 +896,7 @@ Preço Final: ${formatCurrency(price)}
                               type="checkbox"
                               id="agreedToContact"
                               className="orc-check"
-                              label={t('label_agree', { defaultValue: 'Concordo em ser contatado para finalizar detalhes do orçamento.' })}
+                              label={content.labelAgree}
                               checked={agreedToContact}
                               onChange={handleAgreementChange}
                             />
@@ -726,7 +912,7 @@ Preço Final: ${formatCurrency(price)}
 
                       <div className="orc-ctaRow">
                         <Button type="button" onClick={calculateBudget} className="orc-btn orc-btn-primary">
-                          {hero.cta_primario || t('btn_generate', { defaultValue: 'Gerar orçamento' })}
+                          {content.btnGenerate}
                         </Button>
 
                         <Button
@@ -735,12 +921,12 @@ Preço Final: ${formatCurrency(price)}
                           className="orc-btn orc-btn-ghost"
                           onClick={() => { window.location.href = `/${currentLang}/contact`; }}
                         >
-                          {hero.cta_secundario || t('orc_whats', { defaultValue: 'Falar no WhatsApp' })}
+                          {content.btnWhats}
                         </Button>
                       </div>
 
                       <div className="orc-footnote">
-                        <strong>{t('label_obs', { defaultValue: 'Obs:' })}</strong> {precosData.orcamento.observacoes}
+                        <strong>{content.labelObs}</strong> {precosData.orcamento.observacoes}
                       </div>
                     </Form>
                   </Card.Body>
@@ -753,30 +939,30 @@ Preço Final: ${formatCurrency(price)}
                       <Card.Body className="orc-card-body">
                         <div className="orc-resultHead">
                           <div>
-                            <h2 className="orc-card-title mb-1">{t('result_title', { defaultValue: 'Resumo do orçamento' })}</h2>
+                            <h2 className="orc-card-title mb-1">{content.resTitle}</h2>
                             <div className="orc-muted">
-                              {t('orc_result_hint', { defaultValue: 'Guarde este resumo para comparar opções.' })}
+                              {content.resHint}
                             </div>
                           </div>
 
                           <div className="orc-resultActions">
                             <Button variant="outline-secondary" size="sm" className="orc-actionBtn" onClick={handlePrint}>
-                              <FontAwesomeIcon icon={faPrint} /> {t('btn_print', { defaultValue: 'Imprimir' })}
+                              <FontAwesomeIcon icon={faPrint} /> {content.btnPrint}
                             </Button>
                             <Button variant="outline-secondary" size="sm" className="orc-actionBtn" onClick={handleDownload}>
-                              <FontAwesomeIcon icon={faDownload} /> {t('btn_download', { defaultValue: 'Baixar' })}
+                              <FontAwesomeIcon icon={faDownload} /> {content.btnDownload}
                             </Button>
                           </div>
                         </div>
 
                         <div className="orc-resultGrid">
                           <div className="orc-resultCard">
-                            <div className="orc-resultLabel">{t('label_discount_applied', { defaultValue: 'Desconto aplicado' })}</div>
+                            <div className="orc-resultLabel">{content.lblDiscount}</div>
                             <div className="orc-resultValue">{formatCurrency(appliedDiscount)}</div>
                           </div>
 
                           <div className="orc-resultCard is-highlight">
-                            <div className="orc-resultLabel">{t('label_final_price', { defaultValue: 'Preço final' })}</div>
+                            <div className="orc-resultLabel">{content.lblFinalPrice}</div>
                             <div className="orc-resultValue">{formatCurrency(finalPrice)}</div>
                           </div>
                         </div>
@@ -785,25 +971,25 @@ Preço Final: ${formatCurrency(price)}
 
                         <Row className="g-3">
                           <Col md={6}>
-                            <div className="orc-kv"><span>{t('label_name', { defaultValue: 'Nome' })}</span><strong>{userData.nome}</strong></div>
-                            <div className="orc-kv"><span>{t('label_email', { defaultValue: 'E-mail' })}</span><strong>{userData.email}</strong></div>
-                            <div className="orc-kv"><span>{t('label_company', { defaultValue: 'Empresa' })}</span><strong>{userData.empresa}</strong></div>
-                            <div className="orc-kv"><span>{t('label_phone', { defaultValue: 'Telefone' })}</span><strong>{userData.telefone}</strong></div>
+                            <div className="orc-kv"><span>{content.labelName}</span><strong>{userData.nome}</strong></div>
+                            <div className="orc-kv"><span>{content.labelEmail}</span><strong>{userData.email}</strong></div>
+                            <div className="orc-kv"><span>{content.labelCompany}</span><strong>{userData.empresa}</strong></div>
+                            <div className="orc-kv"><span>{content.labelPhone}</span><strong>{userData.telefone}</strong></div>
                           </Col>
 
                           <Col md={6}>
                             <div className="orc-kv">
-                              <span>{t('label_selected_services', { defaultValue: 'Serviços selecionados' })}</span>
+                              <span>{content.lblSelected}</span>
                               <strong>{selectedCount}</strong>
                             </div>
                             <div className="orc-kv">
-                              <span>{t('orc_subtotal', { defaultValue: 'Subtotal (antes de cupons)' })}</span>
+                              <span>{content.lblSubtotalRaw}</span>
                               <strong>{formatCurrency(selectedSubtotal)}</strong>
                             </div>
                           </Col>
                         </Row>
 
-                        <h3 className="orc-sectionTitle mt-4">{t('label_selected_services', { defaultValue: 'Serviços selecionados' })}</h3>
+                        <h3 className="orc-sectionTitle mt-4">{content.lblSelected}</h3>
 
                         <div className="orc-selectedList">
                           {Object.entries(selectedServices).map(([category, services]) => (
@@ -827,7 +1013,7 @@ Preço Final: ${formatCurrency(price)}
 
                         <div className="orc-resultFooter">
                           <Button variant="outline-primary" className="orc-btn orc-btn-ghost" onClick={() => setShowShareModal(true)}>
-                            <FontAwesomeIcon icon={faShareAlt} className="me-2" /> {t('btn_share', { defaultValue: 'Compartilhar' })}
+                            <FontAwesomeIcon icon={faShareAlt} className="me-2" /> {content.btnShare}
                           </Button>
 
                           <Button
@@ -835,7 +1021,7 @@ Preço Final: ${formatCurrency(price)}
                             className="orc-btn orc-btn-primary"
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                           >
-                            {t('btn_back_top', { defaultValue: 'Voltar ao topo' })}
+                            {content.btnBackTop}
                           </Button>
                         </div>
                       </Card.Body>
@@ -850,21 +1036,21 @@ Preço Final: ${formatCurrency(price)}
                   <Card className="orc-card orc-card-sticky">
                     <Card.Body className="orc-card-body">
                       <div className="orc-asideTitle">
-                        {t('orc_summary', { defaultValue: 'Resumo' })}
+                        {content.summaryTitle}
                       </div>
 
                       <div className="orc-asideLine">
-                        <span>{t('orc_selected', { defaultValue: 'Selecionados' })}</span>
+                        <span>{content.summarySelected}</span>
                         <strong>{selectedCount}</strong>
                       </div>
 
                       <div className="orc-asideLine">
-                        <span>{t('orc_subtotal', { defaultValue: 'Subtotal' })}</span>
+                        <span>{content.summarySubtotal}</span>
                         <strong>{formatCurrency(selectedSubtotal)}</strong>
                       </div>
 
                       <div className="orc-asideHint">
-                        {t('orc_summary_hint', { defaultValue: 'Finalize no Passo 2 para receber seu orçamento por e-mail.' })}
+                        {content.summaryHint}
                       </div>
 
                       <div className="orc-asideBtns">
@@ -873,7 +1059,7 @@ Preço Final: ${formatCurrency(price)}
                           className="orc-btn orc-btn-primary"
                           onClick={scrollToForm}
                         >
-                          {t('orc_go_form', { defaultValue: 'Ir para o formulário' })}
+                          {content.btnGoForm}
                         </Button>
 
                         <Button
@@ -882,7 +1068,7 @@ Preço Final: ${formatCurrency(price)}
                           className="orc-btn orc-btn-ghost"
                           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         >
-                          {t('orc_back_services', { defaultValue: 'Voltar aos serviços' })}
+                          {content.btnBackServices}
                         </Button>
                       </div>
 
@@ -894,13 +1080,13 @@ Preço Final: ${formatCurrency(price)}
                         rel="noopener noreferrer"
                       >
                         <div className="orc-quizCard__top">
-                          <div className="orc-quizCard__title">Não sabe qual serviço escolher?</div>
+                          <div className="orc-quizCard__title">{content.quizTitle}</div>
                           <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                         </div>
                         <div className="orc-quizCard__desc">
-                          Responda um quiz rápido e receba uma recomendação do melhor pacote para o seu objetivo.
+                          {content.quizDesc}
                         </div>
-                        <div className="orc-quizCard__cta">Abrir quiz de escolha →</div>
+                        <div className="orc-quizCard__cta">{content.quizCta}</div>
                       </a>
                     </Card.Body>
                   </Card>
@@ -915,15 +1101,15 @@ Preço Final: ${formatCurrency(price)}
               dialogClassName="orc-modal"
             >
               <Modal.Header closeButton>
-                <Modal.Title>{t('modal_share_title', { defaultValue: 'Compartilhar orçamento' })}</Modal.Title>
+                <Modal.Title>{content.modalShareTitle}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <p className="orc-muted">{t('modal_share_desc', { defaultValue: 'Copie a mensagem abaixo e envie para o cliente.' })}</p>
+                <p className="orc-muted">{content.modalShareDesc}</p>
                 <Form.Control as="textarea" rows={6} readOnly value={getShareText()} />
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="secondary" onClick={() => setShowShareModal(false)}>{t('btn_close', { defaultValue: 'Fechar' })}</Button>
-                <Button variant="primary" onClick={copyToClipboard}>{t('btn_copy', { defaultValue: 'Copiar' })}</Button>
+                <Button variant="secondary" onClick={() => setShowShareModal(false)}>{content.btnClose}</Button>
+                <Button variant="primary" onClick={copyToClipboard}>{content.btnCopy}</Button>
               </Modal.Footer>
             </Modal>
 

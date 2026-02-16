@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   motion,
@@ -13,9 +13,14 @@ import servicos from "../assets/images/servicos.png";
 
 const AboutPage = () => {
   const { i18n } = useTranslation();
+  const { lang } = useParams();
   const reduceMotion = useReducedMotion();
 
-  const currentLang = (i18n.language || "pt").toLowerCase().startsWith("en") ? "en" : "pt";
+  const currentLang = useMemo(() => {
+    if (lang === "pt" || lang === "en") return lang;
+    const l = (i18n.language || "pt").toLowerCase();
+    return l.startsWith("en") ? "en" : "pt";
+  }, [lang, i18n.language]);
 
   const content = useMemo(() => {
     const pt = {
@@ -105,37 +110,37 @@ const AboutPage = () => {
 
       sectionTitle: "What is Comerc IA's",
       lead:
-        "We create videos, ads and digital experiences with a simple logic: hook fast, build trust, and deliver a clear CTA.",
+        "We create videos, ads, and digital experiences with a simple logic: hook fast, build trust, and deliver a clear CTA.",
 
       deliverTitle: "What we deliver",
       deliverTag: "Conversion-first",
       deliverItems: [
-        { strong: "Reels and ads", text: "with strong hooks, pacing, and CTA endings." },
-        { strong: "Motion and 3D", text: "to elevate visuals and build differentiation." },
-        { strong: "Landing pages", text: "fast, premium, and structured to convert." },
-        { strong: "Monthly packages", text: "consistency and visual identity week after week." },
-        { strong: "Creative direction", text: "ideas, copy and refinements before editing." },
-        { strong: "Ready-to-post delivery", text: "correct formats, variations, organized files." },
+        { strong: "Reels and Ads", text: "with strong hooks, pacing, and CTA endings." },
+        { strong: "Motion and 3D", text: "to elevate visuals and create differentiation." },
+        { strong: "Landing Pages", text: "fast, premium, and structured to convert." },
+        { strong: "Monthly Packages", text: "consistency and visual identity week after week." },
+        { strong: "Creative Direction", text: "ideas, copywriting, and refinement before editing." },
+        { strong: "Ready-to-post Delivery", text: "correct formats, variations, and organized files." },
       ],
       deliverSummary:
-        "You don’t buy “a video”. You buy a process that makes your brand look premium — and sell.",
+        "You don’t just buy “a video”. You buy a process that transforms your brand into something worth posting — and that sells.",
 
       whyTitle: "Why it works",
       whyBullets: [
-        "Because beauty comes with intent: hook → proof → CTA.",
+        "Because the creative isn't beautiful 'by accident': it has intent (hook → proof → CTA).",
         "Because consistent visual identity builds trust and value perception.",
-        "Because everything is delivered ready to run: organic and paid.",
+        "Because the material arrives ready to run: from organic to paid ads.",
       ],
 
       howTitle: "How we work",
       steps: [
-        { title: "Quick briefing", desc: "Goal, audience, references and offer." },
-        { title: "Script + direction", desc: "We structure your message to convert." },
-        { title: "Production", desc: "Editing, motion, 3D and AI when it helps — without losing quality." },
-        { title: "Delivery + tweaks", desc: "Ready to post, with refinements and variations." },
+        { title: "Quick Briefing", desc: "We understand the goal, audience, references, and offer." },
+        { title: "Script + Direction", desc: "We structure ideas and craft the message to convert." },
+        { title: "Production", desc: "Editing, motion, 3D, and AI where it makes sense — without losing quality." },
+        { title: "Delivery + Tweaks", desc: "You receive it ready to post, with polish and variations." },
       ],
 
-      statsTitle: "Numbers (sample)",
+      statsTitle: "Numbers (Snapshot)",
       stats: [
         { k: "+35", t: "brands served" },
         { k: "+120", t: "creatives delivered" },
@@ -143,27 +148,27 @@ const AboutPage = () => {
         { k: "4.9/5", t: "satisfaction" },
       ],
 
-      principlesTitle: "Our standard",
+      principlesTitle: "Our Standard",
       principles: [
-        { t: "Pacing & clarity", d: "No fluff: the audience understands and acts." },
-        { t: "Premium aesthetics", d: "Clean, modern, consistent finishing." },
-        { t: "Practical delivery", d: "Organized files, correct formats, variations." },
-        { t: "Results-first", d: "Creative is beautiful when it performs." },
+        { t: "Pacing & Clarity", d: "No fluff: the audience understands and acts." },
+        { t: "Premium Aesthetics", d: "Clean, modern, and consistent finishing." },
+        { t: "Practical Delivery", d: "Organized files, correct formats, and variations." },
+        { t: "Results-Driven", d: "Creative is beautiful when it performs." },
       ],
 
-      ctaBarTitle: "Want something that feels like a big brand?",
+      ctaBarTitle: "Ready to look like a major brand?",
       ctaBarText:
-        "Send your offer (or just the idea) and I’ll return a clear proposal with a production plan.",
+        "You send the idea (or just the offer), and I return a clear proposal with a production roadmap.",
       ctaBarBtn: "Get a quote",
 
-      sideTitle: "Visual preview",
+      sideTitle: "Visual Preview",
       sideText:
-        "This panel shows the premium style: clear structure, strong blocks, and smooth microinteractions.",
+        "This panel is an example of the 'expensive' look we build: clear structure, strong blocks, and smooth micro-interactions.",
       sideBtn: "See examples in portfolio",
 
       noteTitle: "Transparency",
       noteText:
-        "We’re fast, not rushed. Fewer projects, higher standard — always.",
+        "We are fast, not rushed. We prefer fewer projects with higher standards than volume without quality.",
     };
 
     return currentLang === "en" ? en : pt;
@@ -219,9 +224,15 @@ const AboutPage = () => {
               </motion.div>
 
               <motion.div variants={fadeUp} className="about-heroChips">
-                <span className="about-heroChip">Entrega rápida</span>
-                <span className="about-heroChip">Estética premium</span>
-                <span className="about-heroChip">CTA e conversão</span>
+                <span className="about-heroChip">
+                  {currentLang === 'en' ? 'Fast Delivery' : 'Entrega rápida'}
+                </span>
+                <span className="about-heroChip">
+                  {currentLang === 'en' ? 'Premium Aesthetic' : 'Estética premium'}
+                </span>
+                <span className="about-heroChip">
+                  {currentLang === 'en' ? 'CTA & Conversion' : 'CTA e conversão'}
+                </span>
               </motion.div>
             </motion.div>
           </header>
@@ -285,7 +296,9 @@ const AboutPage = () => {
                 <motion.div variants={fadeUp} className="about-card about-card--soft about-statsCard">
                   <div className="about-card__head">
                     <h3 className="about-h3">{content.statsTitle}</h3>
-                    <span className="about-chip">Benchmark</span>
+                    <span className="about-chip">
+                      {currentLang === 'en' ? 'Snapshot' : 'Benchmark'}
+                    </span>
                   </div>
 
                   <div className="about-stats">
@@ -302,7 +315,9 @@ const AboutPage = () => {
                 <motion.div variants={fadeUp} className="about-card about-card--soft">
                   <div className="about-card__head">
                     <h3 className="about-h3">{content.principlesTitle}</h3>
-                    <span className="about-chip">Padrão</span>
+                    <span className="about-chip">
+                      {currentLang === 'en' ? 'Standard' : 'Padrão'}
+                    </span>
                   </div>
 
                   <div className="about-principles">

@@ -6,12 +6,12 @@
         "servicos": [
           {
             "titulo": "5 images",
-            "titulo_venda": "Quick Visual Pack — 5 arts",
-            "descricao": "Creation of up to 5 original arts designed for social media or ads. Ideal for those needing consistent and fast visual content.",
+            "titulo_venda": "Quick Visual Pack — 5 designs",
+            "descricao": "Creation of 5 original designs for social media or ads. Ideal for those needing consistent and fast visual content.",
             "inclui": [
               "5 high-resolution images",
-              "1 version for feed (square) and 1 version for stories (vertical) when applicable",
-              "Optional simple lettering",
+              "1 version for Feed (square) and 1 for Stories (vertical) when applicable",
+              "Optional text overlay",
               "Social media optimization"
             ],
             "beneficios": [
@@ -19,7 +19,7 @@
               "Visual consistency for campaigns",
               "Files ready for publishing"
             ],
-            "prazo_entrega": "1 business day (Rush)",
+            "prazo_entrega": "1 business day (Express)",
             "tempo_estimado_horas_min": 2,
             "tempo_estimado_horas_max": 4,
             "revisoes_incluidas": 2,
@@ -33,12 +33,12 @@
           },
           {
             "titulo": "10 images",
-            "titulo_venda": "Engagement Pack — 10 arts",
-            "descricao": "Series of 10 arts aligned with your visual identity or campaign. Includes visual treatment and slight variations for A/B testing.",
+            "titulo_venda": "Engagement Pack — 10 designs",
+            "descricao": "Series of 10 designs aligned with your visual identity or campaign. Includes visual treatment and slight variations for A/B testing.",
             "inclui": [
               "10 high-resolution images",
               "Different layouts for publication variations",
-              "Simple lettering",
+              "Simple text overlay",
               "Quick briefing for alignment"
             ],
             "beneficios": [
@@ -46,7 +46,7 @@
               "Variations to test engagement",
               "Volume savings"
             ],
-            "prazo_entrega": "1 business day (Rush)",
+            "prazo_entrega": "1 business day (Express)",
             "tempo_estimado_horas_min": 3,
             "tempo_estimado_horas_max": 6,
             "revisoes_incluidas": 3,
@@ -59,8 +59,8 @@
           },
           {
             "titulo": "15 images",
-            "titulo_venda": "Growth Pack — 15 arts",
-            "descricao": "Solution for those needing a larger content bank: 15 arts with solid identity, ready for a monthly calendar.",
+            "titulo_venda": "Growth Pack — 15 designs",
+            "descricao": "Solution for those needing a larger content bank: 15 designs with solid identity, ready for a monthly calendar.",
             "inclui": [
               "15 high-resolution images",
               "2 variations per piece when applicable",
@@ -72,7 +72,7 @@
               "Volume savings",
               "Cohesive visual planning"
             ],
-            "prazo_entrega": "2 business days (Rush)",
+            "prazo_entrega": "2 business days (Express)",
             "tempo_estimado_horas_min": 5,
             "tempo_estimado_horas_max": 8,
             "revisoes_incluidas": 4,
@@ -101,7 +101,7 @@
             "beneficios": [
               "High impact in short time",
               "Fast content generation",
-              "Ready for boosting"
+              "Ad-ready"
             ],
             "prazo_entrega": "1 business day",
             "tempo_estimado_horas_min": 1,
@@ -156,7 +156,7 @@
               "1 business day delivery for urgency",
               "Professional result with good retention"
             ],
-            "prazo_entrega": "2 business days (Rush)",
+            "prazo_entrega": "2 business days (Express)",
             "tempo_estimado_horas_min": 5,
             "tempo_estimado_horas_max": 7,
             "revisoes_incluidas": 3,
@@ -183,12 +183,12 @@
               "Appropriate for institutional use and wider reach ads",
               "Technical support on delivery"
             ],
-            "prazo_entrega": "2 business days (Rush)",
+            "prazo_entrega": "2 business days (Express)",
             "tempo_estimado_horas_min": 8,
             "tempo_estimado_horas_max": 20,
             "revisoes_incluidas": 4,
             "formato_entrega": [
-              "MP4 1080/4K (quando aplicável)",
+              "MP4 1080/4K (when applicable)",
               "Project file upon request"
             ],
             "preco_original": 380,
@@ -202,10 +202,10 @@
           {
             "titulo": "Basic Plan",
             "titulo_venda": "Basic Content Plan",
-            "descricao": "Monthly content for 3 to 4 weekly posts. Includes: 10 Custom Arts + 120 seconds of Videos.",
+            "descricao": "Monthly content for 3 to 4 weekly posts. Includes: 10 Custom Designs + 120 seconds of Videos.",
             "inclui": [
-              "10 Custom Arts + 120 seconds of Videos per month",
-              "1 revision per Art and 1 revision per Video",
+              "10 Custom Designs + 120 seconds of Videos per month",
+              "1 revision per Design and 1 revision per Video",
               "1 weekly meeting"
             ],
             "beneficios": [
@@ -258,10 +258,10 @@
           {
             "titulo": "Standard Plan",
             "titulo_venda": "Standard Content Plan",
-            "descricao": "Monthly content for 7 to 8 weekly posts. Includes: 20 Custom Arts + 240 seconds of Videos.",
+            "descricao": "Monthly content for 7 to 8 weekly posts. Includes: 20 Custom Designs + 240 seconds of Videos.",
             "inclui": [
-              "20 Custom Arts + 240 seconds of Videos per month",
-              "1 revision per Art and 2 revisions per Video",
+              "20 Custom Designs + 240 seconds of Videos per month",
+              "1 revision per Design and 2 revisions per Video",
               "2 weekly meetings"
             ],
             "beneficios": [
@@ -314,10 +314,10 @@
           {
             "titulo": "Premium Plan",
             "titulo_venda": "Premium Content Plan",
-            "descricao": "Monthly content for 11 to 12 weekly posts. Includes: 40 Custom Arts + 320 seconds of Videos.",
+            "descricao": "Monthly content for 11 to 12 weekly posts. Includes: 40 Custom Designs + 320 seconds of Videos.",
             "inclui": [
-              "40 Custom Arts + 320 seconds of Videos per month",
-              "1 revision per Art and 2 revisions per Video",
+              "40 Custom Designs + 320 seconds of Videos per month",
+              "1 revision per Design and 2 revisions per Video",
               "2 weekly meetings"
             ],
             "beneficios": [
@@ -398,10 +398,10 @@
           },
           {
             "titulo": "Promotional Poster",
-            "titulo_venda": "Promotional Poster — Custom Art",
+            "titulo_venda": "Promotional Poster — Custom Design",
             "descricao": "Creation of a poster for events, promotions, or physical/digital dissemination based on a detailed briefing.",
             "inclui": [
-              "1 custom art",
+              "1 custom design",
               "Print version (300dpi) and web version",
               "2 quick revisions"
             ],
@@ -409,7 +409,7 @@
               "Ready for print and digital dissemination",
               "Professional image highlighting your offer"
             ],
-            "prazo_entrega": "1 business day (Rush)",
+            "prazo_entrega": "1 business day (Express)",
             "tempo_estimado_horas_min": 2,
             "tempo_estimado_horas_max": 4,
             "revisoes_incluidas": 2,
@@ -457,7 +457,7 @@
               "Ready-to-use content for store and socials",
               "Accelerates product market validation"
             ],
-            "prazo_entrega": "3 business days (Rush)",
+            "prazo_entrega": "3 business days (Express)",
             "tempo_estimado_horas_min": 4,
             "tempo_estimado_horas_max": 8,
             "revisoes_incluidas": 4,
@@ -481,7 +481,7 @@
               "Solid base for visual identity",
               "Files ready for digital application and print"
             ],
-            "prazo_entrega": "1 business day (Rush)",
+            "prazo_entrega": "1 business day (Express)",
             "tempo_estimado_horas_min": 6,
             "tempo_estimado_horas_max": 10,
             "revisoes_incluidas": 4,
@@ -505,7 +505,7 @@
               "Economical solution for sound design",
               "Music adapted to your video rhythm"
             ],
-            "prazo_entrega": "2 business days (Rush)",
+            "prazo_entrega": "2 business days (Express)",
             "tempo_estimado_horas_min": 2,
             "tempo_estimado_horas_max": 4,
             "revisoes_incluidas": 2,
@@ -529,7 +529,7 @@
               "Ideal for expanding your message to other countries",
               "Dubbing voice is a clone of the original, maintaining tone and fluidity"
             ],
-            "prazo_entrega": "3 business days (Rush)",
+            "prazo_entrega": "3 business days (Express)",
             "tempo_estimado_horas_min": 6,
             "tempo_estimado_horas_max": 8,
             "revisoes_incluidas": 2,
@@ -547,14 +547,14 @@
             "inclui": [
               "Home page + up to 4 inner pages",
               "Responsive design",
-              "Arts and banners included",
+              "Visuals and banners included",
               "Delivery with hosting guidelines"
             ],
             "beneficios": [
               "Professional online presence",
               "Fast delivery for launch"
             ],
-            "prazo_entrega": "5 business days (Rush)",
+            "prazo_entrega": "5 business days (Express)",
             "tempo_estimado_horas_min": 20,
             "tempo_estimado_horas_max": 40,
             "revisoes_incluidas": 4,
@@ -583,7 +583,7 @@
               "Unique visual identity",
               "Reusable material in various communications"
             ],
-            "prazo_entrega": "1 business day (Rush)",
+            "prazo_entrega": "1 business day (Express)",
             "tempo_estimado_horas_min": 6,
             "tempo_estimado_horas_max": 10,
             "revisoes_incluidas": 4,
@@ -607,7 +607,7 @@
               "Humanizes the brand",
               "Improves recognition and engagement"
             ],
-            "prazo_entrega": "1 business day (Rush)",
+            "prazo_entrega": "1 business day (Express)",
             "tempo_estimado_horas_min": 6,
             "tempo_estimado_horas_max": 12,
             "revisoes_incluidas": 3,
@@ -632,7 +632,7 @@
               "High sharing potential",
               "Complete piece for campaigns"
             ],
-            "prazo_entrega": "2 business days (Rush)",
+            "prazo_entrega": "2 business days (Express)",
             "tempo_estimado_horas_min": 10,
             "tempo_estimado_horas_max": 18,
             "revisoes_incluidas": 4,
@@ -661,7 +661,7 @@
               "Fast delivery of multimedia identity",
               "Great cost-benefit"
             ],
-            "prazo_entrega": "1 business day (Rush)",
+            "prazo_entrega": "1 business day (Express)",
             "tempo_estimado_horas_min": 12,
             "tempo_estimado_horas_max": 20,
             "revisoes_incluidas": 2,
@@ -685,7 +685,7 @@
               "Centerpiece for digital campaigns",
               "Material ready for multiple applications"
             ],
-            "prazo_entrega": "2 business days (Rush)",
+            "prazo_entrega": "2 business days (Express)",
             "tempo_estimado_horas_min": 16,
             "tempo_estimado_horas_max": 28,
             "revisoes_incluidas": 3,
@@ -703,13 +703,13 @@
             "inclui": [
               "3 videos of 30s",
               "5 character poses",
-              "Narrações e mixagem básica"
+              "Narrations and basic mixing"
             ],
             "beneficios": [
               "Strong multi-platform presence",
               "Content ready for continuous campaign"
             ],
-            "prazo_entrega": "3 dias úteis (Prazo Acelerado)",
+            "prazo_entrega": "3 business days (Express)",
             "tempo_estimado_horas_min": 30,
             "tempo_estimado_horas_max": 50,
             "revisoes_incluidas": 4,
@@ -734,7 +734,7 @@
               "Complete solution for high-impact campaigns",
               "Technical delivery support"
             ],
-            "prazo_entrega": "5 business days (Rush)",
+            "prazo_entrega": "5 business days (Express)",
             "tempo_estimado_horas_min": 60,
             "tempo_estimado_horas_max": 100,
             "revisoes_incluidas": 6,

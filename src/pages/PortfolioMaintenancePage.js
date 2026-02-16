@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import '../styles/PortfolioMaintenancePage.css';
 
@@ -7,7 +8,68 @@ import character from '../assets/images/maintenance/portfolio-maintenance-charac
 import igAvatar from '../assets/images/maintenance/logomanu.png';
 
 const PortfolioMaintenancePage = () => {
-  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const { lang } = useParams();
+
+  // Determina o idioma atual (pt ou en)
+  const currentLang = useMemo(() => {
+    if (lang === 'pt' || lang === 'en') return lang;
+    const l = (i18n.language || 'pt').toLowerCase();
+    return l.startsWith('en') ? 'en' : 'pt';
+  }, [lang, i18n.language]);
+
+  // Conteúdo traduzido
+  const content = useMemo(() => {
+    const pt = {
+      seoTitle: "Portfólio em manutenção | Comerc IA’s",
+      seoDesc: "Estamos aprimorando a experiência do portfólio. Enquanto isso, veja nossos trabalhos no Instagram.",
+      badge: "Em manutenção",
+      title: "Estamos refinando esta seção para uma experiência mais premium.",
+      subtitle: "Estamos reorganizando os cases para ficarem mais rápidos, mais claros e com uma navegação melhor. Enquanto isso, você pode ver nossos trabalhos atualizados no Instagram.",
+      ctaInsta: "Ver perfil no Instagram",
+      ctaWhats: "Falar no WhatsApp",
+      
+      // Perfil Card
+      profileRole: "Produção Generativa • Vídeos • Sites • Criativos",
+      statUpdatedLabel: "Atualizado",
+      statUpdatedValue: "toda semana",
+      statDeliveryLabel: "Entrega",
+      statDeliveryValue: "24–72h",
+      
+      note: "Dica: veja os 3 posts em destaque abaixo — são uma prévia real do nosso trabalho.",
+      
+      // Embeds Section
+      embedTitle: "Prévia real do Instagram",
+      embedDesc: "Posts selecionados para você ver agora, sem sair da página.",
+      embedCta: "Ver todos os posts no Instagram"
+    };
+
+    const en = {
+      seoTitle: "Portfolio Under Maintenance | Comerc IA’s",
+      seoDesc: "We are upgrading the portfolio experience. Meanwhile, check our work on Instagram.",
+      badge: "Under Maintenance",
+      title: "We are refining this section for a premium experience.",
+      subtitle: "We are reorganizing cases to be faster, clearer, and better to navigate. In the meantime, you can see our latest work on Instagram.",
+      ctaInsta: "View Instagram Profile",
+      ctaWhats: "Talk on WhatsApp",
+      
+      // Profile Card
+      profileRole: "Generative Production • Videos • Sites • Creatives",
+      statUpdatedLabel: "Updated",
+      statUpdatedValue: "every week",
+      statDeliveryLabel: "Delivery",
+      statDeliveryValue: "24–72h",
+      
+      note: "Tip: check the 3 featured posts below — they are a real preview of our work.",
+      
+      // Embeds Section
+      embedTitle: "Live Instagram Preview",
+      embedDesc: "Selected posts for you to see right now, without leaving the page.",
+      embedCta: "See all posts on Instagram"
+    };
+
+    return currentLang === 'en' ? en : pt;
+  }, [currentLang]);
 
   const instaUser = 'comerc_ias';
   const instaUrl = `https://www.instagram.com/${instaUser}/`;
@@ -42,12 +104,9 @@ const PortfolioMaintenancePage = () => {
   return (
     <>
       <SEO
-        title={t('portfolio_maintenance_seo_title', 'Portfólio em manutenção | Comerc IA’s')}
-        description={t(
-          'portfolio_maintenance_seo_desc',
-          'Estamos aprimorando a experiência do portfólio. Enquanto isso, veja nossos trabalhos no Instagram.'
-        )}
-        href="/pt/portfolio"
+        title={content.seoTitle}
+        description={content.seoDesc}
+        href={`/${currentLang}/portfolio`}
       />
 
       <section className="pm-page">
@@ -57,24 +116,23 @@ const PortfolioMaintenancePage = () => {
             <div className="pm-hero__bg" aria-hidden="true" />
 
             <div className="pm-hero__content">
-              <div className="pm-badge">Em manutenção</div>
+              <div className="pm-badge">{content.badge}</div>
 
               <h1 className="pm-title">
-                Estamos refinando esta seção para uma experiência mais premium.
+                {content.title}
               </h1>
 
               <p className="pm-subtitle">
-                Estamos reorganizando os cases para ficarem mais rápidos, mais claros e com uma navegação melhor.
-                Enquanto isso, você pode ver nossos trabalhos atualizados no Instagram.
+                {content.subtitle}
               </p>
 
               <div className="pm-ctaRow">
                 <a className="pm-btn pm-btn--primary" href={instaUrl} target="_blank" rel="noopener noreferrer">
-                  Ver perfil no Instagram
+                  {content.ctaInsta}
                 </a>
 
                 <a className="pm-btn pm-btn--ghost" href="https://wa.me/5532984869192" target="_blank" rel="noopener noreferrer">
-                  Falar no WhatsApp
+                  {content.ctaWhats}
                 </a>
               </div>
 
@@ -87,24 +145,24 @@ const PortfolioMaintenancePage = () => {
 
                   <div className="pm-profileMeta">
                     <strong>Comerc IA’s</strong>
-                    <span>@{instaUser} • Produção Generativa • Vídeos • Sites • Criativos</span>
+                    <span>@{instaUser} • {content.profileRole}</span>
                   </div>
                 </div>
 
                 <div className="pm-profileCard__right">
                   <div className="pm-stat">
-                    <strong>Atualizado</strong>
-                    <span>toda semana</span>
+                    <strong>{content.statUpdatedLabel}</strong>
+                    <span>{content.statUpdatedValue}</span>
                   </div>
                   <div className="pm-stat">
-                    <strong>Entrega</strong>
-                    <span>24–72h</span>
+                    <strong>{content.statDeliveryLabel}</strong>
+                    <span>{content.statDeliveryValue}</span>
                   </div>
                 </div>
               </div>
 
               <div className="pm-note">
-                Dica: veja os 3 posts em destaque abaixo — são uma prévia real do nosso trabalho.
+                {content.note}
               </div>
             </div>
 
@@ -114,11 +172,11 @@ const PortfolioMaintenancePage = () => {
             </div>
           </div>
 
-          {/* EMBEDS (agora vem LOGO depois do hero — não fica “lá no fim”) */}
+          {/* EMBEDS */}
           <div className="pm-embeds">
             <div className="pm-sectionHead">
-              <h2>Prévia real do Instagram</h2>
-              <p>Posts selecionados para você ver agora, sem sair da página.</p>
+              <h2>{content.embedTitle}</h2>
+              <p>{content.embedDesc}</p>
             </div>
 
             <div className="pm-embedGrid">
@@ -135,7 +193,7 @@ const PortfolioMaintenancePage = () => {
 
             <div className="pm-embedsCta">
               <a className="pm-btn pm-btn--primary" href={instaUrl} target="_blank" rel="noopener noreferrer">
-                Ver todos os posts no Instagram
+                {content.embedCta}
               </a>
             </div>
           </div>
