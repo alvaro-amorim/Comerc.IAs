@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
+import { BrowserRouter } from 'react-router-dom';
 
 import './i18n';
 import App from './App';
@@ -28,12 +29,14 @@ const container = document.getElementById('root');
 const app = (
   <React.StrictMode>
     <HelmetProvider>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </HelmetProvider>
   </React.StrictMode>
 );
 
-// Mantém sua lógica de hidratação (ótima para react-snap) :contentReference[oaicite:3]{index=3}
+// Mantém sua lógica de hidratação (ótima para react-snap)
 if (container && container.hasChildNodes()) {
   ReactDOM.hydrateRoot(container, app);
 } else if (container) {
