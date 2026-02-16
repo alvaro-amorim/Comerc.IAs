@@ -1,5 +1,5 @@
 import React from 'react';
-import { createRoot, hydrateRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import './index.css';
 
 /* ==========================================================================
    POLYFILL PARA REACT-SNAP
-   Isso corrige o erro "e.replaceAll is not a function" durante o build.
+   Corrige o erro "e.replaceAll is not a function" durante o build.
    ========================================================================== */
 if (!String.prototype.replaceAll) {
   // eslint-disable-next-line no-extend-native
@@ -36,8 +36,10 @@ const app = (
   </React.StrictMode>
 );
 
+// Hidratação (boa para react-snap)
 if (container && container.hasChildNodes()) {
-  hydrateRoot(container, app);
+  ReactDOM.hydrateRoot(container, app);
 } else if (container) {
-  createRoot(container).render(app);
+  const root = ReactDOM.createRoot(container);
+  root.render(app);
 }
