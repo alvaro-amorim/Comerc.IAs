@@ -3,11 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faFilter, faPlay } from '@fortawesome/free-solid-svg-icons';
 import '../styles/PortfolioPage.css';
-
-// Imagens (Podes manter ou substituir por uma genérica enquanto não tens as thumbnails reais)
-import fotoComerc from '../assets/images/foto.comerc.jpg';
 
 // Helper para limpar URLs do Youtube
 function withYoutubeParams(url) {
@@ -30,220 +27,48 @@ const PortfolioPage = () => {
 
   // Estados da interface
   const [activeTag, setActiveTag] = useState('Todos');
-  const [isFilterOpen, setIsFilterOpen] = useState(false); // Filtro começa fechado
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // Imagem provisória para todos os cases (até colocares as reais)
-  const placeholderThumb = fotoComerc;
-
   // =================================================================================
-  // LISTA DE CASES (PREENCHA AQUI SEUS DADOS REAIS)
+  // LISTA DE CASES (Edite os dados aqui)
   // =================================================================================
+  // DICA: Para usar imagens reais depois, descomente o import no topo e use a variável.
+  
   const casesData = [
-    // CASE 01
     {
       id: 'case-01',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO', // Ex: Aurora Clínica — Reels de Venda
-      description: 'DESCRIÇÃO DO PROJETO: Explique o objetivo (ex: vender mais consultas), a estratégia usada (ex: gancho de dor + autoridade) e o resultado esperado.',
-      tags: ['Nicho (ex: Saúde)', 'Formato (ex: Reels)', 'Objetivo (ex: Venda)'],
-      thumbnail: placeholderThumb, // Coloque a importação da imagem real aqui depois
-      media_type: 'video', // 'video' ou 'image'
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI', // Link embed do YouTube ou caminho da imagem
+      title: 'Aurora Clínica — Reels de Venda',
+      description: 'Campanha focada em tráfego local para clínica de estética. Utilizamos ganchos visuais rápidos e foco na transformação do paciente.',
+      tags: ['Saúde', 'Reels', 'Venda'],
+      // Usando placeholder online para garantir que o deploy funcione
+      thumbnail: 'https://placehold.co/600x400/06243d/ffffff?text=Case+Aurora', 
+      media_type: 'video',
+      media_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Troque pelo seu link real
     },
-    // CASE 02
     {
       id: 'case-02',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 2...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
+      title: 'Vitta Store — Lançamento E-commerce',
+      description: 'Vídeo institucional para lançamento de marca de roupas. Foco em lifestyle e identidade visual premium.',
+      tags: ['E-commerce', 'Institucional', 'Branding'],
+      thumbnail: 'https://placehold.co/600x400/0d6efd/ffffff?text=Case+Vitta',
       media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
+      media_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     },
-    // CASE 03
-    {
-      id: 'case-03',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 3...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 04
-    {
-      id: 'case-04',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 4...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 05
-    {
-      id: 'case-05',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 5...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 06
-    {
-      id: 'case-06',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 6...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 07
-    {
-      id: 'case-07',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 7...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 08
-    {
-      id: 'case-08',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 8...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 09
-    {
-      id: 'case-09',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 9...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 10
-    {
-      id: 'case-10',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 10...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 11
-    {
-      id: 'case-11',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 11...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 12
-    {
-      id: 'case-12',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 12...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 13
-    {
-      id: 'case-13',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 13...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 14
-    {
-      id: 'case-14',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 14...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 15
-    {
-      id: 'case-15',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 15...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 16
-    {
-      id: 'case-16',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 16...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 17
-    {
-      id: 'case-17',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 17...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 18
-    {
-      id: 'case-18',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 18...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 19
-    {
-      id: 'case-19',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 19...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
-    // CASE 20
-    {
-      id: 'case-20',
-      title: 'NOME DO CLIENTE — SERVIÇO REALIZADO',
-      description: 'DESCRIÇÃO: Escreva aqui sobre o case 20...',
-      tags: ['Categoria A', 'Categoria B'],
-      thumbnail: placeholderThumb,
-      media_type: 'video',
-      media_url: 'https://www.youtube.com/embed/SEU_LINK_AQUI',
-    },
+    // Adicionei mais alguns slots vazios para completar a grid
+    ...Array.from({ length: 6 }).map((_, i) => ({
+      id: `case-empty-${i}`,
+      title: `Projeto Exemplo ${i + 3}`,
+      description: 'Descrição breve do projeto. Este espaço está reservado para seus cases futuros.',
+      tags: ['Categoria Exemplo'],
+      thumbnail: `https://placehold.co/600x400/f1f5f9/64748b?text=Projeto+${i + 3}`,
+      media_type: 'image',
+      media_url: 'https://placehold.co/1200x800/f1f5f9/64748b?text=Imagem+do+Projeto',
+    }))
   ];
 
-  // Gera lista única de tags baseada nos cases preenchidos
+  // Gera lista única de tags
   const allTags = useMemo(() => {
     const set = new Set();
     casesData.forEach((item) => (item.tags || []).forEach((tg) => set.add(tg)));
@@ -254,7 +79,7 @@ const PortfolioPage = () => {
   const filteredItems = useMemo(() => {
     if (activeTag === 'Todos' || activeTag === 'All') return casesData;
     return casesData.filter((item) => (item.tags || []).includes(activeTag));
-  }, [activeTag]);
+  }, [activeTag, casesData]);
 
   // Lógica do Modal
   const handleShow = (project) => {
@@ -272,13 +97,15 @@ const PortfolioPage = () => {
     return filteredItems.findIndex((it) => it.id === selectedProject.id);
   }, [filteredItems, selectedProject]);
 
-  const goPrev = () => {
+  const goPrev = (e) => {
+    e?.stopPropagation();
     if (!filteredItems.length || selectedIndex < 0) return;
     const prevIndex = (selectedIndex - 1 + filteredItems.length) % filteredItems.length;
     setSelectedProject(filteredItems[prevIndex]);
   };
 
-  const goNext = () => {
+  const goNext = (e) => {
+    e?.stopPropagation();
     if (!filteredItems.length || selectedIndex < 0) return;
     const nextIndex = (selectedIndex + 1) % filteredItems.length;
     setSelectedProject(filteredItems[nextIndex]);
@@ -287,8 +114,8 @@ const PortfolioPage = () => {
   // Atalhos de teclado
   useEffect(() => {
     const onKeyDown = (e) => {
-      if (e.key === 'Escape') handleClose();
       if (!showModal) return;
+      if (e.key === 'Escape') handleClose();
       if (e.key === 'ArrowLeft') goPrev();
       if (e.key === 'ArrowRight') goNext();
     };
@@ -305,7 +132,7 @@ const PortfolioPage = () => {
       window.removeEventListener('keydown', onKeyDown);
     };
     // eslint-disable-next-line
-  }, [showModal, selectedIndex, filteredItems.length]);
+  }, [showModal, selectedIndex]);
 
   return (
     <>
@@ -385,8 +212,10 @@ const PortfolioPage = () => {
                     loading="lazy"
                   />
                   <div className="portfolio-thumbOverlay" aria-hidden="true">
-                    <span className="portfolio-play">▶</span>
-                    <span className="portfolio-open">Abrir</span>
+                    <span className="portfolio-play">
+                      <FontAwesomeIcon icon={faPlay} />
+                    </span>
+                    <span className="portfolio-open">Abrir Case</span>
                   </div>
                 </div>
 
@@ -430,7 +259,7 @@ const PortfolioPage = () => {
               <div className="portfolio-modal-head">
                 <h3 className="portfolio-modal-title">{selectedProject.title}</h3>
                 <div className="portfolio-modal-tags">
-                  {selectedProject.tags.map((t, i) => <span key={i}>#{t} </span>)}
+                  {(selectedProject.tags || []).map((t, i) => <span key={i}>#{t} </span>)}
                 </div>
               </div>
 
