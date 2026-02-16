@@ -1,88 +1,94 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+  useParams,
+  useLocation,
+} from 'react-router-dom';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-import ContactModal from './components/forms/ContactModal';
-import ContactForm from './components/forms/ContactForm';
 import ScrollToTop from './components/ScrollToTop';
 
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
-import PortfolioPage from './pages/PortfolioPage';
-import ContactPage from './pages/ContactPage';
-import OrcamentoPage from './pages/OrcamentoPage';
 import PortfolioMaintenancePage from './pages/PortfolioMaintenancePage';
+import OrcamentoPage from './pages/OrcamentoPage';
+import ContactPage from './pages/ContactPage';
+import ContactForm from './pages/ContactForm';
 
-import './styles/custom.css';
+import ContactModal from './components/ContactModal';
 
-const SUPPORTED_LANGS = ['pt', 'en'];
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import i18n from './i18n';
 
-function normalizeLang(lang) {
-  return SUPPORTED_LANGS.includes(lang) ? lang : 'pt';
-}
-
-const LanguageLayout = () => {
+function LanguageLayout() {
   const { lang } = useParams();
-  const { i18n } = useTranslation();
-  const [showModal, setShowModal] = useState(false);
+  const { i18n: i18next } = useTranslation();
 
-  const currentLang = useMemo(() => normalizeLang(lang), [lang]);
-
-  const handleChatClick = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
+  // Garante que o i18n e a URL fiquem sempre alinhados
   useEffect(() => {
-    // Garante que o i18n e a URL fiquem sempre alinhados :contentReference[oaicite:4]{index=4}
-    if (i18n.language !== currentLang) {
-      i18n.changeLanguage(currentLang);
+    if (lang && ['pt', 'en'].includes(lang)) {
+      if (i18next.language !== lang) i18next.changeLanguage(lang);
     }
+  }, [lang, i18next]);
 
-    // Ajuda SEO/acessibilidade: <html lang="...">
-    document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en';
-  }, [currentLang, i18n]);
-
-  // Se vier /xx/... joga pra /pt
-  if (lang && !SUPPORTED_LANGS.includes(lang)) {
-    return <Navigate to="/pt" replace />;
-  }
+  if (lang && !['pt', 'en'].includes(lang)) return <Navigate to="/pt" replace />;
 
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
-      <main className="flex-grow-1" style={{ paddingTop: '72px' }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="portfolio" element={<PortfolioMaintenancePage />} />
-          <Route path="orcamento" element={<OrcamentoPage />} />
-          <Route path="contact" element={<ContactPage />} />
-
-          {/* Fallback dentro do idioma */}
-          <Route path="*" element={<Navigate to={`/${currentLang}`} replace />} />
-        </Routes>
+      <main className="flex-grow-1" style={{ paddingTop: '56px' }}>
+        <Outlet />
       </main>
+      <Footer />
 
-      <Footer onChatClick={handleChatClick} />
-
-      <ContactModal show={showModal} handleClose={handleCloseModal}>
-        <ContactForm />
-      </ContactModal>
+      {/* Modal global (chat/contato rápido) */}
+      <ContactModal />
     </div>
   );
-};
+}
 
-const App = () => {
+function RootRedirect() {
+  const location = useLocation();
+
+  // Mantém querystring e hash ao redirecionar para /pt
+  const to = `/pt${location.pathname}${location.search}${location.hash}`;
+  return <Navigate to={to} replace />;
+}
+
+function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Navigate to="/pt" replace />} />
-        <Route path="/:lang/*" element={<LanguageLayout />} />
-      </Routes>
-    </Router>
+    <I18nextProvider i18n={i18n}>
+      <Router>
+        <ScrollToTop />
+
+        <Routes>
+          {/* / -> /pt (preservando params) */}
+          <Route path="/" element={<RootRedirect />} />
+
+          {/* Rotas com idioma */}
+          <Route path="/:lang(pt|en)" element={<LanguageLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="sobre" element={<AboutPage />} />
+
+            {/* Portfolio em manutenção */}
+            <Route path="portfolio" element={<PortfolioMaintenancePage />} />
+
+            <Route path="orcamento" element={<OrcamentoPage />} />
+            <Route path="contato" element={<ContactPage />} />
+            <Route path="formulario" element={<ContactForm />} />
+          </Route>
+
+          {/* fallback */}
+          <Route path="*" element={<Navigate to="/pt" replace />} />
+        </Routes>
+      </Router>
+    </I18nextProvider>
   );
-};
+}
 
 export default App;
