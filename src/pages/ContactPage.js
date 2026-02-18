@@ -58,19 +58,19 @@ const ContactPage = () => {
       testimonialsTitle: 'Depoimentos',
       testimonials: [
         {
-          name: 'Clínica Aurora',
-          role: 'Saúde • Tráfego local',
-          quote: 'Em uma semana a percepção da marca mudou. O criativo ficou “premium” e o atendimento ficou mais fácil.',
+          name: 'Glacê Confeitaria',
+          role: 'Alimentos • Juiz de Fora - MG',
+          quote: 'Vídeos perfeitos! Sempre fazendo animações de qualidade que apresentam nossas novidades!!!',
         },
         {
-          name: 'Vitta Store',
-          role: 'E-commerce • Performance',
-          quote: 'A estética ficou absurda. Melhorou CTR e o público passou a confiar mais na oferta.',
+          name: 'Stetho Protect',
+          role: 'Patentes • Juiz de Fora - MG',
+          quote: 'A edição é muito bem pensada. Dublagem perfeita, conseguiu deixar a apresentação do produto muito mais impactante e profissional.',
         },
         {
-          name: 'NeoFit Studio',
-          role: 'Fitness • Conteúdo',
-          quote: 'Ritmo de entrega muito acima do normal. Os vídeos ficaram com energia e clareza de CTA.',
+          name: 'Talitta Almeida - Corretora de Imóveis',
+          role: 'Imóveis • São Paulo - SP',
+          quote: 'Vídeo ficou muito bom! Melhorou muito o desempenho dos anúncios.',
         },
       ],
       
@@ -120,19 +120,19 @@ const ContactPage = () => {
       testimonialsTitle: 'Testimonials',
       testimonials: [
         {
-          name: 'Aurora Clinic',
-          role: 'Health • Local Ads',
-          quote: 'Brand perception changed in a week. The creative looked "premium" and customer service became easier.',
+          name: 'Glacê Confeitaria',
+          role: 'Food Industry • Juiz de Fora - MG',
+          quote: 'Perfect videos! Always delivering high-quality animations that showcase our new products!',
         },
         {
-          name: 'Vitta Store',
-          role: 'E-commerce • Performance',
-          quote: 'The aesthetics are insane. CTR improved and the audience started trusting the offer more.',
+          name: 'Stetho Protect',
+          role: 'Patents • Juiz de Fora - MG',
+          quote: 'The editing is very well thought out. Perfect voice-over, it made the product presentation much more impactful and professional.',
         },
         {
-          name: 'NeoFit Studio',
-          role: 'Fitness • Content',
-          quote: 'Delivery pace way above average. The videos have energy and clear CTAs.',
+          name: 'Talitta Almeida - Corretora de Imóveis',
+          role: 'Real Estate • São Paulo - SP',
+          quote: 'The video turned out great! It significantly improved ad performance.',
         },
       ],
       

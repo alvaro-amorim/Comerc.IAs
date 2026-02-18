@@ -204,12 +204,12 @@ const HomePage = () => {
       // Prova Social
       socialTitle: "Prova social",
       socialSubtitle: "Algumas marcas que já contrataram criativos, vídeos e peças para campanhas.",
-      test1Role: "Saúde • Juiz de Fora",
-      test1Text: "“O padrão subiu muito. O material ficou com estética de marca grande e o retorno veio rápido — principalmente nos stories.”",
-      test2Role: "Serviços • MG",
-      test2Text: "“A edição é muito bem pensada. O vídeo prende e direciona pro WhatsApp. Em 2 semanas já vimos mais agendamentos.”",
-      test3Role: "Varejo • Brasil",
-      test3Text: "“Criativos consistentes e com identidade. A campanha ficou alinhada com a marca e melhorou o desempenho dos anúncios.”",
+      test1Role: "Alimentos • Juiz de Fora - MG",
+      test1Text: "“Vídeos perfeitos! Sempre fazendo animações de qualidade que apresentam nossas novidades!!!”",
+      test2Role: "Patentes • Juiz de Fora - MG",
+      test2Text: "“A edição é muito bem pensada. Dublagem perfeita, conseguiu deixar a apresentação do produto muito mais impactante e profissional”",
+      test3Role: "Imóveis • São Paulo - SP",
+      test3Text: "“Vídeo ficou muito bom! Melhorou muito o desempenho dos anúncios.”",
       
       // 3D
       immTitle: "A próxima fase: site imersivo em 3D (WebGL)",
@@ -318,12 +318,12 @@ const HomePage = () => {
       // Social Proof
       socialTitle: "Social Proof",
       socialSubtitle: "Some brands that have already commissioned creatives, videos, and campaign assets.",
-      test1Role: "Health • Local Traffic",
-      test1Text: "“The standard went way up. The material got a big-brand aesthetic and the return came fast — especially on stories.”",
-      test2Role: "Services • BR",
-      test2Text: "“The editing is very well thought out. The video hooks you and directs to WhatsApp. We saw more bookings in 2 weeks.”",
-      test3Role: "Retail • National",
-      test3Text: "“Consistent creatives with identity. The campaign aligned with the brand and improved ad performance.”",
+      test1Role: "Food Industry • Juiz de Fora - MG",
+      test1Text: "“Perfect videos! Always delivering high-quality animations that showcase our new products!”",
+      test2Role: "Patents • Juiz de Fora - MG",
+      test2Text: "“The editing is very well thought out. Perfect voice-over, it made the product presentation much more impactful and professional.”",
+      test3Role: "Real Estate • São Paulo - SP",
+      test3Text: "“The video turned out great! It significantly improved ad performance.”",
       
       // 3D
       immTitle: "Next Level: Immersive 3D Site (WebGL)",
@@ -705,19 +705,19 @@ const HomePage = () => {
               {[
                 {
                   a: avatar01,
-                  name: "Clínica Aurora",
+                  name: "Glacê Confeitaria",
                   role: content.test1Role,
                   text: content.test1Text,
                 },
                 {
                   a: avatar02,
-                  name: "Barbearia Atlas",
+                  name: "Stetho Protect",
                   role: content.test2Role,
                   text: content.test2Text,
                 },
                 {
                   a: avatar03,
-                  name: "Loja Vento Norte",
+                  name: "Talitta Almeida - Corretora de Imóveis",
                   role: content.test3Role,
                   text: content.test3Text,
                 },
