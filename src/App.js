@@ -9,7 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
 import SEO from './components/SEO';
 import StructuredData from './components/StructuredData';
 
-// Componentes de Contato (OS QUE ESTAVAM A FALTAR)
+// Componentes de Contato
 import ContactModal from './components/forms/ContactModal';
 import ContactForm from './components/forms/ContactForm';
 
@@ -18,7 +18,10 @@ import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import PortfolioMaintenancePage from './pages/PortfolioMaintenancePage';
 import OrcamentoPage from './pages/OrcamentoPage';
+import OrcamentoFunnel from './pages/OrcamentoFunnel';
 import ContactPage from './pages/ContactPage';
+
+import './App.css';
 
 function LanguageGate({ onChatClick }) {
   const { i18n, t } = useTranslation();
@@ -84,13 +87,13 @@ export default function App() {
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="portfolio" element={<PortfolioMaintenancePage />} />
+          <Route path="orcamento/funil" element={<OrcamentoFunnel />} />
           <Route path="orcamento" element={<OrcamentoPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="*" element={<Navigate to="/pt" replace />} />
         </Route>
       </Routes>
 
-      {/* O Modal recebe o Formulário como "child" (filho) */}
       <ContactModal show={showContact} handleClose={closeContact}>
         <ContactForm />
       </ContactModal>

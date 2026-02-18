@@ -29,7 +29,16 @@
               "Source/vector when applicable (.svg/.ai upon request)"
             ],
             "preco_original": 50,
-            "preco": 45
+            "preco": 45,
+            "id": "imagens__pack-visual-rapido-5-artes",
+            "tags": [
+              "images",
+              "design",
+              "social",
+              "instagram",
+              "pack"
+            ],
+            "popular": true
           },
           {
             "titulo": "10 images",
@@ -55,7 +64,16 @@
               "PNG 1080x1920 (stories versions) when requested"
             ],
             "preco_original": 80,
-            "preco": 80
+            "preco": 80,
+            "id": "imagens__pack-engajamento-10-artes",
+            "tags": [
+              "images",
+              "design",
+              "social",
+              "instagram",
+              "pack"
+            ],
+            "popular": false
           },
           {
             "titulo": "15 images",
@@ -81,7 +99,16 @@
               "Source file upon request"
             ],
             "preco_original": 110,
-            "preco": 110
+            "preco": 110,
+            "id": "imagens__pack-crescimento-15-artes",
+            "tags": [
+              "images",
+              "design",
+              "social",
+              "instagram",
+              "pack"
+            ],
+            "popular": false
           }
         ]
       },
@@ -112,7 +139,16 @@
               "Vertical and square version when applicable"
             ],
             "preco_original": 70,
-            "preco": 70
+            "preco": 70,
+            "id": "videos__video-short-ate-15s",
+            "tags": [
+              "video",
+              "reels",
+              "shorts",
+              "social",
+              "cinematic"
+            ],
+            "popular": true
           },
           {
             "titulo": "Simple Video",
@@ -138,7 +174,19 @@
               "Optimized file for Instagram/Facebook/YouTube Shorts"
             ],
             "preco_original": 140,
-            "preco": 125
+            "preco": 125,
+            "id": "videos__video-storytelling-ate-30s",
+            "tags": [
+              "video",
+              "reels",
+              "shorts",
+              "social",
+              "storytelling",
+              "cinematic",
+              "voice",
+              "narration"
+            ],
+            "popular": true
           },
           {
             "titulo": "Premium Video",
@@ -165,7 +213,18 @@
               "Vertical/square MP4 upon request"
             ],
             "preco_original": 240,
-            "preco": 240
+            "preco": 240,
+            "id": "videos__video-premium-ate-60s",
+            "tags": [
+              "video",
+              "reels",
+              "shorts",
+              "social",
+              "cinematic",
+              "voice",
+              "narration"
+            ],
+            "popular": true
           },
           {
             "titulo": "Elaborate Video",
@@ -192,7 +251,16 @@
               "Project file upon request"
             ],
             "preco_original": 380,
-            "preco": 380
+            "preco": 380,
+            "id": "videos__video-pro-ate-120s-efeitos-especiais",
+            "tags": [
+              "video",
+              "reels",
+              "shorts",
+              "social",
+              "cinematic"
+            ],
+            "popular": false
           }
         ]
       },
@@ -253,7 +321,15 @@
                 "preco_total_com_desc": 4080.0,
                 "preco_mensal_efetivo": 340.0
               }
-            ]
+            ],
+            "id": "planos-de-social-media-conteudo-mensal__plano-conteudo-basico",
+            "tags": [
+              "monthly",
+              "plan",
+              "social",
+              "content"
+            ],
+            "popular": false
           },
           {
             "titulo": "Standard Plan",
@@ -309,7 +385,15 @@
                 "preco_total_com_desc": 8160.0,
                 "preco_mensal_efetivo": 680.0
               }
-            ]
+            ],
+            "id": "planos-de-social-media-conteudo-mensal__plano-conteudo-standart",
+            "tags": [
+              "monthly",
+              "plan",
+              "social",
+              "content"
+            ],
+            "popular": true
           },
           {
             "titulo": "Premium Plan",
@@ -365,7 +449,15 @@
                 "preco_total_com_desc": 12240.0,
                 "preco_mensal_efetivo": 1020.0
               }
-            ]
+            ],
+            "id": "planos-de-social-media-conteudo-mensal__plano-conteudo-premium",
+            "tags": [
+              "monthly",
+              "plan",
+              "social",
+              "content"
+            ],
+            "popular": true
           }
         ]
       },
@@ -394,7 +486,13 @@
               "WAV upon request"
             ],
             "preco_original": 25,
-            "preco": 25
+            "preco": 25,
+            "id": "servicos-avulsos__voz-profissional-ia-preco-por-bloco",
+            "tags": [
+              "voice",
+              "narration"
+            ],
+            "popular": false
           },
           {
             "titulo": "Promotional Poster",
@@ -418,7 +516,13 @@
               "Web PNG/JPG"
             ],
             "preco_original": 50,
-            "preco": 50
+            "preco": 50,
+            "id": "servicos-avulsos__poster-promocional-arte-personalizada",
+            "tags": [
+              "poster",
+              "print"
+            ],
+            "popular": false
           },
           {
             "titulo": "AI Photo Editing",
@@ -441,7 +545,13 @@
               "High-res PNG/JPG"
             ],
             "preco_original": 25,
-            "preco": 25
+            "preco": 25,
+            "id": "servicos-avulsos__retoque-rapido-por-foto",
+            "tags": [
+              "photo",
+              "retouch"
+            ],
+            "popular": true
           },
           {
             "titulo": "Product Shoot",
@@ -466,7 +576,13 @@
               "MP4 1080p"
             ],
             "preco_original": 330,
-            "preco": 299
+            "preco": 299,
+            "id": "servicos-avulsos__shooting-compact-10-fotos-2-videos",
+            "tags": [
+              "photo",
+              "shoot"
+            ],
+            "popular": false
           },
           {
             "titulo": "Logo Creation",
@@ -490,7 +606,13 @@
               "Simple usage guide (colors and fonts)"
             ],
             "preco_original": 100,
-            "preco": 100
+            "preco": 100,
+            "id": "servicos-avulsos__identidade-visual-basica-logomarca",
+            "tags": [
+              "branding",
+              "logo"
+            ],
+            "popular": true
           },
           {
             "titulo": "AI Soundtrack",
@@ -514,7 +636,13 @@
               "WAV upon request"
             ],
             "preco_original": 170,
-            "preco": 170
+            "preco": 170,
+            "id": "servicos-avulsos__trilha-sonora-exclusiva-por-ia",
+            "tags": [
+              "music",
+              "soundtrack"
+            ],
+            "popular": false
           },
           {
             "titulo": "AI Dubbing",
@@ -538,7 +666,13 @@
               "WAV upon request"
             ],
             "preco_original": 300,
-            "preco": 300
+            "preco": 300,
+            "id": "servicos-avulsos__dublagem-profissional-por-ia",
+            "tags": [
+              "voice",
+              "dubbing"
+            ],
+            "popular": false
           },
           {
             "titulo": "Custom Business Website",
@@ -563,7 +697,14 @@
               "Files and instructions for hosting"
             ],
             "preco_original": 650,
-            "preco": 590
+            "preco": 590,
+            "id": "servicos-avulsos__website-corporativo-basico",
+            "tags": [
+              "website",
+              "landing",
+              "conversion"
+            ],
+            "popular": true
           }
         ]
       },
@@ -592,7 +733,15 @@
               "SVG/AI upon request"
             ],
             "preco_original": 170,
-            "preco": 170
+            "preco": 170,
+            "id": "criacao-de-personagem-personalizado__mascote-ilustrado-5-poses",
+            "tags": [
+              "character",
+              "mascot",
+              "branding",
+              "logo"
+            ],
+            "popular": false
           },
           {
             "titulo": "Animated Character (Short)",
@@ -616,7 +765,18 @@
               "PNG sequence or GIF upon request"
             ],
             "preco_original": 290,
-            "preco": 290
+            "preco": 290,
+            "id": "criacao-de-personagem-personalizado__mascote-animado-30s-narracao",
+            "tags": [
+              "character",
+              "mascot",
+              "branding",
+              "animation",
+              "logo",
+              "voice",
+              "narration"
+            ],
+            "popular": false
           },
           {
             "titulo": "Animated Character (Long)",
@@ -641,7 +801,17 @@
               "Project file upon request"
             ],
             "preco_original": 420,
-            "preco": 420
+            "preco": 420,
+            "id": "criacao-de-personagem-personalizado__mascote-cinematico-1-min-narracao",
+            "tags": [
+              "character",
+              "mascot",
+              "branding",
+              "animation",
+              "voice",
+              "narration"
+            ],
+            "popular": false
           }
         ]
       },
@@ -670,7 +840,16 @@
               "PNGs of poses"
             ],
             "preco_original": 420,
-            "preco": 420
+            "preco": 420,
+            "id": "pacotes-de-personagem-personalizado__starter-pack-1x-30s-3-poses",
+            "tags": [
+              "character",
+              "mascot",
+              "branding",
+              "voice",
+              "narration"
+            ],
+            "popular": false
           },
           {
             "titulo": "Standard Package",
@@ -694,7 +873,15 @@
               "PNG image files"
             ],
             "preco_original": 550,
-            "preco": 550
+            "preco": 550,
+            "id": "pacotes-de-personagem-personalizado__brand-pack-1x-1min-3-poses",
+            "tags": [
+              "character",
+              "mascot",
+              "branding",
+              "logo"
+            ],
+            "popular": false
           },
           {
             "titulo": "Premium Package",
@@ -718,7 +905,16 @@
               "PNGs and source files upon request"
             ],
             "preco_original": 750,
-            "preco": 675
+            "preco": 675,
+            "id": "pacotes-de-personagem-personalizado__pro-pack-3x-30s-5-poses",
+            "tags": [
+              "character",
+              "mascot",
+              "branding",
+              "voice",
+              "narration"
+            ],
+            "popular": true
           },
           {
             "titulo": "Deluxe Package",
@@ -743,7 +939,15 @@
               "Source files upon request"
             ],
             "preco_original": 1100,
-            "preco": 1100
+            "preco": 1100,
+            "id": "pacotes-de-personagem-personalizado__deluxe-pack-6x-30s-ou-3x-1min",
+            "tags": [
+              "character",
+              "mascot",
+              "branding",
+              "logo"
+            ],
+            "popular": false
           }
         ]
       }
@@ -752,7 +956,7 @@
     "hero": {
       "badge": "Instant Quote",
       "titulo": "Build your quote in 2 minutes",
-      "subtitulo": "Pick the services, choose a period (when available), and receive a clean summary by email.",
+      "subtitulo": "Pick services, choose a period (when available), and see the total instantly. Want bundle discounts? Request a personalized proposal.",
       "destaques": [
         "Volume packs & monthly plans",
         "Full details per service",

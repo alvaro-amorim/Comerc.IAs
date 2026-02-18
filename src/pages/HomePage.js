@@ -130,7 +130,6 @@ const HomePage = () => {
     return l.startsWith("en") ? "en" : "pt";
   }, [lang, i18n.language]);
 
-  const [journey, setJourney] = useState("wow"); // "wow" | "quick"
   const [showVideo, setShowVideo] = useState(false);
 
   // ===== TRADUÇÕES E CONTEÚDO =====
@@ -139,18 +138,13 @@ const HomePage = () => {
       seoTitle: "Comerc IA's - Vídeos, Criativos e Experiências Digitais",
       seoDesc: "Produção audiovisual, criativos e presença digital com foco em conversão.",
       
-      // Hero Dinâmico
-      heroTitleWow: "Comerc IA's: VÍDEOS de ALTO IMPACTO para impulsionar seu negócio!",
-      heroSubtitleWow: "Sua produtora ágil: entrega rápida, acabamento premium e foco em conversão — sem burocracia.",
-      heroTitleQuick: "Direto ao ponto: portfólio + orçamento em poucos cliques.",
-      heroSubtitleQuick: "Sem enrolação: veja cases, entenda o processo e peça um orçamento rápido.",
+      // Hero (Mantido apenas a versão "Encantado")
+      heroTitle: "CONTEÚDO de ALTO IMPACTO para impulsionar seu negócio!",
+      heroSubtitle: "Sua produtora ágil: entrega rápida, acabamento premium e foco em conversão — sem burocracia.",
       
       trust1: "Resposta em até 1 hora útil",
       trust2: "Entrega a partir de 48h",
       trust3: "Direção criativa inclusa",
-      
-      btnWow: "Quero ser encantado",
-      btnQuick: "Estou com pressa",
       
       ctaBudget: "Fazer orçamento",
       ctaPortfolio: "Ver portfólio",
@@ -206,7 +200,7 @@ const HomePage = () => {
       socialSubtitle: "Algumas marcas que já contrataram criativos, vídeos e peças para campanhas.",
       test1Role: "Alimentos • Juiz de Fora - MG",
       test1Text: "“Vídeos perfeitos! Sempre fazendo animações de qualidade que apresentam nossas novidades!!!”",
-      test2Role: "Patentes • Juiz de Fora - MG",
+      test2Role: "Patents • Juiz de Fora - MG",
       test2Text: "“A edição é muito bem pensada. Dublagem perfeita, conseguiu deixar a apresentação do produto muito mais impactante e profissional”",
       test3Role: "Imóveis • São Paulo - SP",
       test3Text: "“Vídeo ficou muito bom! Melhorou muito o desempenho dos anúncios.”",
@@ -253,18 +247,13 @@ const HomePage = () => {
       seoTitle: "Comerc IA's - Videos, Creatives & Digital Experiences",
       seoDesc: "Audiovisual production, creatives, and digital presence focused on conversion.",
       
-      // Dynamic Hero
-      heroTitleWow: "Comerc IA's: HIGH-IMPACT VIDEO to boost your business!",
-      heroSubtitleWow: "Your agile studio: fast delivery, premium finish, and conversion focus — zero bureaucracy.",
-      heroTitleQuick: "Straight to the point: portfolio + quote in a few clicks.",
-      heroSubtitleQuick: "No fluff: see cases, understand the process, and get a quick quote.",
+      // Dynamic Hero (Wow version only)
+      heroTitle: "HIGH-IMPACT CONTENT to boost your business!",
+      heroSubtitle: "Your agile studio: fast delivery, premium finish, and conversion focus — zero bureaucracy.",
       
       trust1: "Reply within 1 business hour",
       trust2: "Delivery starting at 48h",
       trust3: "Creative direction included",
-      
-      btnWow: "I want to be amazed",
-      btnQuick: "I'm in a hurry",
       
       ctaBudget: "Get a quote",
       ctaPortfolio: "View portfolio",
@@ -359,8 +348,8 @@ const HomePage = () => {
       q4: "How do I request a quote?",
       a4: "Click 'Get a quote'. You go straight to the form and receive a reply with the next step and package options.",
       
-      modalTitle: "Institutional Video",
-      modalNote: "Want this video style with your brand? Request a quote and I'll send you format options."
+      modalTitle: "Vídeo institucional",
+      modalNote: "Quer esse estilo de vídeo com a sua marca? Pede um orçamento e eu te envio as opções de formato."
     };
 
     return currentLang === "en" ? en : pt;
@@ -415,11 +404,11 @@ const HomePage = () => {
                 </motion.div>
 
                 <motion.h1 variants={fadeUp} className="home-hero__title">
-                  {journey === "wow" ? content.heroTitleWow : content.heroTitleQuick}
+                  {content.heroTitle}
                 </motion.h1>
 
                 <motion.p variants={fadeUp} className="home-hero__subtitle">
-                  {journey === "wow" ? content.heroSubtitleWow : content.heroSubtitleQuick}
+                  {content.heroSubtitle}
                 </motion.p>
 
                 <motion.div variants={fadeUp} className="hero-trustline">
@@ -430,23 +419,7 @@ const HomePage = () => {
                   <span>{content.trust3}</span>
                 </motion.div>
 
-                {/* Switch */}
-                <motion.div variants={fadeUp} className="home-hero__switch">
-                  <button
-                    type="button"
-                    className={`switch-pill ${journey === "wow" ? "active" : ""}`}
-                    onClick={() => setJourney("wow")}
-                  >
-                    {content.btnWow}
-                  </button>
-                  <button
-                    type="button"
-                    className={`switch-pill ${journey === "quick" ? "active" : ""}`}
-                    onClick={() => setJourney("quick")}
-                  >
-                    {content.btnQuick}
-                  </button>
-                </motion.div>
+                {/* Switch removido */}
 
                 {/* CTA */}
                 <motion.div variants={fadeUp} className="home-hero__cta">
