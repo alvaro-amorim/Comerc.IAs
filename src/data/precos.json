@@ -38,7 +38,7 @@
               "instagram",
               "pack"
             ],
-            "popular": true
+            "popular": false
           },
           {
             "titulo": "10 imagens",
@@ -112,7 +112,7 @@
               "branding",
               "logo"
             ],
-            "popular": false
+            "popular": true
           }
         ]
       },
@@ -152,7 +152,7 @@
               "social",
               "cinematic"
             ],
-            "popular": true
+            "popular": false
           },
           {
             "titulo": "Vídeo Simples",
@@ -190,7 +190,7 @@
               "voz",
               "narration"
             ],
-            "popular": true
+            "popular": false
           },
           {
             "titulo": "Vídeo Premium",
@@ -461,7 +461,7 @@
               "social",
               "content"
             ],
-            "popular": true
+            "popular": false
           }
         ]
       },
@@ -496,7 +496,7 @@
               "voz",
               "narration"
             ],
-            "popular": false
+            "popular": true
           },
           {
             "titulo": "Cartaz de divulgação",
@@ -555,7 +555,7 @@
               "photo",
               "retouch"
             ],
-            "popular": true
+            "popular": false
           },
           {
             "titulo": "Ensaio de produto",
@@ -816,7 +816,7 @@
               "voz",
               "narration"
             ],
-            "popular": false
+            "popular": true
           }
         ]
       },
