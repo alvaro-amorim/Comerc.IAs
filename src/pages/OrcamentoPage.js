@@ -9,15 +9,13 @@ import {
   Container,
   Form,
   Modal,
-  ProgressBar,
   Row,
 } from 'react-bootstrap';
 import { useReactToPrint } from 'react-to-print';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faArrowUpRightFromSquare,
-  faBolt,
+import {  faBolt,
   faChevronDown,
   faChevronUp,
   faCircleCheck,
@@ -41,7 +39,7 @@ import '../styles/OrcamentoPage.css';
 import precosPT from '../data/precos.json';
 import precosEN from '../data/precos_en.json';
 
-const QUIZ_URL = 'https://auxiliar-de-escolha.vercel.app/';
+const STORAGE_KEY = 'comerc_orcamento_page_v2';
 
 /* ==========================================================================
    Helpers
@@ -68,11 +66,12 @@ const getDataByLang = (lang) => (lang === 'en' ? precosEN : precosPT);
 const moneyFormatter = (lang) =>
   new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'pt-BR', {
     style: 'currency',
-    currency: lang === 'en' ? 'USD' : 'BRL',
-    maximumFractionDigits: 2,
+    currency: 'BRL',
+    maximumFractionDigits: 0,
   });
 
-const buildWhatsAppUrl = (text) => `https://wa.me/?text=${encodeURIComponent(text)}`;
+const WHATSAPP_NUMBER = '5532991147944';
+const buildWhatsAppUrl = (text) => `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 
 const safeCopy = async (text) => {
   try {
@@ -392,132 +391,6 @@ const normalizeCatalog = (raw) => {
 };
 
 /* ==========================================================================
-   Quiz model (kept premium / small)
-   ========================================================================== */
-const QUIZ_STEPS = (c) => [
-  {
-    id: 'goal',
-    title: c.quizQ1,
-    options: [
-      { value: 'sales', label: c.goal1 },
-      { value: 'brand', label: c.goal2 },
-      { value: 'recurring', label: c.goal3 },
-      { value: 'character', label: c.goal4 },
-    ],
-  },
-  {
-    id: 'channel',
-    title: c.quizQ2,
-    options: [
-      { value: 'ig', label: c.ch1 },
-      { value: 'ads', label: c.ch2 },
-      { value: 'web', label: c.ch3 },
-      { value: 'mix', label: c.ch4 },
-    ],
-  },
-  {
-    id: 'deadline',
-    title: c.quizQ3,
-    options: [
-      { value: 'fast', label: c.dl1 },
-      { value: 'normal', label: c.dl2 },
-      { value: 'flex', label: c.dl3 },
-    ],
-  },
-  {
-    id: 'budget',
-    title: c.quizQ4,
-    options: [
-      { value: 'low', label: c.bud1 },
-      { value: 'mid', label: c.bud2 },
-      { value: 'high', label: c.bud3 },
-    ],
-  },
-];
-
-const scoreService = (svc, ans) => {
-  const t = norm(`${svc.tituloVenda} ${svc.categoria} ${svc.tags.join(' ')}`);
-
-  let score = 0;
-
-  // goal
-  if (ans.goal === 'sales') {
-    if (t.includes('website') || t.includes('site') || t.includes('landing')) score += 5;
-    if (t.includes('video') || t.includes('vídeo') || t.includes('reels') || t.includes('short')) score += 4;
-    if (t.includes('poster') || t.includes('imagens') || t.includes('design')) score += 2;
-  }
-
-  if (ans.goal === 'brand') {
-    if (t.includes('identidade') || t.includes('branding') || t.includes('logo')) score += 6;
-    if (t.includes('website') || t.includes('site')) score += 3;
-    if (t.includes('video') || t.includes('vídeo') || t.includes('story')) score += 3;
-    if (t.includes('pack') || t.includes('imagens')) score += 2;
-  }
-
-  if (ans.goal === 'recurring') {
-    if (t.includes('plano') || t.includes('monthly') || t.includes('mensal')) score += 7;
-    if (t.includes('pack') || t.includes('imagens')) score += 3;
-    if (t.includes('video') || t.includes('vídeo')) score += 3;
-  }
-
-  if (ans.goal === 'character') {
-    if (t.includes('personagem') || t.includes('mascote') || t.includes('character')) score += 7;
-    if (t.includes('anim') || t.includes('cinematic')) score += 4;
-  }
-
-  // channel
-  if (ans.channel === 'ig') {
-    if (t.includes('reels') || t.includes('short') || t.includes('story')) score += 4;
-    if (t.includes('imagens') || t.includes('images') || t.includes('feed') || t.includes('stories')) score += 3;
-    if (t.includes('plano') || t.includes('monthly') || t.includes('mensal')) score += 2;
-  }
-
-  if (ans.channel === 'ads') {
-    if (t.includes('video') || t.includes('vídeo')) score += 4;
-    if (t.includes('poster') || t.includes('imagens') || t.includes('design')) score += 3;
-    if (t.includes('landing') || t.includes('website') || t.includes('site')) score += 2;
-  }
-
-  if (ans.channel === 'web') {
-    if (t.includes('website') || t.includes('site') || t.includes('landing')) score += 7;
-    if (t.includes('branding') || t.includes('identidade') || t.includes('logo')) score += 2;
-  }
-
-  if (ans.channel === 'mix') {
-    score += 1;
-    if (t.includes('plano') || t.includes('monthly') || t.includes('mensal')) score += 2;
-  }
-
-  // deadline
-  if (ans.deadline === 'fast') {
-    if (t.includes('rapido') || t.includes('rápido') || t.includes('short') || t.includes('pack')) score += 3;
-    if (t.includes('pro') || t.includes('premium') || t.includes('cinematic')) score -= 1;
-  }
-  if (ans.deadline === 'flex') {
-    if (t.includes('premium') || t.includes('pro') || t.includes('cinematic')) score += 1;
-  }
-
-  // budget
-  if (ans.budget === 'low') score += svc.price <= 150 ? 2 : -1;
-  if (ans.budget === 'high') score += svc.price >= 200 ? 1 : 0;
-
-  if (svc.popular) score += 1;
-  return score;
-};
-
-const buildRecommendation = (catalog, ans) => {
-  const scored = catalog.all
-    .map((svc) => ({ svc, score: scoreService(svc, ans) }))
-    .sort((a, b) => b.score - a.score);
-
-  const top = scored.filter((x) => x.score > 0).slice(0, 4).map((x) => x.svc);
-  if (top.length) return top;
-
-  const popular = catalog.all.filter((s) => s.popular).slice(0, 4);
-  return popular.length ? popular : catalog.all.slice(0, 3);
-};
-
-/* ==========================================================================
    Bundles (premium quick start)
    ========================================================================== */
 const buildBundles = (catalog, isPt) => {
@@ -583,9 +456,15 @@ const buildBundles = (catalog, isPt) => {
    Component
    ========================================================================== */
 export default function OrcamentoPage() {
+  const navigate = useNavigate();
+  const params = useParams();
   const { i18n } = useTranslation();
   const lang = pickLang(i18n);
   const copy = COPY[lang];
+  const routeLang = (params?.lang || lang || 'pt').toLowerCase().startsWith('en') ? 'en' : 'pt';
+  const goToFunnel = useCallback(() => {
+    navigate(`/${routeLang}/orcamento/funil`);
+  }, [navigate, routeLang]);
 
   const catalog = useMemo(() => normalizeCatalog(getDataByLang(lang)), [lang]);
   const fmt = useMemo(() => moneyFormatter(lang), [lang]);
@@ -604,15 +483,8 @@ export default function OrcamentoPage() {
   const [lead, setLead] = useState({ name: '', whatsapp: '', email: '', message: '' });
 
   // Modals
-  const [showQuiz, setShowQuiz] = useState(false);
-  const [showShare, setShowShare] = useState(false);
+const [showShare, setShowShare] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  // Quiz
-  const steps = useMemo(() => QUIZ_STEPS(copy), [copy]);
-  const [quizStep, setQuizStep] = useState(0);
-  const [quizAnswers, setQuizAnswers] = useState({ goal: '', channel: '', deadline: '', budget: '' });
-  const [quizResult, setQuizResult] = useState(null);
 
   // print
   const printRef = useRef(null);
@@ -658,7 +530,10 @@ export default function OrcamentoPage() {
           categoria: svc.categoria,
           tituloVenda: svc.tituloVenda,
           price: Number(chosen?.price) || svc.price,
+          oldPrice: Number(chosen?.old) || Number(svc.old) || 0,
           periodName: chosen?.name || '',
+          revisoes: svc.revisoes,
+          prazo: svc.prazo,
         };
       }
 
@@ -668,7 +543,10 @@ export default function OrcamentoPage() {
         categoria: svc.categoria,
         tituloVenda: svc.tituloVenda,
         price: Number(svc.price) || 0,
+        oldPrice: Number(svc.old) || 0,
         periodName: '',
+        revisoes: svc.revisoes,
+        prazo: svc.prazo,
       };
     },
     [getBestPeriod]
@@ -707,6 +585,7 @@ export default function OrcamentoPage() {
           ...current,
           periodName: p.name,
           price: Number(p.price) || current.price,
+          oldPrice: Number(p.old) || Number(svc.old) || 0,
         };
         return next;
       });
@@ -726,6 +605,22 @@ export default function OrcamentoPage() {
   const selectedCount = selectedList.length;
 
   const total = useMemo(() => selectedList.reduce((sum, it) => sum + (Number(it.price) || 0), 0), [selectedList]);
+  const totalSavings = useMemo(
+    () =>
+      selectedList.reduce(
+        (sum, it) => sum + Math.max(0, (Number(it.oldPrice) || 0) - (Number(it.price) || 0)),
+        0
+      ),
+    [selectedList]
+  );
+  const averageTicket = selectedCount ? total / selectedCount : 0;
+  const avgRevisions = useMemo(() => {
+    if (!selectedCount) return 0;
+    const withReview = selectedList.filter((it) => typeof it.revisoes === 'number');
+    if (!withReview.length) return 0;
+    const sum = withReview.reduce((acc, it) => acc + Number(it.revisoes || 0), 0);
+    return sum / withReview.length;
+  }, [selectedCount, selectedList]);
 
   const potentialDiscount = useMemo(() => {
     if (selectedCount < 2) return null;
@@ -742,6 +637,7 @@ export default function OrcamentoPage() {
       items: selectedList.map((it) => ({
         id: it.id,
         price: Number(it.price) || 0,
+        oldPrice: Number(it.oldPrice) || 0,
         periodName: it.periodName || '',
       })),
     };
@@ -797,76 +693,133 @@ export default function OrcamentoPage() {
     window.open(url, '_blank', 'noopener,noreferrer');
   }, [buildSummaryText, selectedCount]);
 
+  useEffect(() => {
+    try {
+      const payload = {
+        items: selectedList.map((it) => ({
+          id: it.id,
+          price: Number(it.price) || 0,
+          oldPrice: Number(it.oldPrice) || 0,
+          periodName: it.periodName || '',
+        })),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // ignore
+    }
+  }, [selectedList]);
+
   /* ------------------------------------------------------------------------
      URL hydration (shareable link)
      ------------------------------------------------------------------------ */
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
+      const next = {};
+      let loaded = false;
+
+      const addById = (id, periodName = '', priceOverride = null, oldPriceOverride = null) => {
+        const svc = catalog.byId?.[id];
+        if (!svc) return;
+        const entry = buildSelectionEntry(svc, periodName);
+        if (!entry) return;
+
+        const normalizedPrice = Number(priceOverride);
+        if (!Number.isNaN(normalizedPrice) && normalizedPrice > 0) entry.price = normalizedPrice;
+
+        const normalizedOld = Number(oldPriceOverride);
+        if (!Number.isNaN(normalizedOld) && normalizedOld > 0) entry.oldPrice = normalizedOld;
+
+        next[svc.id] = entry;
+      };
 
       // New format: itens = base64url(JSON)
       const itensB64 = params.get('itens');
       if (itensB64) {
         const decoded = b64UrlDecode(itensB64);
-        const parsed = JSON.parse(decoded);
-
-        if (Array.isArray(parsed?.items)) {
-          const next = {};
-
-          parsed.items.forEach((it) => {
-            const svc = catalog.byId?.[it?.id];
-            if (!svc) return;
-
-            // Prefer the explicit periodName (if exists), else best
-            const entry = buildSelectionEntry(svc, it?.periodName || '');
-            if (!entry) return;
-
-            // If payload has a price override, honor it (but keep a valid number)
-            const overridePrice = Number(it?.price);
-            if (!Number.isNaN(overridePrice) && overridePrice > 0) entry.price = overridePrice;
-
-            next[svc.id] = entry;
-          });
-
-          if (Object.keys(next).length) setSelected(next);
-          return;
+        if (decoded) {
+          try {
+            const parsed = JSON.parse(decoded);
+            if (Array.isArray(parsed?.items)) {
+              parsed.items.forEach((it) => {
+                addById(it?.id, it?.periodName || '', it?.price, it?.oldPrice);
+              });
+              if (Object.keys(next).length) loaded = true;
+            }
+          } catch {
+            // Fallback for very old format: base64("id1,id2,id3")
+            decoded
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean)
+              .forEach((id) => addById(id));
+            if (Object.keys(next).length) loaded = true;
+          }
         }
       }
 
-      // Old format (legacy): servicos + periodos
-      const servicos = params.get('servicos');
-      const periodos = params.get('periodos');
-      if (servicos) {
-        const oldSel = JSON.parse(decodeURIComponent(servicos));
-        const oldPeriods = periodos ? JSON.parse(decodeURIComponent(periodos)) : {};
-        const next = {};
+      // Older format (legacy): servicos + periodos
+      if (!loaded) {
+        const servicos = params.get('servicos');
+        const periodos = params.get('periodos');
+        if (servicos) {
+          const oldSel = JSON.parse(decodeURIComponent(servicos));
+          const oldPeriods = periodos ? JSON.parse(decodeURIComponent(periodos)) : {};
 
-        Object.entries(oldSel || {}).forEach(([catName, list]) => {
-          Object.entries(list || {}).forEach(([title, price]) => {
-            const catN = norm(catName);
-            const titleN = norm(title);
+          Object.entries(oldSel || {}).forEach(([catName, list]) => {
+            Object.entries(list || {}).forEach(([title, price]) => {
+              const catN = norm(catName);
+              const titleN = norm(title);
 
-            const match = catalog.all.find((s) => s._categoriaNorm === catN && (norm(s.tituloVenda) === titleN || norm(s.titulo) === titleN));
-            if (!match) return;
+              const match = catalog.all.find(
+                (s) => s._categoriaNorm === catN && (norm(s.tituloVenda) === titleN || norm(s.titulo) === titleN)
+              );
+              if (!match) return;
 
-            const chosenPeriodName = oldPeriods?.[catName]?.[title] || '';
-            const entry = buildSelectionEntry(match, chosenPeriodName);
-            if (!entry) return;
-
-            const overridePrice = Number(price);
-            if (!Number.isNaN(overridePrice) && overridePrice > 0) entry.price = overridePrice;
-
-            next[match.id] = entry;
+              const chosenPeriodName = oldPeriods?.[catName]?.[title] || '';
+              addById(match.id, chosenPeriodName, price);
+            });
           });
-        });
 
-        if (Object.keys(next).length) setSelected(next);
+          if (Object.keys(next).length) loaded = true;
+        }
+      }
+
+      if (!loaded) {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : null;
+          if (Array.isArray(parsed?.items)) {
+            parsed.items.forEach((it) => {
+              addById(it?.id, it?.periodName || '', it?.price, it?.oldPrice);
+            });
+            if (Object.keys(next).length) loaded = true;
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      if (!loaded) {
+        try {
+          const rawLegacy = localStorage.getItem('comerc_orcamento_itens');
+          const ids = rawLegacy ? JSON.parse(rawLegacy) : [];
+          if (Array.isArray(ids)) {
+            ids.forEach((id) => addById(id));
+            if (Object.keys(next).length) loaded = true;
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      if (loaded) {
+        setSelected(next);
       }
     } catch {
       // ignore
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalog.all.length]);
+  }, [catalog.all, catalog.byId, buildSelectionEntry, lang]);
 
   /* ------------------------------------------------------------------------
      Filters + search
@@ -916,14 +869,13 @@ export default function OrcamentoPage() {
      Default open categories
      ------------------------------------------------------------------------ */
   useEffect(() => {
-    if (Object.keys(openCats).length) return;
     const initial = {};
     catalog.categorias.forEach((c) => {
       initial[c.nome] = true;
     });
     setOpenCats(initial);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalog.categorias.length]);
+    setOpenDetails({});
+  }, [catalog.categorias]);
 
   const toggleCat = useCallback((name) => {
     setOpenCats((p) => ({ ...p, [name]: !p[name] }));
@@ -954,56 +906,6 @@ export default function OrcamentoPage() {
     });
     scrollToServices();
   }, [buildSelectionEntry, scrollToServices]);
-
-  /* ------------------------------------------------------------------------
-     Quiz handlers
-     ------------------------------------------------------------------------ */
-  const resetQuiz = useCallback(() => {
-    setQuizStep(0);
-    setQuizAnswers({ goal: '', channel: '', deadline: '', budget: '' });
-    setQuizResult(null);
-  }, []);
-
-  const setQuizAnswer = useCallback((stepId, value) => {
-    setQuizAnswers((p) => ({ ...p, [stepId]: value }));
-  }, []);
-
-  const canGoNext = useMemo(() => {
-    const step = steps[quizStep];
-    if (!step) return false;
-    return !!quizAnswers[step.id];
-  }, [quizAnswers, quizStep, steps]);
-
-  const onQuizNext = useCallback(() => {
-    if (!canGoNext) return;
-    setQuizStep((s) => Math.min(steps.length - 1, s + 1));
-  }, [canGoNext, steps.length]);
-
-  const onQuizBack = useCallback(() => {
-    setQuizStep((s) => Math.max(0, s - 1));
-  }, []);
-
-  const onQuizFinish = useCallback(() => {
-    const rec = buildRecommendation(catalog, quizAnswers);
-    setQuizResult(rec);
-  }, [catalog, quizAnswers]);
-
-  const applyRecommendation = useCallback(() => {
-    if (!quizResult?.length) return;
-
-    setSelected((prev) => {
-      const next = { ...prev };
-      quizResult.forEach((svc) => {
-        if (next[svc.id]) return;
-        const entry = buildSelectionEntry(svc);
-        if (entry) next[svc.id] = entry;
-      });
-      return next;
-    });
-
-    setShowQuiz(false);
-    scrollToServices();
-  }, [buildSelectionEntry, quizResult, scrollToServices]);
 
   /* ------------------------------------------------------------------------
      UI components
@@ -1274,7 +1176,7 @@ export default function OrcamentoPage() {
                 </div>
 
                 <div className="orc-ctaButtons">
-                  <Button className="orc-btn orc-btn-primary" onClick={() => setShowQuiz(true)}>
+                  <Button className="orc-btn orc-btn-primary" onClick={goToFunnel}>
                     <FontAwesomeIcon icon={faWandMagicSparkles} />
                     <span>{copy.ctaPrimary}</span>
                   </Button>
@@ -1286,13 +1188,7 @@ export default function OrcamentoPage() {
                 </div>
 
                 <div className="orc-ctaLinks">
-                  {/* External quiz: show ONCE, only here */}
-                  <a className="orc-link" href={QUIZ_URL} target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                    <span>{copy.ctaExtQuiz}</span>
-                  </a>
-
-                  <button type="button" className="orc-link orc-linkBtn" onClick={() => setShowShare(true)}>
+<button type="button" className="orc-link orc-linkBtn" onClick={() => setShowShare(true)}>
                     <FontAwesomeIcon icon={faShareNodes} />
                     <span>{copy.ctaShare}</span>
                   </button>
@@ -1303,6 +1199,44 @@ export default function OrcamentoPage() {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="orc-proofRow">
+          <div className="orc-proofItem">
+            <div className="orc-proofTitle">{lang === 'en' ? 'Instant estimate' : 'Estimativa imediata'}</div>
+            <div className="orc-proofText">
+              {lang === 'en'
+                ? 'Build your quote with transparent pricing and no wait.'
+                : 'Monte seu orçamento com preços claros e sem espera.'}
+            </div>
+          </div>
+
+          <div className="orc-proofItem">
+            <div className="orc-proofTitle">{lang === 'en' ? 'Potential savings' : 'Economia potencial'}</div>
+            <div className="orc-proofText">
+              {totalSavings > 0
+                ? fmt.format(totalSavings)
+                : lang === 'en'
+                  ? 'Bundle discounts available on proposal'
+                  : 'Descontos em combo disponíveis na proposta'}
+            </div>
+          </div>
+
+          <div className="orc-proofItem">
+            <div className="orc-proofTitle">{lang === 'en' ? 'Average ticket' : 'Ticket médio'}</div>
+            <div className="orc-proofText">{selectedCount ? fmt.format(averageTicket) : fmt.format(0)}</div>
+          </div>
+
+          <div className="orc-proofItem">
+            <div className="orc-proofTitle">{lang === 'en' ? 'Included revisions' : 'Revisões inclusas'}</div>
+            <div className="orc-proofText">
+              {avgRevisions > 0
+                ? `~${avgRevisions.toFixed(1)} ${lang === 'en' ? 'per service' : 'por serviço'}`
+                : lang === 'en'
+                  ? 'Defined per selected service'
+                  : 'Definidas por serviço selecionado'}
             </div>
           </div>
         </div>
@@ -1457,6 +1391,16 @@ export default function OrcamentoPage() {
                   <strong>{fmt.format(total || 0)}</strong>
                 </div>
 
+                <div className="orc-asideLine">
+                  <span>{lang === 'en' ? 'Potential savings' : 'Economia potencial'}</span>
+                  <strong>{totalSavings > 0 ? fmt.format(totalSavings) : '—'}</strong>
+                </div>
+
+                <div className="orc-asideLine">
+                  <span>{lang === 'en' ? 'Average ticket' : 'Ticket médio'}</span>
+                  <strong>{selectedCount ? fmt.format(averageTicket) : '—'}</strong>
+                </div>
+
                 {potentialDiscount ? (
                   <div className="orc-asideHint">
                     {lang === 'en'
@@ -1504,6 +1448,11 @@ export default function OrcamentoPage() {
                             <div style={{ minWidth: 0 }}>
                               <div style={{ fontWeight: 950 }}>{it.tituloVenda}</div>
                               {it.periodName ? <div className="orc-muted" style={{ fontWeight: 900 }}>{it.periodName}</div> : null}
+                              {it.prazo ? (
+                                <div className="orc-muted" style={{ fontWeight: 900 }}>
+                                  {copy.delivery}: {it.prazo}
+                                </div>
+                              ) : null}
                               <div className="orc-muted" style={{ fontWeight: 900 }}>{fmt.format(Number(it.price) || 0)}</div>
                             </div>
 
@@ -1586,122 +1535,6 @@ export default function OrcamentoPage() {
             </Card>
           </Col>
         </Row>
-
-        {/* QUIZ MODAL */}
-        <Modal show={showQuiz} onHide={() => setShowQuiz(false)} centered dialogClassName="orc-modal" scrollable>
-          <Modal.Header closeButton>
-            <Modal.Title>{copy.quizTitle}</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <p className="orc-muted" style={{ fontWeight: 900 }}>
-              {copy.quizDesc}
-            </p>
-
-            {!quizResult ? (
-              <>
-                <ProgressBar
-                  now={clamp(((quizStep + 1) / steps.length) * 100, 0, 100)}
-                  style={{ height: 10, borderRadius: 999, background: 'rgba(2,8,23,0.06)' }}
-                  className="mb-3"
-                />
-
-                <div style={{ fontWeight: 950, marginBottom: 10 }}>{steps[quizStep].title}</div>
-
-                <div style={{ display: 'grid', gap: 10 }}>
-                  {steps[quizStep].options.map((op) => {
-                    const active = quizAnswers[steps[quizStep].id] === op.value;
-                    return (
-                      <button
-                        key={op.value}
-                        type="button"
-                        className={`orc-filterChip ${active ? 'is-active' : ''}`}
-                        onClick={() => setQuizAnswer(steps[quizStep].id, op.value)}
-                        style={{ textAlign: 'left', borderRadius: 16, padding: '12px 14px' }}
-                      >
-                        {active ? <FontAwesomeIcon icon={faCircleCheck} className="me-2" /> : null}
-                        <span style={{ fontWeight: 950 }}>{op.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="d-flex justify-content-between gap-2 mt-3">
-                  <Button className="orc-btn orc-btn-ghost" onClick={onQuizBack} disabled={quizStep === 0}>
-                    {copy.back}
-                  </Button>
-
-                  {quizStep < steps.length - 1 ? (
-                    <Button className="orc-btn orc-btn-primary" onClick={onQuizNext} disabled={!canGoNext}>
-                      {copy.next}
-                    </Button>
-                  ) : (
-                    <Button className="orc-btn orc-btn-primary" onClick={onQuizFinish} disabled={!canGoNext}>
-                      {copy.finish}
-                    </Button>
-                  )}
-                </div>
-              </>
-            ) : (
-              <>
-                <Alert variant="light" className="mb-3">
-                  <div style={{ fontWeight: 950, marginBottom: 6 }}>{copy.recTitle}</div>
-                  <div className="orc-muted" style={{ fontWeight: 900 }}>
-                    {copy.recSub}
-                  </div>
-                </Alert>
-
-                <div style={{ display: 'grid', gap: 10 }}>
-                  {quizResult.map((svc) => (
-                    <div
-                      key={svc.id}
-                      style={{
-                        padding: '12px 14px',
-                        borderRadius: 18,
-                        border: '1px solid rgba(2,8,23,0.08)',
-                        background: 'rgba(255,255,255,0.80)',
-                      }}
-                    >
-                      <div className="d-flex justify-content-between align-items-start gap-2">
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontWeight: 950 }}>{svc.tituloVenda}</div>
-                          <div className="orc-muted" style={{ fontWeight: 900 }}>
-                            {svc.categoria}
-                          </div>
-                        </div>
-                        <div style={{ fontWeight: 950 }}>{fmt.format(svc.price || 0)}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <Alert variant="light" className="mt-3 mb-0">
-                  <div style={{ fontWeight: 950 }}>{copy.why}</div>
-                  <div className="orc-muted" style={{ fontWeight: 900 }}>
-                    {copy.whySub}
-                  </div>
-                </Alert>
-
-                <div className="d-grid gap-2 mt-3">
-                  <Button className="orc-btn orc-btn-primary" onClick={applyRecommendation}>
-                    <FontAwesomeIcon icon={faCircleCheck} />
-                    <span>{copy.apply}</span>
-                  </Button>
-
-                  <Button className="orc-btn orc-btn-ghost" onClick={resetQuiz}>
-                    <span>{copy.restart}</span>
-                  </Button>
-                </div>
-              </>
-            )}
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button className="orc-btn orc-btn-ghost" onClick={() => setShowQuiz(false)}>
-              {copy.close}
-            </Button>
-          </Modal.Footer>
-        </Modal>
 
         {/* SHARE MODAL */}
         <Modal show={showShare} onHide={() => setShowShare(false)} centered dialogClassName="orc-modal" scrollable>

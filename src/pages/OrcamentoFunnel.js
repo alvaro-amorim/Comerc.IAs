@@ -1,786 +1,1100 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import data from "../data/precos.json";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Alert, Badge, Button, Card, Col, Container, Form, ProgressBar, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBolt,
+  faChevronLeft,
+  faCircleCheck,
+  faCircleXmark,
+  faListCheck,
+  faPaperPlane,
+  faRotateRight,
+  faWandMagicSparkles,
+} from '@fortawesome/free-solid-svg-icons';
 
-// =====================
-// Utils
-// =====================
-function slugify(str = "") {
-  return str
+import SEO from '../components/SEO';
+import '../styles/OrcamentoPage.css';
+
+import precosPT from '../data/precos.json';
+import precosEN from '../data/precos_en.json';
+
+const WHATSAPP_NUMBER = '5532991147944';
+const isBrowser = typeof window !== 'undefined';
+
+const norm = (s) =>
+  (s || '')
     .toString()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "");
-}
+    .trim();
 
-function moneyBRL(value) {
-  const num = Number(value || 0);
-  return num.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
+const pickLang = (i18n) => ((i18n?.language || 'pt').toLowerCase().startsWith('en') ? 'en' : 'pt');
+const getDataByLang = (lang) => (lang === 'en' ? precosEN : precosPT);
 
-function clamp(n, min, max) {
-  return Math.max(min, Math.min(max, n));
-}
+const money = (lang) =>
+  new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    maximumFractionDigits: 0,
+  });
 
-function safeBase64Encode(str) {
-  // URL-safe base64
-  const b64 = btoa(unescape(encodeURIComponent(str)));
-  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-function safeBase64Decode(str) {
-  const b64 = str.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((str.length + 3) % 4);
-  return decodeURIComponent(escape(atob(b64)));
-}
+const buildWhatsAppUrl = (text) => `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 
-function buildWhatsAppLink(message) {
-  const text = encodeURIComponent(message);
-  // se você tiver um número fixo, troque para: https://wa.me/55DDDNÚMERO?text=...
-  return `https://wa.me/?text=${text}`;
-}
+const normalizeCatalog = (raw) => {
+  const categorias = (raw?.orcamento?.categorias || []).map((cat) => {
+    const categoriaNome = cat?.nome || 'Categoria';
+    const categoriaNorm = norm(categoriaNome);
 
-// =====================
-// Data normalization
-// =====================
-function normalizeCatalog(raw) {
-  const categorias = raw?.orcamento?.categorias || [];
-  const flat = [];
+    const servicos = (cat?.servicos || []).map((svc) => {
+      const titulo = svc?.titulo || '';
+      const tituloVenda = svc?.titulo_venda || titulo || '';
 
-  for (const cat of categorias) {
-    const catName = cat?.nome || "Categoria";
-    const services = cat?.servicos || [];
-    for (const s of services) {
-      const id = `${slugify(catName)}__${slugify(s.titulo_venda || s.titulo || "servico")}`;
-      const price = typeof s.preco === "number" ? s.preco : null;
+      const id = svc?.id || `${categoriaNorm}__${norm(tituloVenda).replace(/[^a-z0-9]+/g, '-')}`;
 
-      flat.push({
+      const inclui = Array.isArray(svc?.inclui) ? svc.inclui : [];
+      const beneficios = Array.isArray(svc?.beneficios) ? svc.beneficios : [];
+      const formato = Array.isArray(svc?.formato_entrega) ? svc.formato_entrega : [];
+      const tags = Array.isArray(svc?.tags) ? svc.tags : [];
+
+      const hasPeriods = Array.isArray(svc?.precos_por_periodo) && svc.precos_por_periodo.length > 0;
+
+      const periods = hasPeriods
+        ? svc.precos_por_periodo.map((p) => {
+            const name = p?.periodo || '';
+            const meses = Number(p?.meses || 0) || null;
+
+            const monthly =
+              Number(p?.preco_mensal_efetivo) ||
+              Number(p?.preco) ||
+              (Number(p?.preco_total_com_desc) && meses ? Number(p?.preco_total_com_desc) / meses : 0);
+
+            const oldMonthly =
+              Number(p?.preco_original) ||
+              (Number(p?.preco_total_sem_desc) && meses ? Number(p?.preco_total_sem_desc) / meses : null);
+
+            const off = p?.desconto_percentual ?? p?.desconto_perc ?? null;
+            const termTotal = Number(p?.preco_total_com_desc) || null;
+
+            return {
+              name,
+              price: Number.isFinite(monthly) ? monthly : 0,
+              old: oldMonthly,
+              off,
+              meses,
+              termTotal,
+            };
+          })
+        : [];
+
+      const defaultPeriod = hasPeriods
+        ? periods.find((pp) => norm(pp.name).includes('mensal') || norm(pp.name).includes('monthly')) || periods[0] || null
+        : null;
+
+      const price = Number(svc?.preco) || Number(defaultPeriod?.price) || 0;
+      const old = svc?.preco_original ?? defaultPeriod?.old ?? null;
+      const off = svc?.desconto_percentual ?? (old && price ? Math.round((1 - price / old) * 100) : null);
+
+      const searchNorm = norm(`${tituloVenda} ${titulo} ${svc?.descricao || ''} ${categoriaNome} ${tags.join(' ')}`);
+
+      return {
         id,
-        categoria: catName,
-        titulo: s.titulo || s.titulo_venda || "Serviço",
-        tituloVenda: s.titulo_venda || s.titulo || "Serviço",
-        descricao: s.descricao || "",
-        inclui: s.inclui || [],
-        beneficios: s.beneficios || [],
-        prazo: s.prazo_entrega || "",
-        revisoes: s.revisoes_incluidas ?? null,
-        formatos: s.formato_entrega || [],
-        preco: price,
-        precoOriginal: typeof s.preco_original === "number" ? s.preco_original : null,
-        precosPorPeriodo: s.precos_por_periodo || null,
-      });
+        categoria: categoriaNome,
+        titulo,
+        tituloVenda,
+        descricao: svc?.descricao || '',
+        inclui,
+        beneficios,
+        prazo: svc?.prazo_entrega || '',
+        revisoes: svc?.revisoes_incluidas ?? null,
+        formato,
+        tags,
+        popular: !!svc?.popular,
+
+        hasPeriods,
+        periods,
+        price,
+        old,
+        off,
+
+        _categoriaNorm: categoriaNorm,
+        _searchNorm: searchNorm,
+        _titleNorm: norm(`${tituloVenda} ${titulo}`),
+      };
+    });
+
+    return { nome: categoriaNome, _nomeNorm: categoriaNorm, servicos };
+  });
+
+  const all = categorias.flatMap((c) => c.servicos);
+  const byId = all.reduce((acc, s) => {
+    acc[s.id] = s;
+    return acc;
+  }, {});
+
+  return { categorias, all, byId, observacoes: raw?.orcamento?.observacoes || '' };
+};
+
+const COPY = {
+  pt: {
+    seoTitle: 'Orçamento (Funil) — Comerc IAs',
+    seoDesc: 'Responda o quiz e receba 3 ofertas claras para finalizar no WhatsApp.',
+    badge: 'Orçamento premium',
+    title: 'Receba 3 ofertas claras em 45 segundos',
+    subtitle:
+      'Responda o quiz e veja 3 opções (essencial, custo-benefício e avançada). Depois é só finalizar pelo WhatsApp.',
+    start: 'Começar agora',
+    restart: 'Reiniciar',
+    back: 'Voltar',
+    next: 'Continuar',
+    skip: 'Pular',
+    optional: 'Opcional',
+    chooseOne: 'Escolha 1 opção para continuar',
+    offersTitle: 'Escolha sua oferta',
+    offersSub: '3 opções claras e limpas. Você escolhe 1 e finaliza no WhatsApp.',
+    essential: 'Essencial',
+    bestValue: 'Custo-benefício',
+    advanced: 'Avançada',
+    bestSeller: 'MAIS VENDIDA',
+    estTotal: 'Total estimado',
+    save: 'Você economiza',
+    details: 'Ver o que está incluso',
+    choose: 'Escolher esta oferta',
+    customizeTitle: 'Ajuste fino (opcional)',
+    customizeSub: 'Opcional: adicione 1–2 extras relevantes (sem poluir a tela).',
+    included: 'Incluso na oferta',
+    extras: 'Extras sugeridos',
+    note: 'Observações rápidas (opcional):',
+    notePh: 'Ex.: Quero focar em promoções da semana, público X, referência de estilo…',
+    sendWa: 'Enviar no WhatsApp',
+    totalNow: 'Total agora',
+    summary: 'Resumo do quiz',
+    obs: 'Observação',
+    // Questions
+    q_goal: 'Qual é o seu objetivo principal?',
+    q_need: 'O que você precisa agora?',
+    q_volume: 'Qual volume você imagina?',
+    q_invest: 'Investimento desejado',
+    q_deadline: 'Prazo desejado',
+    // Options
+    goal_sales: 'Gerar vendas / conversão',
+    goal_brand: 'Fortalecer marca / identidade',
+    goal_social: 'Conteúdo para redes sociais',
+    goal_edu: 'Educativo / explicativo',
+    goal_intl: 'Internacionalizar (idiomas)',
+    goal_launch: 'Lançamento / campanha',
+    need_images: 'Artes e imagens',
+    need_videos: 'Vídeos (Reels/Ads)',
+    need_plan: 'Plano mensal de conteúdo',
+    need_oneoff: 'Serviços avulsos (logo, site, etc.)',
+    need_mascot: 'Personagem / mascote',
+    need_unsure: 'Não tenho certeza',
+    vol_low: 'Baixo (rápido / essencial)',
+    vol_mid: 'Médio (consistente)',
+    vol_high: 'Alto (campanha forte)',
+    vol_mega: 'Muito alto (máxima presença)',
+    inv_100: 'Até R$100',
+    inv_300: 'Até R$300',
+    inv_600: 'Até R$600',
+    inv_1000: 'Até R$1.000',
+    inv_2000: 'Até R$2.000',
+    d1: 'Urgente (até 2 dias)',
+    d2: 'Até 7 dias',
+    d3: 'Flexível',
+  },
+  en: {
+    seoTitle: 'Quote Funnel — Comerc IAs',
+    seoDesc: 'Answer the quiz and get 3 clear offers to finish on WhatsApp.',
+    badge: 'Premium quote',
+    title: 'Get 3 clear offers in 45 seconds',
+    subtitle:
+      'Answer the quiz and see 3 options (simple, best value, advanced). Then finish via WhatsApp.',
+    start: 'Start now',
+    restart: 'Restart',
+    back: 'Back',
+    next: 'Continue',
+    skip: 'Skip',
+    optional: 'Optional',
+    chooseOne: 'Choose 1 option to continue',
+    offersTitle: 'Choose your offer',
+    offersSub: '3 clean options. Pick one and finish on WhatsApp.',
+    essential: 'Simple',
+    bestValue: 'Best value',
+    advanced: 'Advanced',
+    bestSeller: 'BEST SELLER',
+    estTotal: 'Estimated total',
+    save: 'You save',
+    details: 'See what’s included',
+    choose: 'Choose this offer',
+    customizeTitle: 'Fine-tune (optional)',
+    customizeSub: 'Optional: add 1–2 relevant add-ons (kept minimal).',
+    included: 'Included in the offer',
+    extras: 'Suggested add-ons',
+    note: 'Quick notes (optional):',
+    notePh: 'E.g., weekly promos, audience X, style reference…',
+    sendWa: 'Send on WhatsApp',
+    totalNow: 'Total now',
+    summary: 'Quiz summary',
+    obs: 'Note',
+    // Questions
+    q_goal: 'What’s your main goal?',
+    q_need: 'What do you need right now?',
+    q_volume: 'What volume are you aiming for?',
+    q_invest: 'Desired budget',
+    q_deadline: 'Desired timeline',
+    // Options
+    goal_sales: 'Sales / conversion',
+    goal_brand: 'Brand / identity',
+    goal_social: 'Social media content',
+    goal_edu: 'Educational / explanatory',
+    goal_intl: 'Go international (languages)',
+    goal_launch: 'Launch / campaign',
+    need_images: 'Designs & images',
+    need_videos: 'Videos (Reels/Ads)',
+    need_plan: 'Monthly content plan',
+    need_oneoff: 'One-off services (logo, website, etc.)',
+    need_mascot: 'Character / mascot',
+    need_unsure: 'Not sure yet',
+    vol_low: 'Low (fast / essential)',
+    vol_mid: 'Medium (consistent)',
+    vol_high: 'High (strong campaign)',
+    vol_mega: 'Very high (maximum presence)',
+    inv_100: 'Up to R$100',
+    inv_300: 'Up to R$300',
+    inv_600: 'Up to R$600',
+    inv_1000: 'Up to R$1,000',
+    inv_2000: 'Up to R$2,000',
+    d1: 'Urgent (up to 2 days)',
+    d2: 'Up to 7 days',
+    d3: 'Flexible',
+  },
+};
+
+const isPlan = (s) => !!s?.hasPeriods;
+
+const findService = (catalog, { catIncludes = [], titleIncludes = [], titleAny = [] }) => {
+  const catNeed = catIncludes.map(norm);
+  const titleNeed = titleIncludes.map(norm);
+  const titleAnyNeed = titleAny.map(norm);
+
+  for (const cat of catalog.categorias) {
+    const cn = norm(cat.nome);
+    if (catNeed.length && !catNeed.some((x) => cn.includes(x))) continue;
+
+    for (const s of cat.servicos) {
+      const tn = norm(s.tituloVenda || s.titulo);
+      if (titleNeed.length && !titleNeed.every((x) => tn.includes(x))) continue;
+      if (titleAnyNeed.length && !titleAnyNeed.some((x) => tn.includes(x))) continue;
+      return s;
     }
   }
+  return null;
+};
 
-  return { categorias, flat, hero: raw?.orcamento?.hero || null, observacoes: raw?.orcamento?.observacoes || "" };
-}
+const uniquePush = (arr, svc) => {
+  if (!svc) return;
+  if (arr.find((x) => x.id === svc.id)) return;
+  arr.push(svc);
+};
 
-// =====================
-// Quiz scoring
-// =====================
-const QUIZ = [
-  {
-    key: "objetivo",
-    title: "Qual seu objetivo agora?",
-    options: [
-      { value: "vendas", label: "Vender mais (promoção / campanha / tráfego)" },
-      { value: "autoridade", label: "Aumentar autoridade e consistência no Instagram" },
-      { value: "institucional", label: "Apresentação institucional (marca / empresa / serviço)" },
-      { value: "lançamento", label: "Lançamento (produto novo / novidade)" },
-    ],
-  },
-  {
-    key: "formato",
-    title: "Qual formato você quer priorizar?",
-    options: [
-      { value: "video", label: "Vídeo (Reels/Shorts)" },
-      { value: "imagens", label: "Imagens (feed/stories/anúncios)" },
-      { value: "mensal", label: "Plano mensal (conteúdo contínuo)" },
-      { value: "site", label: "Site/landing (presença profissional)" },
-      { value: "personagem", label: "Personagem/mascote (marca memorável)" },
-    ],
-  },
-  {
-    key: "prazo",
-    title: "Quando você precisa disso?",
-    options: [
-      { value: "urgente", label: "Urgente (até 2 dias)" },
-      { value: "semana", label: "Nesta semana" },
-      { value: "calma", label: "Sem pressa (planejado)" },
-    ],
-  },
-  {
-    key: "orcamento",
-    title: "Qual faixa de investimento você imagina?",
-    options: [
-      { value: "baixo", label: "Até R$ 150" },
-      { value: "medio", label: "R$ 150 a R$ 500" },
-      { value: "alto", label: "Acima de R$ 500" },
-    ],
-  },
-];
+const anchorByVolume = (vol) => {
+  if (vol === 'low') return 300;
+  if (vol === 'mid') return 600;
+  if (vol === 'high') return 1000;
+  return 2000;
+};
 
-function scoreService(service, answers) {
-  let score = 0;
+const calcTotals = (items, discountPerc, periodById) => {
+  let subtotal = 0;
+  let originalSubtotal = 0;
 
-  const cat = (service.categoria || "").toLowerCase();
-  const title = (service.tituloVenda || service.titulo || "").toLowerCase();
+  const lines = items.map((s) => {
+    if (isPlan(s)) {
+      const period = periodById.get(s.id) || (s.periods?.[0]?.name || '');
+      const p = s.periods.find((pp) => norm(pp.name) === norm(period)) || s.periods[0];
+      const monthly = Number(p?.price || 0);
+      const oldMonthly = Number(p?.old || monthly);
 
-  // Formato
-  if (answers.formato === "video") score += cat.includes("vídeo") || cat.includes("videos") ? 50 : -5;
-  if (answers.formato === "imagens") score += cat.includes("imagem") ? 50 : -5;
-  if (answers.formato === "mensal") score += cat.includes("planos") ? 60 : -10;
-  if (answers.formato === "site") score += title.includes("website") || title.includes("site") ? 60 : -10;
-  if (answers.formato === "personagem") score += cat.includes("personagem") ? 60 : -10;
+      subtotal += monthly;
+      originalSubtotal += oldMonthly;
 
-  // Objetivo
-  if (answers.objetivo === "vendas") {
-    score += cat.includes("vídeo") ? 20 : 0;
-    score += cat.includes("imagem") ? 15 : 0;
-    score += title.includes("poster") ? 10 : 0;
-  }
-  if (answers.objetivo === "autoridade") {
-    score += cat.includes("planos") ? 30 : 0;
-    score += cat.includes("imagem") ? 10 : 0;
-    score += cat.includes("vídeo") ? 10 : 0;
-  }
-  if (answers.objetivo === "institucional") {
-    score += title.includes("website") || title.includes("corporativo") ? 30 : 0;
-    score += title.includes("premium") || title.includes("pro") ? 10 : 0;
-    score += cat.includes("personagem") ? 10 : 0;
-  }
-  if (answers.objetivo === "lançamento") {
-    score += cat.includes("vídeo") ? 25 : 0;
-    score += cat.includes("imagem") ? 20 : 0;
-    score += cat.includes("planos") ? 10 : 0;
-  }
-
-  // Prazo
-  if (answers.prazo === "urgente") {
-    const prazo = (service.prazo || "").toLowerCase();
-    score += prazo.includes("1 dia") || prazo.includes("2 dias") || prazo.includes("acelerado") ? 15 : 0;
-  }
-
-  // Orçamento
-  const p = service.preco;
-  if (typeof p === "number") {
-    if (answers.orcamento === "baixo") score += p <= 150 ? 15 : -10;
-    if (answers.orcamento === "medio") score += p > 150 && p <= 500 ? 15 : 0;
-    if (answers.orcamento === "alto") score += p >= 500 ? 10 : 0;
-  } else if (service.precosPorPeriodo?.length) {
-    // planos (mensal etc)
-    const mensal = service.precosPorPeriodo.find((x) => x.periodo === "Mensal")?.preco_mensal_efetivo;
-    if (typeof mensal === "number") {
-      if (answers.orcamento === "baixo") score += mensal <= 150 ? 15 : -10;
-      if (answers.orcamento === "medio") score += mensal > 150 && mensal <= 500 ? 15 : 0;
-      if (answers.orcamento === "alto") score += mensal >= 500 ? 10 : 0;
+      return { svc: s, kind: 'plan', period: p?.name || period, monthly, oldMonthly };
     }
+
+    const price = Number(s.price || 0);
+    const old = Number(s.old || price);
+
+    subtotal += price;
+    originalSubtotal += old;
+
+    return { svc: s, kind: 'oneoff', price, old };
+  });
+
+  const discount = Math.round(subtotal * (discountPerc / 100));
+  const total = subtotal - discount;
+
+  const instantSave = Math.max(0, Math.round(originalSubtotal - subtotal));
+  const totalSave = instantSave + discount;
+
+  return { lines, subtotal, originalSubtotal, discount, total, totalSave };
+};
+
+const pickCore = (catalog, answers, tier) => {
+  const pick = (a, b, c) => (tier === 'simple' ? a : tier === 'value' ? b : c);
+
+  const need = answers.need;
+  const vol = answers.volume;
+  const goal = answers.goal;
+
+  // Images packs
+  if (need === 'images') {
+    const low = findService(catalog, { catIncludes: ['imagens', 'images'], titleAny: ['5'] });
+    const mid = findService(catalog, { catIncludes: ['imagens', 'images'], titleAny: ['10'] });
+    const high = findService(catalog, { catIncludes: ['imagens', 'images'], titleAny: ['15'] });
+
+    if (vol === 'high' || vol === 'mega') return pick(mid, high, high);
+    return pick(low, mid, high);
   }
 
-  // Pequeno bônus para serviços bem descritos e “vendáveis”
-  if ((service.beneficios || []).length >= 3) score += 3;
-  if ((service.inclui || []).length >= 3) score += 3;
+  // Videos
+  if (need === 'videos') {
+    const s15 = findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['15'] });
+    const s30 = findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['30'] });
+    const s60 = findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['60'] });
+    const s120 = findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['120'] });
 
-  return score;
-}
+    if (vol === 'mega') return pick(s30, s60, s120);
+    if (vol === 'high') return pick(s15, s30, s60);
+    return pick(s15, s30, s60);
+  }
 
-// =====================
-// Main Component
-// =====================
+  // Plans
+  if (need === 'plan') {
+    const basic = findService(catalog, { catIncludes: ['plano', 'plan'], titleAny: ['básico', 'basic'] });
+    const standard = findService(catalog, { catIncludes: ['plano', 'plan'], titleAny: ['standart', 'standard'] });
+    const premium = findService(catalog, { catIncludes: ['plano', 'plan'], titleAny: ['premium'] });
+    return pick(basic, standard, premium);
+  }
+
+  // Mascot
+  if (need === 'mascot') {
+    const ill = findService(catalog, { catIncludes: ['personagem', 'mascot', 'character'], titleAny: ['ilustr', 'illustr'] });
+    const anim30 = findService(catalog, { catIncludes: ['personagem', 'mascot', 'character'], titleAny: ['30'] });
+    const anim60 = findService(catalog, { catIncludes: ['personagem', 'mascot', 'character'], titleAny: ['1', '60', 'cinem'] });
+
+    if (goal === 'launch' || vol === 'mega') return pick(ill, anim30, anim60);
+    return pick(ill, anim30, anim60);
+  }
+
+  // One-off / unsure: choose by goal
+  if (goal === 'brand') {
+    const logo = findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['logo', 'identidade'] });
+    const site = findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['website', 'site'] });
+    return pick(logo, site, site);
+  }
+
+  if (goal === 'sales') {
+    const poster = findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['poster', 'cartaz'] });
+    const shooting = findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['shoot', 'ensaio'] });
+    return pick(poster, shooting, shooting);
+  }
+
+  if (goal === 'intl') {
+    const dub = findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['dubl', 'dub'] });
+    return pick(dub, dub, dub);
+  }
+
+  if (goal === 'edu') {
+    const voice = findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['voz', 'voice'] });
+    return pick(voice, voice, voice);
+  }
+
+  if (goal === 'launch') {
+    const poster = findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['poster', 'cartaz'] });
+    const s30 = findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['30'] });
+    const s60 = findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['60'] });
+    return pick(poster, s30, s60);
+  }
+
+  // fallback
+  const poster = findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['poster', 'cartaz'] });
+  const midImg = findService(catalog, { catIncludes: ['imagens', 'images'], titleAny: ['10'] });
+  const s60 = findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['60'] });
+  return pick(poster, midImg, s60);
+};
+
+const suggestExtras = (catalog, answers, tier, core) => {
+  const maxExtras = tier === 'simple' ? 1 : 2;
+  const extras = [];
+  const goal = answers.goal;
+  const need = answers.need;
+
+  const add = (svc) => uniquePush(extras, svc);
+
+  // Cross-sell: video + images
+  if (core && norm(core.categoria).includes('vídeo') || norm(core.categoria).includes('video')) {
+    add(findService(catalog, { catIncludes: ['imagens', 'images'], titleAny: ['10'] }));
+  }
+  if (core && (norm(core.categoria).includes('imagens') || norm(core.categoria).includes('images'))) {
+    add(findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['30'] }));
+  }
+
+  if (goal === 'sales' || goal === 'launch') {
+    add(findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['poster', 'cartaz'] }));
+    if (tier !== 'simple') add(findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['shoot', 'ensaio'] }));
+  }
+  if (goal === 'brand') {
+    add(findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['logo', 'identidade'] }));
+    if (tier !== 'simple') add(findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['website', 'site'] }));
+  }
+  if (goal === 'edu') {
+    add(findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['voz', 'voice'] }));
+  }
+  if (goal === 'intl') {
+    add(findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['dubl', 'dub'] }));
+  }
+
+  if (need === 'plan' && tier === 'advanced') {
+    add(findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['30'] }));
+  }
+
+  const filtered = extras.filter((x) => x && (!core || x.id !== core.id));
+  return filtered.slice(0, maxExtras);
+};
+
+const buildOffers = (catalog, answers) => {
+  const anchor = typeof answers.invest === 'number' ? answers.invest : anchorByVolume(answers.volume || 'mid');
+
+  const discounts = { simple: 0, value: 10, advanced: 12 };
+  const periodByTier = { simple: ['Mensal', 'Monthly'], value: ['Trimestral', 'Quarterly'], advanced: ['Semestral', 'Semiannual'] };
+
+  const pickPeriodName = (svc, preferList) => {
+    if (!isPlan(svc)) return '';
+    const candidates = preferList.map(norm);
+    const match = svc.periods.find((p) => candidates.some((c) => norm(p.name).includes(c)));
+    return match?.name || svc.periods[0]?.name || '';
+  };
+
+  const buildTier = (tier) => {
+    const core = pickCore(catalog, answers, tier);
+    const items = [];
+    uniquePush(items, core);
+    suggestExtras(catalog, answers, tier, core).forEach((x) => uniquePush(items, x));
+
+    const periodById = new Map();
+    items.forEach((s) => {
+      if (isPlan(s)) periodById.set(s.id, pickPeriodName(s, periodByTier[tier] || ['Mensal', 'Monthly']));
+    });
+
+    let totals = calcTotals(items, discounts[tier] || 0, periodById);
+
+    // soft target to keep offers balanced
+    const target = tier === 'simple' ? anchor * 0.75 : tier === 'value' ? anchor * 1.0 : anchor * 1.45;
+    if (tier !== 'simple' && totals.total > target * 1.35 && items.length > 1) {
+      items.pop();
+      totals = calcTotals(items, discounts[tier] || 0, periodById);
+    }
+
+    return { tier, items, periodById, discountPerc: discounts[tier] || 0, ...totals };
+  };
+
+  return [buildTier('simple'), buildTier('value'), buildTier('advanced')];
+};
+
 export default function OrcamentoFunnel() {
-  const catalog = useMemo(() => normalizeCatalog(data), []);
-  const services = catalog.flat;
+  const { i18n } = useTranslation();
+  const lang = pickLang(i18n);
+  const copy = COPY[lang];
+  const fmt = useMemo(() => money(lang), [lang]);
 
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({ objetivo: "", formato: "", prazo: "", orcamento: "" });
+  const catalog = useMemo(() => normalizeCatalog(getDataByLang(lang)), [lang]);
 
-  const [selectedIds, setSelectedIds] = useState(() => new Set());
-  const [periodoPlano, setPeriodoPlano] = useState("Mensal");
-  const [mensagem, setMensagem] = useState("");
-  const [email, setEmail] = useState("");
+  const [view, setView] = useState('intro'); // intro | quiz | offers | customize
+  const [stepIndex, setStepIndex] = useState(0);
+  const [answers, setAnswers] = useState({
+    goal: null,
+    need: null,
+    volume: null,
+    invest: null,
+    deadline: null,
+  });
 
-  const resultsRef = useRef(null);
+  const [chosenTier, setChosenTier] = useState('value');
+  const [selectedExtras, setSelectedExtras] = useState(new Set());
+  const [note, setNote] = useState('');
 
-  // Read query param ?itens=base64(...)
-  useEffect(() => {
-    const sp = new URLSearchParams(window.location.search);
-    const itens = sp.get("itens");
-    if (itens) {
-      try {
-        const decoded = safeBase64Decode(itens);
-        const ids = decoded.split(",").map((s) => s.trim()).filter(Boolean);
-        const set = new Set(ids);
-        setSelectedIds(set);
-      } catch {
-        // ignora
-      }
-    }
+  const offers = useMemo(() => {
+    if (view === 'intro') return null;
+    if (!answers.goal || !answers.need || !answers.volume) return null;
+    return buildOffers(catalog, answers);
+  }, [catalog, answers, view]);
+
+  const chosenOffer = useMemo(() => {
+    if (!offers) return null;
+    return offers.find((o) => o.tier === chosenTier) || offers[1] || null;
+  }, [offers, chosenTier]);
+
+  const steps = useMemo(() => {
+    return [
+      {
+        id: 'goal',
+        title: copy.q_goal,
+        optional: false,
+        options: [
+          { v: 'sales', label: copy.goal_sales },
+          { v: 'brand', label: copy.goal_brand },
+          { v: 'social', label: copy.goal_social },
+          { v: 'edu', label: copy.goal_edu },
+          { v: 'intl', label: copy.goal_intl },
+          { v: 'launch', label: copy.goal_launch },
+        ],
+      },
+      {
+        id: 'need',
+        title: copy.q_need,
+        optional: false,
+        options: [
+          { v: 'images', label: copy.need_images },
+          { v: 'videos', label: copy.need_videos },
+          { v: 'plan', label: copy.need_plan },
+          { v: 'oneoff', label: copy.need_oneoff },
+          { v: 'mascot', label: copy.need_mascot },
+          { v: 'unsure', label: copy.need_unsure },
+        ],
+      },
+      {
+        id: 'volume',
+        title: copy.q_volume,
+        optional: false,
+        options: [
+          { v: 'low', label: copy.vol_low },
+          { v: 'mid', label: copy.vol_mid },
+          { v: 'high', label: copy.vol_high },
+          { v: 'mega', label: copy.vol_mega },
+        ],
+      },
+      {
+        id: 'invest',
+        title: copy.q_invest,
+        optional: true,
+        options: [
+          { v: 100, label: copy.inv_100 },
+          { v: 300, label: copy.inv_300 },
+          { v: 600, label: copy.inv_600 },
+          { v: 1000, label: copy.inv_1000 },
+          { v: 2000, label: copy.inv_2000 },
+        ],
+      },
+      {
+        id: 'deadline',
+        title: copy.q_deadline,
+        optional: true,
+        options: [
+          { v: 'urgent', label: copy.d1 },
+          { v: 'week', label: copy.d2 },
+          { v: 'flex', label: copy.d3 },
+        ],
+      },
+    ];
+  }, [copy]);
+
+  const progressPct = useMemo(() => {
+    const total = steps.length + 2; // offers + customize
+    const done =
+      view === 'intro' ? 0 : view === 'quiz' ? stepIndex : view === 'offers' ? steps.length : steps.length + 1;
+    return Math.round((done / total) * 100);
+  }, [stepIndex, steps.length, view]);
+
+  const resetAll = useCallback(() => {
+    setView('intro');
+    setStepIndex(0);
+    setAnswers({ goal: null, need: null, volume: null, invest: null, deadline: null });
+    setChosenTier('value');
+    setSelectedExtras(new Set());
+    setNote('');
   }, []);
 
-  // Persist selection (opcional)
-  useEffect(() => {
-    const arr = Array.from(selectedIds);
-    localStorage.setItem("comerc_orcamento_itens", JSON.stringify(arr));
-  }, [selectedIds]);
+  const goStart = useCallback(() => {
+    setView('quiz');
+    setStepIndex(0);
+  }, []);
 
-  useEffect(() => {
-    // load persisted if none selected
-    if (selectedIds.size > 0) return;
-    try {
-      const raw = localStorage.getItem("comerc_orcamento_itens");
-      if (!raw) return;
-      const arr = JSON.parse(raw);
-      if (Array.isArray(arr) && arr.length) setSelectedIds(new Set(arr));
-    } catch {}
-  }, []); // eslint-disable-line
+  const setAnswer = useCallback((id, v) => {
+    setAnswers((p) => ({ ...p, [id]: v }));
+  }, []);
 
-  const quizDone = Object.values(answers).every(Boolean);
+  const goNext = useCallback(() => {
+    const cur = steps[stepIndex];
+    if (!cur) return;
 
-  const ranked = useMemo(() => {
-    if (!quizDone) return [];
-    const scored = services
-      .map((s) => ({ s, score: scoreService(s, answers) }))
-      .sort((a, b) => b.score - a.score);
-    return scored.slice(0, 6).map((x) => x.s);
-  }, [quizDone, services, answers]);
+    if (!cur.optional && (answers[cur.id] === null || typeof answers[cur.id] === 'undefined')) return;
 
-  const selectedServices = useMemo(() => {
-    const map = new Map(services.map((s) => [s.id, s]));
-    return Array.from(selectedIds).map((id) => map.get(id)).filter(Boolean);
-  }, [selectedIds, services]);
-
-  const total = useMemo(() => {
-    let sum = 0;
-
-    for (const s of selectedServices) {
-      if (typeof s.preco === "number") sum += s.preco;
-      else if (s.precosPorPeriodo?.length) {
-        const chosen = s.precosPorPeriodo.find((x) => x.periodo === periodoPlano);
-        sum += chosen?.preco_total_com_desc ?? chosen?.preco_total_sem_desc ?? 0;
-      }
+    if (stepIndex >= steps.length - 1) {
+      setView('offers');
+      return;
     }
-    return sum;
-  }, [selectedServices, periodoPlano]);
+    setStepIndex((s) => Math.min(steps.length - 1, s + 1));
+  }, [answers, stepIndex, steps]);
 
-  function toggleSelect(id) {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+  const goBack = useCallback(() => {
+    if (view === 'quiz') setStepIndex((s) => Math.max(0, s - 1));
+    if (view === 'offers') setView('quiz');
+    if (view === 'customize') setView('offers');
+  }, [view]);
+
+  const skipStep = useCallback(() => {
+    const cur = steps[stepIndex];
+    if (!cur?.optional) return;
+    setAnswers((p) => ({ ...p, [cur.id]: null }));
+    goNext();
+  }, [goNext, stepIndex, steps]);
+
+  const openCustomize = useCallback(
+    (tier) => {
+      setChosenTier(tier);
+      setSelectedExtras(new Set());
+      setView('customize');
+    },
+    []
+  );
+
+  const extrasPool = useMemo(() => {
+    if (!chosenOffer) return [];
+    // Reuse suggestion logic but allow up to 6 extra options
+    const core = chosenOffer.items[0] || null;
+    const base = suggestExtras(catalog, answers, chosenOffer.tier, core);
+
+    // Expand pool with common add-ons (safe duplicates are removed by uniquePush)
+    const pool = [];
+    base.forEach((x) => uniquePush(pool, x));
+    uniquePush(pool, findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['poster', 'cartaz'] }));
+    uniquePush(pool, findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['logo', 'identidade'] }));
+    uniquePush(pool, findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['website', 'site'] }));
+    uniquePush(pool, findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['30'] }));
+    uniquePush(pool, findService(catalog, { catIncludes: ['imagens', 'images'], titleAny: ['10'] }));
+
+    // Remove already included
+    const includedIds = new Set((chosenOffer.items || []).map((s) => s.id));
+    return pool.filter((s) => s && !includedIds.has(s.id)).slice(0, 6);
+  }, [catalog, answers, chosenOffer]);
+
+  const totals = useMemo(() => {
+    if (!chosenOffer) return null;
+
+    const items = [...chosenOffer.items];
+    selectedExtras.forEach((id) => {
+      const svc = catalog.byId[id];
+      if (svc) uniquePush(items, svc);
     });
-  }
 
-  function shareLink() {
-    const ids = Array.from(selectedIds);
-    const encoded = safeBase64Encode(ids.join(","));
-    const url = new URL(window.location.href);
-    url.searchParams.set("itens", encoded);
+    return calcTotals(items, chosenOffer.discountPerc || 0, chosenOffer.periodById || new Map());
+  }, [catalog.byId, chosenOffer, selectedExtras]);
 
-    navigator.clipboard?.writeText(url.toString());
-    alert("Link copiado! Você pode mandar pro cliente.");
-  }
+  const offerTitle = useCallback(
+    (tier) => (tier === 'simple' ? copy.essential : tier === 'value' ? copy.bestValue : copy.advanced),
+    [copy]
+  );
 
-  function scrollToResults() {
-    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  const buildWhatsAppMessage = useCallback(() => {
+    if (!chosenOffer || !totals) return '';
 
-  function buildResumoTexto() {
     const lines = [];
-    lines.push("Orçamento – Comerc IAs");
-    lines.push("");
-    lines.push("Serviços selecionados:");
-    for (const s of selectedServices) {
-      if (typeof s.preco === "number") {
-        lines.push(`- ${s.tituloVenda} (${s.categoria}) — ${moneyBRL(s.preco)}`);
-      } else if (s.precosPorPeriodo?.length) {
-        const chosen = s.precosPorPeriodo.find((x) => x.periodo === periodoPlano);
-        const price = chosen?.preco_total_com_desc ?? chosen?.preco_total_sem_desc ?? 0;
-        lines.push(`- ${s.tituloVenda} (${s.categoria}) — ${periodoPlano}: ${moneyBRL(price)}`);
+    lines.push(lang === 'en' ? 'Hi! I want a quote with Comerc IAs.' : 'Olá! Quero um orçamento com a Comerc IAs.');
+    lines.push('');
+    lines.push((lang === 'en' ? 'Chosen offer: ' : 'Oferta escolhida: ') + offerTitle(chosenOffer.tier));
+    lines.push('');
+
+    lines.push(lang === 'en' ? 'Quiz summary:' : 'Resumo do quiz:');
+    lines.push(`- ${copy.q_goal} ${answers.goal || '-'}`);
+    lines.push(`- ${copy.q_need} ${answers.need || '-'}`);
+    lines.push(`- ${copy.q_volume} ${answers.volume || '-'}`);
+    lines.push(`- ${copy.q_invest} ${answers.invest ?? '—'}`);
+    lines.push(`- ${copy.q_deadline} ${answers.deadline ?? '—'}`);
+    lines.push('');
+
+    lines.push(lang === 'en' ? 'Included services:' : 'Serviços incluídos:');
+    totals.lines.forEach((x) => {
+      if (x.kind === 'plan') {
+        lines.push(`- ${x.svc.tituloVenda} — ${fmt.format(x.monthly)}/mês (${x.period})`);
       } else {
-        lines.push(`- ${s.tituloVenda} (${s.categoria})`);
+        lines.push(`- ${x.svc.tituloVenda} — ${fmt.format(x.price)}`);
       }
+    });
+
+    lines.push('');
+    lines.push((lang === 'en' ? 'Estimated total: ' : 'Total estimado: ') + fmt.format(totals.total));
+    if (totals.totalSave) {
+      lines.push((lang === 'en' ? 'Estimated savings: ' : 'Economia estimada: ') + fmt.format(totals.totalSave));
     }
-    lines.push("");
-    lines.push(`Total estimado: ${moneyBRL(total)}`);
-    if (mensagem.trim()) {
-      lines.push("");
-      lines.push("Mensagem do cliente:");
-      lines.push(mensagem.trim());
+
+    if (note && note.trim()) {
+      lines.push('');
+      lines.push(lang === 'en' ? 'Notes:' : 'Observações:');
+      lines.push(note.trim());
     }
-    return lines.join("\n");
-  }
 
-  function openWhatsApp() {
-    const msg = buildResumoTexto() + "\n\nQuero fechar isso. Pode me orientar no melhor caminho?";
-    window.open(buildWhatsAppLink(msg), "_blank", "noopener,noreferrer");
-  }
+    lines.push('');
+    lines.push(lang === 'en' ? 'Can you confirm availability and next steps?' : 'Pode me confirmar disponibilidade e próximos passos?');
 
-  function copyResumo() {
-    const text = buildResumoTexto();
-    navigator.clipboard?.writeText(text);
-    alert("Resumo copiado.");
-  }
+    return lines.join('\n');
+  }, [answers, chosenOffer, copy, fmt, lang, note, offerTitle, totals]);
 
-  function resetQuiz() {
-    setAnswers({ objetivo: "", formato: "", prazo: "", orcamento: "" });
-    setStep(0);
-  }
+  const sendWhatsApp = useCallback(() => {
+    const msg = buildWhatsAppMessage();
+    if (!msg || !isBrowser) return;
+    window.open(buildWhatsAppUrl(msg), '_blank', 'noopener,noreferrer');
+  }, [buildWhatsAppMessage]);
 
-  const hero = catalog.hero;
+  const anchorRef = useRef(null);
+  useEffect(() => {
+    if (!isBrowser) return;
+    try {
+      anchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch {
+      // ignore
+    }
+  }, [view]);
+
+  const currentStep = steps[stepIndex];
 
   return (
-    <div className="of-page">
-      <header className="of-hero">
-        <div className="of-hero-badge">{hero?.badge || "Orçamento Instantâneo"}</div>
-        <h1 className="of-hero-title">{hero?.titulo || "Monte seu orçamento em 2 minutos"}</h1>
-        <p className="of-hero-subtitle">
-          {hero?.subtitulo ||
-            "Selecione serviços, responda um quiz rápido e gere um resumo pronto para mandar no WhatsApp."}
-        </p>
+    <div className="orcamento-page">
+      <SEO title={copy.seoTitle} description={copy.seoDesc} />
 
-        <div className="of-hero-pills">
-          {(hero?.destaques || ["Quiz rápido", "Serviços detalhados", "Link compartilhável"]).map((t) => (
-            <span key={t} className="of-pill">{t}</span>
-          ))}
-        </div>
-
-        <div className="of-hero-cta">
-          <a className="of-btn primary" href="#quiz">Começar pelo Quiz</a>
-          <a className="of-btn ghost" href="#servicos">Ver todos os serviços</a>
-        </div>
-
-        <div className="of-hero-note">{hero?.nota || "Dica: comece com 1–2 serviços e avance."}</div>
-      </header>
-
-      {/* ===================== QUIZ ===================== */}
-      <section id="quiz" className="of-section">
-        <div className="of-section-head">
-          <h2>Encontre o serviço ideal (quiz rápido)</h2>
-          <p>Responda 4 perguntas e eu te mostro a melhor combinação para vender mais com conteúdo visual.</p>
-        </div>
-
-        <div className="of-quiz">
-          <div className="of-quiz-steps">
-            {QUIZ.map((q, i) => (
-              <button
-                key={q.key}
-                className={`of-step ${i === step ? "active" : ""} ${answers[q.key] ? "done" : ""}`}
-                onClick={() => setStep(i)}
-                type="button"
-              >
-                <span className="of-step-dot" />
-                <span className="of-step-label">{q.title}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="of-quiz-card">
-            <div className="of-quiz-title">{QUIZ[step].title}</div>
-            <div className="of-quiz-options">
-              {QUIZ[step].options.map((opt) => {
-                const selected = answers[QUIZ[step].key] === opt.value;
-                return (
-                  <button
-                    key={opt.value}
-                    className={`of-option ${selected ? "selected" : ""}`}
-                    onClick={() => {
-                      setAnswers((a) => ({ ...a, [QUIZ[step].key]: opt.value }));
-                      setStep((s) => clamp(s + 1, 0, QUIZ.length - 1));
-                      setTimeout(scrollToResults, 150);
-                    }}
-                    type="button"
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="of-quiz-actions">
-              <button
-                className="of-btn ghost"
-                type="button"
-                onClick={() => setStep((s) => clamp(s - 1, 0, QUIZ.length - 1))}
-                disabled={step === 0}
-              >
-                Voltar
-              </button>
-
-              <button className="of-btn ghost" type="button" onClick={resetQuiz}>
-                Reiniciar
-              </button>
-
-              <button
-                className="of-btn primary"
-                type="button"
-                onClick={() => {
-                  if (!quizDone) return;
-                  scrollToResults();
-                }}
-                disabled={!quizDone}
-                title={!quizDone ? "Responda todas as perguntas" : "Ver recomendações"}
-              >
-                Ver recomendações
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div ref={resultsRef} className="of-results">
-          <h3>Recomendação dinâmica</h3>
-          {!quizDone ? (
-            <p className="of-muted">Responda todas as perguntas para eu montar um caminho recomendado.</p>
-          ) : (
-            <>
-              <p className="of-muted">
-                Baseado no que você respondeu, aqui estão as melhores opções para começar (clique para adicionar ao orçamento).
-              </p>
-
-              <div className="of-grid">
-                {ranked.map((s) => (
-                  <ServiceCard key={s.id} service={s} selected={selectedIds.has(s.id)} onToggle={() => toggleSelect(s.id)} />
-                ))}
+      <Container className="orc-wrap">
+        <div className="orc-hero">
+          <div className="orc-hero-grid">
+            <div>
+              <div className="orc-hero-badge">
+                <FontAwesomeIcon icon={faBolt} />
+                <span>{copy.badge}</span>
               </div>
-            </>
-          )}
-        </div>
-      </section>
 
-      {/* ===================== APRESENTAÇÃO INTERATIVA ===================== */}
-      <section id="servicos" className="of-section">
-        <div className="of-section-head">
-          <h2>Apresentação interativa dos serviços</h2>
-          <p>Abra as categorias, compare opções e adicione ao orçamento com 1 clique.</p>
-        </div>
+              <h1 className="orc-hero-title">{copy.title}</h1>
+              <p className="orc-hero-subtitle">{copy.subtitle}</p>
 
-        <div className="of-categories">
-          {catalog.categorias.map((cat) => {
-            const catName = cat?.nome || "Categoria";
-            const catServices = (cat?.servicos || []).map((s) => {
-              const id = `${slugify(catName)}__${slugify(s.titulo_venda || s.titulo || "servico")}`;
-              return services.find((x) => x.id === id);
-            }).filter(Boolean);
+              <div className="orc-hero-note">
+                {copy.obs}: {catalog.observacoes}
+              </div>
+            </div>
 
-            return (
-              <details key={catName} className="of-accordion">
-                <summary>
-                  <span className="of-acc-title">{catName}</span>
-                  <span className="of-acc-meta">{catServices.length} opções</span>
-                </summary>
-                <div className="of-grid">
-                  {catServices.map((s) => (
-                    <ServiceCard
-                      key={s.id}
-                      service={s}
-                      selected={selectedIds.has(s.id)}
-                      onToggle={() => toggleSelect(s.id)}
-                    />
-                  ))}
+            <div>
+              <div className="orc-ctaCard">
+                <div className="orc-ctaTop">
+                  <div>
+                    <div className="orc-ctaTotalLabel">{copy.totalNow}</div>
+                    <div className="orc-ctaTotal">{totals ? fmt.format(totals.total) : fmt.format(0)}</div>
+                  </div>
+                  <div className="orc-ctaMeta">
+                    <span className="orc-chip">
+                      <FontAwesomeIcon icon={faListCheck} />
+                      <span>{Math.max(0, progressPct)}%</span>
+                    </span>
+                  </div>
                 </div>
-              </details>
-            );
-          })}
-        </div>
 
-        <div className="of-process">
-          <h3>Como funciona (bem rápido)</h3>
-          <div className="of-process-row">
-            <div className="of-process-item">
-              <div className="of-process-n">1</div>
-              <div>
-                <strong>Você escolhe</strong>
-                <div className="of-muted">Quiz ou seleção manual</div>
-              </div>
-            </div>
-            <div className="of-process-item">
-              <div className="of-process-n">2</div>
-              <div>
-                <strong>Eu produzo</strong>
-                <div className="of-muted">Conteúdo visual com padrão profissional</div>
-              </div>
-            </div>
-            <div className="of-process-item">
-              <div className="of-process-n">3</div>
-              <div>
-                <strong>Você publica e vende</strong>
-                <div className="of-muted">Peças prontas para anúncios e orgânico</div>
+                <div className="orc-ctaButtons">
+                  {view === 'intro' ? (
+                    <>
+                      <Button className="orc-btn orc-btn-primary" onClick={goStart}>
+                        <FontAwesomeIcon icon={faWandMagicSparkles} />
+                        <span>{copy.start}</span>
+                      </Button>
+                      <Button className="orc-btn orc-btn-ghost" onClick={resetAll}>
+                        <FontAwesomeIcon icon={faRotateRight} />
+                        <span>{copy.restart}</span>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button className="orc-btn orc-btn-ghost" onClick={goBack} disabled={view === 'quiz' && stepIndex === 0}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                        <span>{copy.back}</span>
+                      </Button>
+                      <Button className="orc-btn orc-btn-primary" onClick={resetAll}>
+                        <FontAwesomeIcon icon={faRotateRight} />
+                        <span>{copy.restart}</span>
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <div className="mt-3">
+                  <ProgressBar
+                    now={progressPct}
+                    style={{ height: 10, borderRadius: 999, background: 'rgba(2,8,23,0.06)' }}
+                  />
+                </div>
               </div>
             </div>
           </div>
-
-          <div className="of-notebox">
-            <strong>Observação:</strong> {catalog.observacoes || "Descontos progressivos em combos e parcerias."}
-          </div>
-        </div>
-      </section>
-
-      {/* ===================== ORÇAMENTO ===================== */}
-      <section id="orcamento" className="of-section">
-        <div className="of-section-head">
-          <h2>Seu orçamento (pronto pra mandar)</h2>
-          <p>Selecione serviços, escolha período (se for plano) e gere um resumo profissional.</p>
         </div>
 
-        <div className="of-budget">
-          <div className="of-budget-left">
-            <div className="of-budget-card">
-              <div className="of-budget-title">Itens selecionados</div>
+        <div ref={anchorRef} />
 
-              {selectedServices.length === 0 ? (
-                <p className="of-muted">Ainda nada selecionado. Volte no quiz ou abra as categorias e clique em “Adicionar”.</p>
-              ) : (
-                <ul className="of-list">
-                  {selectedServices.map((s) => (
-                    <li key={s.id} className="of-list-item">
-                      <div className="of-li-main">
-                        <div className="of-li-title">{s.tituloVenda}</div>
-                        <div className="of-li-sub">{s.categoria}</div>
+        <Row className="g-3 mt-3">
+          <Col lg={12}>
+            <Card className="orc-card">
+              <Card.Body className="orc-card-body">
+                {view === 'intro' ? (
+                  <div className="text-center">
+                    <div className="orc-card-head" style={{ justifyContent: 'center' }}>
+                      <div className="orc-step">★</div>
+                      <div>
+                        <h2 className="orc-card-title">{copy.title}</h2>
+                        <p className="orc-card-subtitle">{copy.subtitle}</p>
                       </div>
+                    </div>
 
-                      <div className="of-li-right">
-                        <div className="of-li-price">
-                          {typeof s.preco === "number"
-                            ? moneyBRL(s.preco)
-                            : s.precosPorPeriodo?.length
-                              ? moneyBRL(
-                                  (s.precosPorPeriodo.find((x) => x.periodo === periodoPlano)?.preco_total_com_desc) ??
-                                  (s.precosPorPeriodo.find((x) => x.periodo === periodoPlano)?.preco_total_sem_desc) ??
-                                  0
-                                )
-                              : "—"}
+                    <div className="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+                      <Button className="orc-btn orc-btn-primary" onClick={goStart}>
+                        <FontAwesomeIcon icon={faWandMagicSparkles} />
+                        <span>{copy.start}</span>
+                      </Button>
+                      <Button className="orc-btn orc-btn-ghost" onClick={resetAll}>
+                        <FontAwesomeIcon icon={faRotateRight} />
+                        <span>{copy.restart}</span>
+                      </Button>
+                    </div>
+                  </div>
+                ) : null}
+
+                {view === 'quiz' && currentStep ? (
+                  <>
+                    <div className="orc-card-head">
+                      <div className="orc-step">{stepIndex + 1}</div>
+                      <div style={{ minWidth: 0 }}>
+                        <h2 className="orc-card-title">{currentStep.title}</h2>
+                        <p className="orc-card-subtitle">{copy.chooseOne}</p>
+                      </div>
+                      {currentStep.optional ? (
+                        <Badge bg="secondary" className="orc-badge">
+                          {copy.optional}
+                        </Badge>
+                      ) : null}
+                    </div>
+
+                    <div className="mt-3" style={{ display: 'grid', gap: 10 }}>
+                      {currentStep.options.map((op) => {
+                        const active = String(answers[currentStep.id]) === String(op.v);
+                        return (
+                          <button
+                            key={String(op.v)}
+                            type="button"
+                            className={`orc-filterChip ${active ? 'is-active' : ''}`}
+                            style={{ textAlign: 'left', borderRadius: 16, padding: '12px 14px' }}
+                            onClick={() => setAnswer(currentStep.id, op.v)}
+                          >
+                            {active ? <FontAwesomeIcon icon={faCircleCheck} className="me-2" /> : null}
+                            <span style={{ fontWeight: 950 }}>{op.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="d-flex justify-content-between gap-2 mt-3 flex-wrap">
+                      <Button className="orc-btn orc-btn-ghost" onClick={goBack} disabled={stepIndex === 0}>
+                        {copy.back}
+                      </Button>
+
+                      <div className="d-flex gap-2">
+                        {currentStep.optional ? (
+                          <Button className="orc-btn orc-btn-ghost" onClick={skipStep}>
+                            {copy.skip}
+                          </Button>
+                        ) : null}
+                        <Button className="orc-btn orc-btn-primary" onClick={goNext}>
+                          {copy.next}
+                        </Button>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+
+                {view === 'offers' && offers ? (
+                  <>
+                    <div className="orc-card-head">
+                      <div className="orc-step">✓</div>
+                      <div style={{ minWidth: 0 }}>
+                        <h2 className="orc-card-title">{copy.offersTitle}</h2>
+                        <p className="orc-card-subtitle">{copy.offersSub}</p>
+                      </div>
+                    </div>
+
+                    <Row className="g-3 mt-2">
+                      {offers.map((of) => {
+                        const best = of.tier === 'value';
+                        return (
+                          <Col key={of.tier} md={4}>
+                            <div className={`orc-svcCard ${best ? 'is-selected' : ''}`} style={{ cursor: 'default' }}>
+                              <div className="d-flex justify-content-between align-items-start gap-2">
+                                <div style={{ minWidth: 0 }}>
+                                  <div className="d-flex align-items-center gap-2 flex-wrap">
+                                    <div style={{ fontWeight: 950 }}>{offerTitle(of.tier)}</div>
+                                    {best ? (
+                                      <Badge bg="warning" text="dark" className="orc-badge">
+                                        {copy.bestSeller}
+                                      </Badge>
+                                    ) : null}
+                                  </div>
+                                  <div className="orc-muted" style={{ fontWeight: 900 }}>{copy.estTotal}</div>
+                                </div>
+                                <div className="text-end">
+                                  <div style={{ fontWeight: 950, fontSize: '1.35rem' }}>{fmt.format(of.total)}</div>
+                                  <div className="orc-muted" style={{ fontWeight: 900 }}>
+                                    {copy.save}: {of.totalSave ? fmt.format(of.totalSave) : '—'}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <details className="mt-3">
+                                <summary className="orc-miniLink" style={{ fontWeight: 950 }}>
+                                  {copy.details}
+                                </summary>
+                                <div className="mt-2" style={{ display: 'grid', gap: 8 }}>
+                                  {of.lines.map((x) => (
+                                    <div key={x.svc.id} className="orc-pill" style={{ justifyContent: 'space-between' }}>
+                                      <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        {x.svc.tituloVenda}
+                                      </span>
+                                      <span style={{ fontWeight: 950 }}>
+                                        {x.kind === 'plan' ? `${fmt.format(x.monthly)}/m` : fmt.format(x.price)}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </details>
+
+                              <div className="mt-3 d-grid">
+                                <Button className={`orc-btn ${best ? 'orc-btn-primary' : 'orc-btn-ghost'}`} onClick={() => openCustomize(of.tier)}>
+                                  <FontAwesomeIcon icon={faCircleCheck} />
+                                  <span>{copy.choose}</span>
+                                </Button>
+                              </div>
+                            </div>
+                          </Col>
+                        );
+                      })}
+                    </Row>
+                  </>
+                ) : null}
+
+                {view === 'customize' && chosenOffer && totals ? (
+                  <>
+                    <div className="orc-card-head">
+                      <div className="orc-step">✓</div>
+                      <div style={{ minWidth: 0 }}>
+                        <h2 className="orc-card-title">{copy.customizeTitle}</h2>
+                        <p className="orc-card-subtitle">{copy.customizeSub}</p>
+                      </div>
+                      <div className="text-end">
+                        <div className="orc-muted" style={{ fontWeight: 900 }}>{copy.estTotal}</div>
+                        <div style={{ fontWeight: 950, fontSize: '1.35rem' }}>{fmt.format(totals.total)}</div>
+                      </div>
+                    </div>
+
+                    <Row className="g-3 mt-2">
+                      <Col lg={6}>
+                        <div className="orc-detailsTitle">{copy.included}</div>
+                        <div className="mt-2" style={{ display: 'grid', gap: 10 }}>
+                          {chosenOffer.lines.map((x) => (
+                            <div key={x.svc.id} className="orc-svcCard" style={{ cursor: 'default' }}>
+                              <div className="d-flex justify-content-between align-items-start gap-2">
+                                <div style={{ minWidth: 0 }}>
+                                  <div style={{ fontWeight: 950 }}>{x.svc.tituloVenda}</div>
+                                  <div className="orc-muted" style={{ fontWeight: 900 }}>{x.svc.categoria}</div>
+                                  {x.kind === 'plan' ? (
+                                    <div className="orc-muted" style={{ fontWeight: 900 }}>{x.period}</div>
+                                  ) : null}
+                                </div>
+                                <div style={{ fontWeight: 950 }}>
+                                  {x.kind === 'plan' ? `${fmt.format(x.monthly)}/mês` : fmt.format(x.price)}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                        <button className="of-mini" type="button" onClick={() => toggleSelect(s.id)}>
-                          Remover
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
+                      </Col>
 
-              <div className="of-divider" />
+                      <Col lg={6}>
+                        <div className="d-flex align-items-center justify-content-between gap-2">
+                          <div className="orc-detailsTitle">{copy.extras}</div>
+                          <Badge bg="secondary" className="orc-badge">
+                            {copy.optional}
+                          </Badge>
+                        </div>
 
-              <div className="of-row">
-                <div>
-                  <div className="of-muted">Período (para planos)</div>
-                  <select
-                    className="of-select"
-                    value={periodoPlano}
-                    onChange={(e) => setPeriodoPlano(e.target.value)}
-                  >
-                    <option value="Mensal">Mensal</option>
-                    <option value="Trimestral">Trimestral</option>
-                    <option value="Semestral">Semestral</option>
-                    <option value="Anual">Anual</option>
-                  </select>
-                </div>
+                        <div className="mt-2" style={{ display: 'grid', gap: 10 }}>
+                          {extrasPool.length ? (
+                            extrasPool.map((s) => {
+                              const checked = selectedExtras.has(s.id);
+                              return (
+                                <label key={s.id} className="orc-svcCard" style={{ cursor: 'pointer' }}>
+                                  <div className="d-flex align-items-start gap-3">
+                                    <Form.Check
+                                      type="checkbox"
+                                      checked={checked}
+                                      onChange={() => {
+                                        setSelectedExtras((prev) => {
+                                          const next = new Set(prev);
+                                          if (next.has(s.id)) next.delete(s.id);
+                                          else next.add(s.id);
+                                          return next;
+                                        });
+                                      }}
+                                    />
+                                    <div style={{ minWidth: 0, flex: 1 }}>
+                                      <div className="d-flex justify-content-between align-items-start gap-2">
+                                        <div style={{ minWidth: 0 }}>
+                                          <div style={{ fontWeight: 950 }}>{s.tituloVenda}</div>
+                                          <div className="orc-muted orc-clamp2" style={{ fontWeight: 900 }}>{s.descricao}</div>
+                                        </div>
+                                        <div style={{ fontWeight: 950 }}>{isPlan(s) ? `${fmt.format(s.price)}/m` : fmt.format(s.price)}</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </label>
+                              );
+                            })
+                          ) : (
+                            <Alert variant="light" className="mb-0">
+                              {lang === 'en' ? 'No suggested add-ons.' : 'Sem extras sugeridos.'}
+                            </Alert>
+                          )}
+                        </div>
 
-                <div className="of-total">
-                  <div className="of-muted">Total estimado</div>
-                  <div className="of-total-value">{moneyBRL(total)}</div>
-                </div>
-              </div>
+                        <div className="mt-3">
+                          <div className="orc-detailsTitle">{copy.note}</div>
+                          <Form.Control
+                            as="textarea"
+                            rows={4}
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            placeholder={copy.notePh}
+                            className="mt-2"
+                          />
+                        </div>
 
-              <div className="of-divider" />
-
-              <label className="of-label">
-                <span>Conte sua ideia (opcional)</span>
-                <textarea
-                  className="of-textarea"
-                  rows={4}
-                  value={mensagem}
-                  onChange={(e) => setMensagem(e.target.value)}
-                  placeholder="Ex: Quero 2 Reels por semana para divulgar promoção X…"
-                />
-              </label>
-
-              <label className="of-label">
-                <span>E-mail (opcional, pra você copiar/colar depois)</span>
-                <input
-                  className="of-input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
-                />
-              </label>
-
-              <div className="of-actions">
-                <button className="of-btn primary" type="button" onClick={openWhatsApp} disabled={selectedServices.length === 0}>
-                  Enviar no WhatsApp
-                </button>
-                <button className="of-btn ghost" type="button" onClick={copyResumo} disabled={selectedServices.length === 0}>
-                  Copiar resumo
-                </button>
-                <button className="of-btn ghost" type="button" onClick={shareLink} disabled={selectedServices.length === 0}>
-                  Copiar link do orçamento
-                </button>
-              </div>
-
-              {email?.trim() && selectedServices.length > 0 ? (
-                <div className="of-notebox">
-                  <strong>Dica:</strong> cole o resumo no e-mail e envie para <em>{email.trim()}</em>.
-                </div>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="of-budget-right">
-            <div className="of-budget-card">
-              <div className="of-budget-title">Por que isso converte?</div>
-              <ul className="of-bullets">
-                <li><strong>Decisão guiada:</strong> quiz reduz indecisão e acelera o “sim”.</li>
-                <li><strong>Transparência:</strong> detalhes + entregáveis + prazo + revisões.</li>
-                <li><strong>CTA pronto:</strong> WhatsApp com mensagem pronta e link compartilhável.</li>
-              </ul>
-
-              <div className="of-divider" />
-
-              <div className="of-budget-title">Sugestões de combos (1 clique)</div>
-              <div className="of-combos">
-                <button
-                  className="of-combo"
-                  type="button"
-                  onClick={() => addCombo(setSelectedIds, services, ["vídeos", "imagens"], "combo-engajamento")}
-                >
-                  Combo Engajamento (vídeo + artes)
-                </button>
-                <button
-                  className="of-combo"
-                  type="button"
-                  onClick={() => addCombo(setSelectedIds, services, ["planos"], "combo-mensal")}
-                >
-                  Combo Mensal (plano)
-                </button>
-                <button
-                  className="of-combo"
-                  type="button"
-                  onClick={() => addCombo(setSelectedIds, services, ["website"], "combo-presenca")}
-                >
-                  Combo Presença (site)
-                </button>
-              </div>
-
-              <div className="of-notebox">
-                <strong>Importante:</strong> você pode deixar essa página em uma rota separada e mandar o link direto pro cliente.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <footer className="of-footer">
-          <div className="of-muted">
-            Feito para a Comerc IAs — funil de orçamento com quiz + vitrine interativa + link compartilhável.
-          </div>
-        </footer>
-      </section>
+                        <div className="d-grid gap-2 mt-3">
+                          <Button className="orc-btn orc-btn-primary" onClick={sendWhatsApp}>
+                            <FontAwesomeIcon icon={faPaperPlane} />
+                            <span>{copy.sendWa}</span>
+                          </Button>
+                          <Button className="orc-btn orc-btn-ghost" onClick={goBack}>
+                            <FontAwesomeIcon icon={faChevronLeft} />
+                            <span>{copy.back}</span>
+                          </Button>
+                        </div>
+                      </Col>
+                    </Row>
+                  </>
+                ) : null}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
-}
-
-// =====================
-// Components
-// =====================
-function ServiceCard({ service, selected, onToggle }) {
-  const hasPlan = Array.isArray(service.precosPorPeriodo) && service.precosPorPeriodo.length > 0;
-
-  return (
-    <div className={`of-card ${selected ? "selected" : ""}`}>
-      <div className="of-card-top">
-        <div className="of-card-cat">{service.categoria}</div>
-        <div className="of-card-title">{service.tituloVenda}</div>
-
-        <div className="of-card-price">
-          {typeof service.preco === "number" ? (
-            <>
-              <span className="of-price-now">{moneyBRL(service.preco)}</span>
-              {typeof service.precoOriginal === "number" && service.precoOriginal > service.preco ? (
-                <span className="of-price-old">{moneyBRL(service.precoOriginal)}</span>
-              ) : null}
-            </>
-          ) : hasPlan ? (
-            <span className="of-price-now">Plano (ver períodos)</span>
-          ) : (
-            <span className="of-price-now">Sob consulta</span>
-          )}
-        </div>
-
-        <p className="of-card-desc">{service.descricao}</p>
-      </div>
-
-      <div className="of-card-mid">
-        {service.beneficios?.length ? (
-          <div className="of-mini-list">
-            <div className="of-mini-title">Benefícios</div>
-            <ul>
-              {service.beneficios.slice(0, 3).map((b) => <li key={b}>{b}</li>)}
-            </ul>
-          </div>
-        ) : null}
-
-        {service.inclui?.length ? (
-          <div className="of-mini-list">
-            <div className="of-mini-title">Inclui</div>
-            <ul>
-              {service.inclui.slice(0, 3).map((i) => <li key={i}>{i}</li>)}
-            </ul>
-          </div>
-        ) : null}
-
-        <div className="of-meta">
-          {service.prazo ? <span className="of-tag">Prazo: {service.prazo}</span> : null}
-          {service.revisoes != null ? <span className="of-tag">Revisões: {service.revisoes}</span> : null}
-        </div>
-
-        {hasPlan ? (
-          <details className="of-plan">
-            <summary>Ver preços por período</summary>
-            <div className="of-plan-grid">
-              {service.precosPorPeriodo.map((p) => (
-                <div key={p.periodo} className="of-plan-item">
-                  <div className="of-plan-title">{p.periodo}</div>
-                  <div className="of-plan-price">{moneyBRL(p.preco_total_com_desc ?? p.preco_total_sem_desc)}</div>
-                  <div className="of-muted">{p.desconto_perc ? `${p.desconto_perc}% off` : "Sem desconto"}</div>
-                </div>
-              ))}
-            </div>
-          </details>
-        ) : null}
-      </div>
-
-      <div className="of-card-actions">
-        <button className={`of-btn ${selected ? "ghost" : "primary"}`} type="button" onClick={onToggle}>
-          {selected ? "Remover" : "Adicionar ao orçamento"}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// Combo helper: adiciona 1-2 itens “representativos” conforme intenção
-function addCombo(setSelectedIds, services, matchWords = [], mode = "") {
-  const lowerWords = matchWords.map((w) => w.toLowerCase());
-
-  const filtered = services.filter((s) => {
-    const hay = `${s.categoria} ${s.tituloVenda} ${s.titulo}`.toLowerCase();
-    return lowerWords.some((w) => hay.includes(w));
-  });
-
-  const pick = [];
-  if (mode === "combo-engajamento") {
-    // tenta pegar 1 vídeo + 1 pack imagens
-    const video = filtered.find((s) => (s.categoria || "").toLowerCase().includes("vídeo"));
-    const imgs = filtered.find((s) => (s.categoria || "").toLowerCase().includes("imagem"));
-    if (video) pick.push(video.id);
-    if (imgs) pick.push(imgs.id);
-  } else {
-    // pega o primeiro (mais “representativo”)
-    if (filtered[0]) pick.push(filtered[0].id);
-  }
-
-  setSelectedIds((prev) => {
-    const next = new Set(prev);
-    pick.forEach((id) => next.add(id));
-    return next;
-  });
 }
