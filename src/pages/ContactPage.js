@@ -23,21 +23,21 @@ const ContactPage = () => {
       
       badge: 'Contato',
       title: 'Vamos transformar sua ideia em um material que vende.',
-      subtitle: 'Conte seu objetivo e eu retorno com um caminho claro: conceito, referências, prazo e o melhor formato pra sua campanha.',
+      subtitle: 'Conte seu objetivo e retornamos com um caminho claro: conceito, referências, prazo e o melhor formato pra sua campanha.',
       
       ctaBudget: 'Fazer orçamento',
       ctaWhats: 'WhatsApp',
       
       formTitle: 'Envie sua mensagem',
       formTag: 'Resposta rápida',
-      formDesc: 'Para eu te responder com precisão, me diga: nicho, objetivo (venda, marca, tráfego), prazo e onde vai postar.',
+      formDesc: 'Para te responder com precisão, diga: nicho, objetivo (venda, marca, tráfego), prazo e onde vai postar.',
       formNote: 'Dica: se você tiver referência (site, vídeo, reel), cole o link na mensagem — eu uso isso para acertar o estilo mais rápido.',
       
       infoTitle: 'Outros canais',
-      infoDesc: 'Se preferir, fale direto por WhatsApp. Respondemos rápido em dias úteis e já organizamos o briefing com você.',
+      infoDesc: 'Se preferir, fale direto por WhatsApp. Respondemos rápido e já organizamos o briefing com você.',
       
       miniCtaTitle: 'Quer acelerar o processo?',
-      miniCtaDesc: 'Se você já quer chegar no objetivo final, faça o orçamento e eu te conduzo pelas opções.',
+      miniCtaDesc: 'Se você já quer chegar no objetivo final, faça o orçamento instantâneo.',
       miniCtaBtn: 'Ir para orçamento',
       
       processTitle: 'O que acontece depois?',
@@ -85,18 +85,18 @@ const ContactPage = () => {
       
       badge: 'Contact',
       title: 'Let’s turn your idea into an asset that sells.',
-      subtitle: 'Tell us your goal and we’ll return with a clear path: concept, references, timeline, and the best format for your campaign.',
+      subtitle: 'Tell us your goal and we will get back to you with a clear path: concept, references, deadline, and the best format for your campaign.',
       
       ctaBudget: 'Get a quote',
       ctaWhats: 'WhatsApp',
       
       formTitle: 'Send a message',
       formTag: 'Fast reply',
-      formDesc: 'For a precise answer, tell me: niche, goal (sales, branding, traffic), deadline, and where you will post it.',
+      formDesc: 'To give you a precise answer, please specify: niche, objective (sales, brand, traffic), timeframe, and where you will post it.',
       formNote: 'Tip: if you have a reference (site, video, reel), paste the link in the message — I use it to nail the style faster.',
       
       infoTitle: 'Other channels',
-      infoDesc: 'If you prefer, talk directly via WhatsApp. We reply fast on business days and organize the briefing with you.',
+      infoDesc: 'If you prefer, talk directly via WhatsApp. We respond quickly and can schedule a briefing with you right away.',
       
       miniCtaTitle: 'Want to speed it up?',
       miniCtaDesc: 'If you want to get straight to the point, generate a quote and I will guide you through the options.',

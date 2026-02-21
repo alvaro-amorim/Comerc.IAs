@@ -1,38 +1,38 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Form,
-  Collapse,
-  Modal,
-  Badge,
   Alert,
+  Badge,
+  Button,
+  Card,
+  Col,
+  Collapse,
+  Container,
+  Form,
+  Modal,
   ProgressBar,
+  Row,
 } from 'react-bootstrap';
 import { useReactToPrint } from 'react-to-print';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faArrowUpRightFromSquare,
   faBolt,
-  faWandMagicSparkles,
-  faListCheck,
   faChevronDown,
   faChevronUp,
-  faArrowUpRightFromSquare,
-  faShareNodes,
-  faPrint,
-  faClipboard,
-  faPaperPlane,
   faCircleCheck,
   faCircleXmark,
-  faMagnifyingGlass,
-  faFire,
-  faTag,
+  faClipboard,
   faClock,
+  faFire,
+  faListCheck,
+  faMagnifyingGlass,
+  faPaperPlane,
+  faPrint,
   faRotateRight,
+  faShareNodes,
+  faTag,
+  faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 
 import SEO from '../components/SEO';
@@ -43,7 +43,9 @@ import precosEN from '../data/precos_en.json';
 
 const QUIZ_URL = 'https://auxiliar-de-escolha.vercel.app/';
 
-// ---------- helpers ----------
+/* ==========================================================================
+   Helpers
+   ========================================================================== */
 const norm = (s) =>
   (s || '')
     .toString()
@@ -58,24 +60,10 @@ const slug = (s) =>
     .replace(/-{2,}/g, '-')
     .replace(/(^-|-$)/g, '') || 'item';
 
-const b64UrlEncode = (str) => {
-  try {
-    const b64 = window.btoa(unescape(encodeURIComponent(str)));
-    return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-  } catch {
-    return '';
-  }
-};
+const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
 
-const b64UrlDecode = (b64) => {
-  try {
-    let s = (b64 || '').replace(/-/g, '+').replace(/_/g, '/');
-    while (s.length % 4) s += '=';
-    return decodeURIComponent(escape(window.atob(s)));
-  } catch {
-    return '';
-  }
-};
+const pickLang = (i18n) => ((i18n?.language || 'pt').toLowerCase().startsWith('en') ? 'en' : 'pt');
+const getDataByLang = (lang) => (lang === 'en' ? precosEN : precosPT);
 
 const moneyFormatter = (lang) =>
   new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'pt-BR', {
@@ -83,60 +71,6 @@ const moneyFormatter = (lang) =>
     currency: lang === 'en' ? 'USD' : 'BRL',
     maximumFractionDigits: 2,
   });
-
-const pickLang = (i18n) => ((i18n?.language || 'pt').toLowerCase().startsWith('en') ? 'en' : 'pt');
-const getDataByLang = (lang) => (lang === 'en' ? precosEN : precosPT);
-
-const normalizeCatalog = (raw) => {
-  const hero = raw?.orcamento?.hero || {};
-  const categorias = (raw?.orcamento?.categorias || []).map((cat) => {
-    const servicos = (cat?.servicos || []).map((svc) => {
-      const titulo = svc?.titulo || '';
-      const tituloVenda = svc?.titulo_venda || titulo || '';
-      const id = svc?.id || `${slug(cat?.nome)}__${slug(tituloVenda || titulo)}`;
-
-      const base = {
-        id,
-        categoria: cat?.nome || 'Categoria',
-        titulo,
-        tituloVenda,
-        descricao: svc?.descricao || '',
-        inclui: Array.isArray(svc?.inclui) ? svc.inclui : [],
-        beneficios: Array.isArray(svc?.beneficios) ? svc.beneficios : [],
-        prazo: svc?.prazo_entrega || '',
-        revisoes: svc?.revisoes_incluidas ?? null,
-        formato: Array.isArray(svc?.formato_entrega) ? svc.formato_entrega : [],
-        tags: Array.isArray(svc?.tags) ? svc.tags : [],
-        popular: !!svc?.popular,
-      };
-
-      const hasPeriods = Array.isArray(svc?.precos_por_periodo) && svc.precos_por_periodo.length > 0;
-      const periods = hasPeriods
-        ? svc.precos_por_periodo.map((p) => ({
-            name: p?.periodo || '',
-            price: p?.preco ?? 0,
-            old: p?.preco_original ?? null,
-            off: p?.desconto_percentual ?? null,
-          }))
-        : null;
-
-      const price = svc?.preco ?? 0;
-      const old = svc?.preco_original ?? null;
-      const off =
-        svc?.desconto_percentual ??
-        (old && price ? Math.round((1 - Number(price) / Number(old)) * 100) : null);
-
-      return { ...base, hasPeriods, periods, price: Number(price) || 0, old, off };
-    });
-
-    return { nome: cat?.nome || 'Categoria', servicos };
-  });
-
-  const all = categorias.flatMap((c) => c.servicos);
-  return { hero, categorias, all };
-};
-
-const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
 
 const buildWhatsAppUrl = (text) => `https://wa.me/?text=${encodeURIComponent(text)}`;
 
@@ -159,6 +93,28 @@ const safeCopy = async (text) => {
   }
 };
 
+const b64UrlEncode = (str) => {
+  try {
+    const b64 = window.btoa(unescape(encodeURIComponent(str)));
+    return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  } catch {
+    return '';
+  }
+};
+
+const b64UrlDecode = (b64) => {
+  try {
+    let s = (b64 || '').replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4) s += '=';
+    return decodeURIComponent(escape(window.atob(s)));
+  } catch {
+    return '';
+  }
+};
+
+/* ==========================================================================
+   Copy (PT/EN)
+   ========================================================================== */
 const COPY = {
   pt: {
     seoTitle: 'Orçamento Instantâneo — Comerc IAs',
@@ -191,7 +147,6 @@ const COPY = {
     hideDetails: 'Ocultar detalhes',
     includes: 'Inclui',
     benefits: 'Benefícios',
-    meta: 'Info rápida',
     delivery: 'Prazo',
     revisions: 'Revisões',
     formats: 'Formatos',
@@ -251,6 +206,11 @@ const COPY = {
     comboSub:
       'Um ponto de partida rápido (você pode adicionar/remover itens). Descontos para combos são negociáveis por prazo e volume.',
     addCombo: 'Adicionar combo',
+    itemsSelectedTitle: 'Itens selecionados',
+    emptySearch:
+      'Nenhum serviço encontrado. Tente outra busca.',
+    notSelected: 'Não selecionado',
+    added: 'Adicionado',
   },
   en: {
     seoTitle: 'Instant Quote — Comerc IAs',
@@ -283,7 +243,6 @@ const COPY = {
     hideDetails: 'Hide details',
     includes: 'Includes',
     benefits: 'Benefits',
-    meta: 'Quick info',
     delivery: 'Delivery',
     revisions: 'Revisions',
     formats: 'Formats',
@@ -341,10 +300,100 @@ const COPY = {
     comboSub:
       'A quick starting point (you can add/remove items). Bundle discounts are negotiable depending on deadline and volume.',
     addCombo: 'Add bundle',
+    itemsSelectedTitle: 'Selected items',
+    emptySearch:
+      'No services found. Try a different search.',
+    notSelected: 'Not selected',
+    added: 'Added',
   },
 };
 
-// ---------- quiz model ----------
+/* ==========================================================================
+   Catalog normalization (performance: precompute norms)
+   ========================================================================== */
+const normalizeCatalog = (raw) => {
+  const hero = raw?.orcamento?.hero || {};
+
+  const categorias = (raw?.orcamento?.categorias || []).map((cat) => {
+    const categoriaNome = cat?.nome || 'Categoria';
+    const categoriaNorm = norm(categoriaNome);
+
+    const servicos = (cat?.servicos || []).map((svc) => {
+      const titulo = svc?.titulo || '';
+      const tituloVenda = svc?.titulo_venda || titulo || '';
+
+      const id = svc?.id || `${slug(categoriaNome)}__${slug(tituloVenda || titulo)}`;
+
+      const inclui = Array.isArray(svc?.inclui) ? svc.inclui : [];
+      const beneficios = Array.isArray(svc?.beneficios) ? svc.beneficios : [];
+      const formato = Array.isArray(svc?.formato_entrega) ? svc.formato_entrega : [];
+      const tags = Array.isArray(svc?.tags) ? svc.tags : [];
+
+      const hasPeriods = Array.isArray(svc?.precos_por_periodo) && svc.precos_por_periodo.length > 0;
+      const periods = hasPeriods
+        ? svc.precos_por_periodo.map((p) => ({
+            name: p?.periodo || '',
+            price: Number(p?.preco) || 0,
+            old: p?.preco_original ?? null,
+            off: p?.desconto_percentual ?? null,
+          }))
+        : [];
+
+      const price = Number(svc?.preco) || 0;
+      const old = svc?.preco_original ?? null;
+      const off =
+        svc?.desconto_percentual ??
+        (old && price ? Math.round((1 - Number(price) / Number(old)) * 100) : null);
+
+      const titleNorm = norm(`${tituloVenda} ${titulo}`);
+      const tagsNorm = norm(tags.join(' '));
+      const descNorm = norm(svc?.descricao || '');
+      const searchNorm = norm(`${tituloVenda} ${titulo} ${svc?.descricao || ''} ${categoriaNome} ${tags.join(' ')}`);
+
+      return {
+        id,
+        categoria: categoriaNome,
+        titulo,
+        tituloVenda,
+        descricao: svc?.descricao || '',
+        inclui,
+        beneficios,
+        prazo: svc?.prazo_entrega || '',
+        revisoes: svc?.revisoes_incluidas ?? null,
+        formato,
+        tags,
+        popular: !!svc?.popular,
+
+        hasPeriods,
+        periods,
+        price,
+        old,
+        off,
+
+        // precomputed
+        _categoriaNorm: categoriaNorm,
+        _titleNorm: titleNorm,
+        _tagsNorm: tagsNorm,
+        _descNorm: descNorm,
+        _searchNorm: searchNorm,
+      };
+    });
+
+    return { nome: categoriaNome, _nomeNorm: categoriaNorm, servicos };
+  });
+
+  const all = categorias.flatMap((c) => c.servicos);
+  const byId = all.reduce((acc, s) => {
+    acc[s.id] = s;
+    return acc;
+  }, {});
+
+  return { hero, categorias, all, byId };
+};
+
+/* ==========================================================================
+   Quiz model (kept premium / small)
+   ========================================================================== */
 const QUIZ_STEPS = (c) => [
   {
     id: 'goal',
@@ -387,7 +436,7 @@ const QUIZ_STEPS = (c) => [
 ];
 
 const scoreService = (svc, ans) => {
-  const t = norm(`${svc.tituloVenda} ${svc.categoria} ${(svc.tags || []).join(' ')}`);
+  const t = norm(`${svc.tituloVenda} ${svc.categoria} ${svc.tags.join(' ')}`);
 
   let score = 0;
 
@@ -422,15 +471,18 @@ const scoreService = (svc, ans) => {
     if (t.includes('imagens') || t.includes('images') || t.includes('feed') || t.includes('stories')) score += 3;
     if (t.includes('plano') || t.includes('monthly') || t.includes('mensal')) score += 2;
   }
+
   if (ans.channel === 'ads') {
     if (t.includes('video') || t.includes('vídeo')) score += 4;
     if (t.includes('poster') || t.includes('imagens') || t.includes('design')) score += 3;
     if (t.includes('landing') || t.includes('website') || t.includes('site')) score += 2;
   }
+
   if (ans.channel === 'web') {
     if (t.includes('website') || t.includes('site') || t.includes('landing')) score += 7;
     if (t.includes('branding') || t.includes('identidade') || t.includes('logo')) score += 2;
   }
+
   if (ans.channel === 'mix') {
     score += 1;
     if (t.includes('plano') || t.includes('monthly') || t.includes('mensal')) score += 2;
@@ -449,9 +501,7 @@ const scoreService = (svc, ans) => {
   if (ans.budget === 'low') score += svc.price <= 150 ? 2 : -1;
   if (ans.budget === 'high') score += svc.price >= 200 ? 1 : 0;
 
-  // best sellers
   if (svc.popular) score += 1;
-
   return score;
 };
 
@@ -461,31 +511,23 @@ const buildRecommendation = (catalog, ans) => {
     .sort((a, b) => b.score - a.score);
 
   const top = scored.filter((x) => x.score > 0).slice(0, 4).map((x) => x.svc);
-
-  // ensure not empty
   if (top.length) return top;
 
-  // fallback: pick popular first
   const popular = catalog.all.filter((s) => s.popular).slice(0, 4);
   return popular.length ? popular : catalog.all.slice(0, 3);
 };
 
-// ---------- bundles ----------
-const buildBundles = (catalog, c) => {
-  // This is “best-effort”. If a service isn't found, the bundle is skipped.
+/* ==========================================================================
+   Bundles (premium quick start)
+   ========================================================================== */
+const buildBundles = (catalog, isPt) => {
   const bundles = [];
 
-  const addBundle = (id, name, hint, pickerList) => {
-    const items = pickerList.map((p) => findService(catalog, p)).filter(Boolean);
-    if (items.length >= 2) {
-      bundles.push({ id, name, hint, items });
-    }
-  };
-
-  const findService = (cat, p) => {
+  const findService = (p) => {
     const catNeed = (p.catIncludes || []).map(norm);
     const titleNeed = (p.titleIncludes || []).map(norm);
-    for (const ccat of cat.categorias) {
+
+    for (const ccat of catalog.categorias) {
       const cn = norm(ccat.nome);
       if (catNeed.length && !catNeed.some((x) => cn.includes(x))) continue;
 
@@ -498,11 +540,15 @@ const buildBundles = (catalog, c) => {
     return null;
   };
 
-  // PT keywords are also attempted; EN file has English titles. Our find is tolerant.
+  const addBundle = (id, name, hint, pickerList) => {
+    const items = pickerList.map(findService).filter(Boolean);
+    if (items.length >= 2) bundles.push({ id, name, hint, items });
+  };
+
   addBundle(
     'bundle-social-boost',
-    (c.pt ? 'Combo Social Boost' : 'Social Boost Bundle'),
-    (c.pt ? 'Mais conteúdo para redes + vídeo curto para conversão.' : 'More social content + a short video for conversion.'),
+    isPt ? 'Combo Social Boost' : 'Social Boost Bundle',
+    isPt ? 'Mais conteúdo para redes + vídeo curto para conversão.' : 'More social content + a short video for conversion.',
     [
       { catIncludes: ['imagens', 'images'], titleIncludes: ['10'] },
       { catIncludes: ['videos', 'vídeos'], titleIncludes: ['short'] },
@@ -511,8 +557,8 @@ const buildBundles = (catalog, c) => {
 
   addBundle(
     'bundle-launch',
-    (c.pt ? 'Combo Lançamento' : 'Launch Bundle'),
-    (c.pt ? 'Vídeo + artes + site para campanha completa.' : 'Video + designs + website for a full campaign.'),
+    isPt ? 'Combo Lançamento' : 'Launch Bundle',
+    isPt ? 'Vídeo + artes + site para campanha completa.' : 'Video + designs + website for a full campaign.',
     [
       { catIncludes: ['videos', 'vídeos'], titleIncludes: ['30'] },
       { catIncludes: ['imagens', 'images'], titleIncludes: ['15'] },
@@ -522,8 +568,8 @@ const buildBundles = (catalog, c) => {
 
   addBundle(
     'bundle-brand',
-    (c.pt ? 'Combo Marca' : 'Brand Bundle'),
-    (c.pt ? 'Identidade + website para presença profissional.' : 'Brand identity + website for a professional presence.'),
+    isPt ? 'Combo Marca' : 'Brand Bundle',
+    isPt ? 'Identidade + website para presença profissional.' : 'Brand identity + website for a professional presence.',
     [
       { catIncludes: ['servicos', 'services'], titleIncludes: ['identidade'] },
       { catIncludes: ['servicos', 'services'], titleIncludes: ['website'] },
@@ -533,21 +579,25 @@ const buildBundles = (catalog, c) => {
   return bundles.slice(0, 3);
 };
 
-// ---------- component ----------
+/* ==========================================================================
+   Component
+   ========================================================================== */
 export default function OrcamentoPage() {
   const { i18n } = useTranslation();
   const lang = pickLang(i18n);
   const copy = COPY[lang];
+
   const catalog = useMemo(() => normalizeCatalog(getDataByLang(lang)), [lang]);
   const fmt = useMemo(() => moneyFormatter(lang), [lang]);
 
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
-  const [openCats, setOpenCats] = useState(() => ({}));
-  const [openDetails, setOpenDetails] = useState(() => ({}));
 
-  // selection: id -> { id, title, category, price, periodName }
-  const [selected, setSelected] = useState(() => ({}));
+  const [openCats, setOpenCats] = useState({});
+  const [openDetails, setOpenDetails] = useState({});
+
+  // selection: id -> { id, categoria, tituloVenda, price, periodName }
+  const [selected, setSelected] = useState({});
 
   // Proposal form (optional)
   const [wantsProposal, setWantsProposal] = useState(false);
@@ -558,7 +608,7 @@ export default function OrcamentoPage() {
   const [showShare, setShowShare] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Quiz state
+  // Quiz
   const steps = useMemo(() => QUIZ_STEPS(copy), [copy]);
   const [quizStep, setQuizStep] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({ goal: '', channel: '', deadline: '', budget: '' });
@@ -572,228 +622,121 @@ export default function OrcamentoPage() {
   });
 
   const servicesAnchorRef = useRef(null);
-  const scrollToServices = () => {
+  const scrollToServices = useCallback(() => {
     try {
       servicesAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  // ====== URL hydration (shareable link) ======
-  useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
+  /* ------------------------------------------------------------------------
+     Selection helpers (DRY)
+     ------------------------------------------------------------------------ */
+  const getBestPeriod = useCallback((svc) => {
+    if (!svc?.hasPeriods || !svc.periods?.length) return null;
+    const sorted = [...svc.periods].sort((a, b) => Number(a.price) - Number(b.price));
+    return sorted[0] || null;
+  }, []);
 
-      // New: itens = base64url(JSON)
-      const itensB64 = params.get('itens');
-      if (itensB64) {
-        const decoded = b64UrlDecode(itensB64);
-        const parsed = JSON.parse(decoded);
-        if (Array.isArray(parsed?.items)) {
-          const next = {};
-          parsed.items.forEach((it) => {
-            if (!it?.id) return;
-            const svc = catalog.all.find((s) => s.id === it.id);
-            if (!svc) return;
-            const chosen = {
-              id: svc.id,
-              categoria: svc.categoria,
-              tituloVenda: svc.tituloVenda,
-              price: Number(it.price ?? svc.price) || svc.price,
-              periodName: it.periodName || '',
-            };
+  const buildSelectionEntry = useCallback(
+    (svc, preferredPeriodName = '') => {
+      if (!svc) return null;
 
-            // if service has periods and a periodName is provided, take that price
-            if (svc.hasPeriods && it.periodName) {
-              const p = svc.periods.find((pp) => norm(pp.name) === norm(it.periodName));
-              if (p) chosen.price = Number(p.price) || chosen.price;
-            }
-
-            next[svc.id] = chosen;
-          });
-
-          if (Object.keys(next).length) setSelected(next);
-          return;
-        }
-      }
-
-      // Old: servicos = JSON nested
-      const servicos = params.get('servicos');
-      const periodos = params.get('periodos');
-      if (servicos) {
-        const oldSel = JSON.parse(decodeURIComponent(servicos));
-        const oldPeriods = periodos ? JSON.parse(decodeURIComponent(periodos)) : {};
-        const next = {};
-
-        Object.entries(oldSel || {}).forEach(([catName, list]) => {
-          Object.entries(list || {}).forEach(([title, price]) => {
-            // find best match in catalog
-            const match = catalog.all.find(
-              (s) => norm(s.categoria) === norm(catName) && (norm(s.tituloVenda) === norm(title) || norm(s.titulo) === norm(title))
-            );
-            if (!match) return;
-            const chosenPeriodName = oldPeriods?.[catName]?.[title] || '';
-            let finalPrice = Number(price) || match.price;
-
-            if (match.hasPeriods && chosenPeriodName) {
-              const p = match.periods.find((pp) => norm(pp.name) === norm(chosenPeriodName));
-              if (p) finalPrice = Number(p.price) || finalPrice;
-            }
-
-            next[match.id] = {
-              id: match.id,
-              categoria: match.categoria,
-              tituloVenda: match.tituloVenda,
-              price: finalPrice,
-              periodName: chosenPeriodName,
-            };
-          });
-        });
-
-        if (Object.keys(next).length) setSelected(next);
-      }
-    } catch {
-      // ignore
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalog.all.length]);
-
-  // ====== selection helpers ======
-  const toggleService = (svc) => {
-    setSelected((prev) => {
-      const next = { ...prev };
-      if (next[svc.id]) {
-        delete next[svc.id];
-        return next;
-      }
-
-      // if has periods: auto-select first period (best value)
+      // If periods exist:
       if (svc.hasPeriods && svc.periods?.length) {
-        const best = [...svc.periods].sort((a, b) => Number(a.price) - Number(b.price))[0];
-        next[svc.id] = {
+        // If preferredPeriodName matches, use it; otherwise choose best (lowest)
+        let chosen = null;
+
+        if (preferredPeriodName) {
+          chosen = svc.periods.find((p) => norm(p.name) === norm(preferredPeriodName)) || null;
+        }
+        if (!chosen) chosen = getBestPeriod(svc);
+
+        return {
           id: svc.id,
           categoria: svc.categoria,
           tituloVenda: svc.tituloVenda,
-          price: Number(best.price) || svc.price,
-          periodName: best.name || '',
+          price: Number(chosen?.price) || svc.price,
+          periodName: chosen?.name || '',
         };
-        return next;
       }
 
-      next[svc.id] = { id: svc.id, categoria: svc.categoria, tituloVenda: svc.tituloVenda, price: svc.price, periodName: '' };
-      return next;
-    });
-  };
-
-  const setPeriod = (svc, periodName) => {
-    setSelected((prev) => {
-      const next = { ...prev };
-      const current = next[svc.id] || { id: svc.id, categoria: svc.categoria, tituloVenda: svc.tituloVenda, price: svc.price, periodName: '' };
-
-      const period = svc.periods?.find((p) => norm(p.name) === norm(periodName));
-      if (period) {
-        next[svc.id] = { ...current, periodName: period.name, price: Number(period.price) || current.price };
-      } else {
-        next[svc.id] = { ...current, periodName: '', price: svc.price };
-      }
-      return next;
-    });
-  };
-
-  const removeItem = (id) => setSelected((prev) => {
-    const next = { ...prev };
-    delete next[id];
-    return next;
-  });
-
-  const selectedList = useMemo(() => Object.values(selected), [selected]);
-
-  const subtotal = useMemo(
-    () => selectedList.reduce((sum, it) => sum + (Number(it.price) || 0), 0),
-    [selectedList]
+      // No periods:
+      return {
+        id: svc.id,
+        categoria: svc.categoria,
+        tituloVenda: svc.tituloVenda,
+        price: Number(svc.price) || 0,
+        periodName: '',
+      };
+    },
+    [getBestPeriod]
   );
 
-  // optional: show “potential discount range” hint (not applied)
-  const potentialDiscount = useMemo(() => {
-    const count = selectedList.length;
-    if (count < 2) return null;
-    if (count >= 6) return { min: 10, max: 20 };
-    if (count >= 4) return { min: 8, max: 15 };
-    return { min: 5, max: 12 };
-  }, [selectedList.length]);
+  const toggleService = useCallback(
+    (svc) => {
+      setSelected((prev) => {
+        const next = { ...prev };
+        if (next[svc.id]) {
+          delete next[svc.id];
+          return next;
+        }
+        const entry = buildSelectionEntry(svc);
+        if (entry) next[svc.id] = entry;
+        return next;
+      });
+    },
+    [buildSelectionEntry]
+  );
 
-  // Filters + search
-  const serviceMatches = (svc) => {
-    const q = norm(search);
-    if (!q) return true;
-    const hay = norm(`${svc.tituloVenda} ${svc.titulo} ${svc.descricao} ${svc.categoria} ${(svc.tags || []).join(' ')}`);
-    return hay.includes(q);
-  };
+  const setPeriod = useCallback(
+    (svc, periodName) => {
+      setSelected((prev) => {
+        const next = { ...prev };
+        const current = next[svc.id] || buildSelectionEntry(svc);
+        if (!current) return prev;
 
-  const servicePassesFilter = (svc) => {
-    if (filter === 'all') return true;
-    if (filter === 'popular') return svc.popular || (svc.off && Number(svc.off) >= 10);
-    if (filter === 'video') return norm(svc.categoria).includes('video') || norm(svc.categoria).includes('vídeo') || norm(svc.tags?.join(' ')).includes('video');
-    if (filter === 'images') return norm(svc.categoria).includes('imagem') || norm(svc.tags?.join(' ')).includes('imagens') || norm(svc.tags?.join(' ')).includes('images');
-    if (filter === 'plans') return norm(svc.categoria).includes('plano') || norm(svc.tags?.join(' ')).includes('mensal') || norm(svc.tags?.join(' ')).includes('monthly');
-    if (filter === 'web') return norm(`${svc.tituloVenda} ${svc.tags?.join(' ')}`).includes('website') || norm(`${svc.tituloVenda}`).includes('site') || norm(`${svc.tituloVenda}`).includes('landing');
-    if (filter === 'char') return norm(svc.categoria).includes('person') || norm(`${svc.tituloVenda} ${svc.tags?.join(' ')}`).includes('mascot') || norm(`${svc.tituloVenda}`).includes('mascote');
-    return true;
-  };
+        const p = svc.periods?.find((pp) => norm(pp.name) === norm(periodName));
+        if (!p) {
+          next[svc.id] = { ...current, periodName: '', price: Number(svc.price) || 0 };
+          return next;
+        }
 
-  const filteredCategories = useMemo(() => {
-    const cats = catalog.categorias.map((cat) => ({
-      ...cat,
-      servicos: cat.servicos.filter((s) => serviceMatches(s) && servicePassesFilter(s)),
-    }));
-    return cats.filter((c) => c.servicos.length > 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalog.categorias, search, filter]);
+        next[svc.id] = {
+          ...current,
+          periodName: p.name,
+          price: Number(p.price) || current.price,
+        };
+        return next;
+      });
+    },
+    [buildSelectionEntry]
+  );
 
-  const toggleCat = (name) => setOpenCats((p) => ({ ...p, [name]: !p[name] }));
-  const isCatOpen = (name) => !!openCats[name];
-
-  const toggleDetails = (id) => setOpenDetails((p) => ({ ...p, [id]: !p[id] }));
-  const isDetailsOpen = (id) => !!openDetails[id];
-
-  // Bundles for quick add
-  const bundles = useMemo(() => buildBundles(catalog, { pt: lang === 'pt' }), [catalog, lang]);
-
-  const bundlePrice = (items) => items.reduce((sum, s) => sum + (Number(s.price) || 0), 0);
-
-  const addBundle = (bundle) => {
+  const removeItem = useCallback((id) => {
     setSelected((prev) => {
       const next = { ...prev };
-      bundle.items.forEach((svc) => {
-        if (next[svc.id]) return;
-
-        if (svc.hasPeriods && svc.periods?.length) {
-          const best = [...svc.periods].sort((a, b) => Number(a.price) - Number(b.price))[0];
-          next[svc.id] = {
-            id: svc.id,
-            categoria: svc.categoria,
-            tituloVenda: svc.tituloVenda,
-            price: Number(best.price) || svc.price,
-            periodName: best.name || '',
-          };
-        } else {
-          next[svc.id] = {
-            id: svc.id,
-            categoria: svc.categoria,
-            tituloVenda: svc.tituloVenda,
-            price: svc.price,
-            periodName: '',
-          };
-        }
-      });
+      delete next[id];
       return next;
     });
+  }, []);
 
-    scrollToServices();
-  };
+  const selectedList = useMemo(() => Object.values(selected), [selected]);
+  const selectedCount = selectedList.length;
 
-  // Share link
+  const total = useMemo(() => selectedList.reduce((sum, it) => sum + (Number(it.price) || 0), 0), [selectedList]);
+
+  const potentialDiscount = useMemo(() => {
+    if (selectedCount < 2) return null;
+    if (selectedCount >= 6) return { min: 10, max: 20 };
+    if (selectedCount >= 4) return { min: 8, max: 15 };
+    return { min: 5, max: 12 };
+  }, [selectedCount]);
+
+  /* ------------------------------------------------------------------------
+     Share URL
+     ------------------------------------------------------------------------ */
   const shareUrl = useMemo(() => {
     const payload = {
       items: selectedList.map((it) => ({
@@ -804,26 +747,29 @@ export default function OrcamentoPage() {
     };
 
     const encoded = b64UrlEncode(JSON.stringify(payload));
-    if (!encoded) return window.location.href;
-
     const base = `${window.location.origin}${window.location.pathname}`;
+
+    if (!encoded) return window.location.href;
     return `${base}?itens=${encoded}`;
   }, [selectedList]);
 
-  const onCopyShare = async () => {
+  const onCopyShare = useCallback(async () => {
     setCopied(false);
     const ok = await safeCopy(shareUrl);
     setCopied(ok);
     if (ok) setTimeout(() => setCopied(false), 1500);
-  };
+  }, [shareUrl]);
 
-  // WhatsApp message
-  const buildSummaryText = () => {
+  /* ------------------------------------------------------------------------
+     WhatsApp summary
+     ------------------------------------------------------------------------ */
+  const buildSummaryText = useCallback(() => {
     const lines = [];
     lines.push(lang === 'en' ? 'Hello! I’d like a quote:' : 'Olá! Quero um orçamento:');
     lines.push('');
 
     selectedList
+      .slice()
       .sort((a, b) => (a.categoria || '').localeCompare(b.categoria || ''))
       .forEach((it) => {
         const period = it.periodName ? ` (${it.periodName})` : '';
@@ -831,7 +777,7 @@ export default function OrcamentoPage() {
       });
 
     lines.push('');
-    lines.push(`${copy.total}: ${fmt.format(subtotal)}`);
+    lines.push(`${copy.total}: ${fmt.format(total || 0)}`);
 
     if (wantsProposal) {
       lines.push('');
@@ -843,82 +789,225 @@ export default function OrcamentoPage() {
     }
 
     return lines.join('\n');
-  };
+  }, [copy.email, copy.message, copy.name, copy.total, copy.whatsappField, fmt, lang, lead, selectedList, total, wantsProposal]);
 
-  const goWhatsApp = () => {
+  const goWhatsApp = useCallback(() => {
+    if (!selectedCount) return;
     const url = buildWhatsAppUrl(buildSummaryText());
     window.open(url, '_blank', 'noopener,noreferrer');
-  };
+  }, [buildSummaryText, selectedCount]);
 
-  const sendProposal = () => {
-    if (!selectedList.length) return;
-    goWhatsApp();
-  };
+  /* ------------------------------------------------------------------------
+     URL hydration (shareable link)
+     ------------------------------------------------------------------------ */
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
 
-  // ===== quiz handlers =====
-  const resetQuiz = () => {
+      // New format: itens = base64url(JSON)
+      const itensB64 = params.get('itens');
+      if (itensB64) {
+        const decoded = b64UrlDecode(itensB64);
+        const parsed = JSON.parse(decoded);
+
+        if (Array.isArray(parsed?.items)) {
+          const next = {};
+
+          parsed.items.forEach((it) => {
+            const svc = catalog.byId?.[it?.id];
+            if (!svc) return;
+
+            // Prefer the explicit periodName (if exists), else best
+            const entry = buildSelectionEntry(svc, it?.periodName || '');
+            if (!entry) return;
+
+            // If payload has a price override, honor it (but keep a valid number)
+            const overridePrice = Number(it?.price);
+            if (!Number.isNaN(overridePrice) && overridePrice > 0) entry.price = overridePrice;
+
+            next[svc.id] = entry;
+          });
+
+          if (Object.keys(next).length) setSelected(next);
+          return;
+        }
+      }
+
+      // Old format (legacy): servicos + periodos
+      const servicos = params.get('servicos');
+      const periodos = params.get('periodos');
+      if (servicos) {
+        const oldSel = JSON.parse(decodeURIComponent(servicos));
+        const oldPeriods = periodos ? JSON.parse(decodeURIComponent(periodos)) : {};
+        const next = {};
+
+        Object.entries(oldSel || {}).forEach(([catName, list]) => {
+          Object.entries(list || {}).forEach(([title, price]) => {
+            const catN = norm(catName);
+            const titleN = norm(title);
+
+            const match = catalog.all.find((s) => s._categoriaNorm === catN && (norm(s.tituloVenda) === titleN || norm(s.titulo) === titleN));
+            if (!match) return;
+
+            const chosenPeriodName = oldPeriods?.[catName]?.[title] || '';
+            const entry = buildSelectionEntry(match, chosenPeriodName);
+            if (!entry) return;
+
+            const overridePrice = Number(price);
+            if (!Number.isNaN(overridePrice) && overridePrice > 0) entry.price = overridePrice;
+
+            next[match.id] = entry;
+          });
+        });
+
+        if (Object.keys(next).length) setSelected(next);
+      }
+    } catch {
+      // ignore
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalog.all.length]);
+
+  /* ------------------------------------------------------------------------
+     Filters + search
+     ------------------------------------------------------------------------ */
+  const q = useMemo(() => norm(search), [search]);
+
+  const servicePassesFilter = useCallback((svc) => {
+    if (filter === 'all') return true;
+
+    if (filter === 'popular') return svc.popular || (svc.off && Number(svc.off) >= 10);
+
+    if (filter === 'video') {
+      return svc._categoriaNorm.includes('video') || svc._categoriaNorm.includes('vídeo') || svc._tagsNorm.includes('video');
+    }
+    if (filter === 'images') {
+      return svc._categoriaNorm.includes('imagem') || svc._tagsNorm.includes('imagens') || svc._tagsNorm.includes('images');
+    }
+    if (filter === 'plans') {
+      return svc._categoriaNorm.includes('plano') || svc._tagsNorm.includes('mensal') || svc._tagsNorm.includes('monthly');
+    }
+    if (filter === 'web') {
+      return svc._titleNorm.includes('website') || svc._titleNorm.includes('site') || svc._titleNorm.includes('landing') || svc._tagsNorm.includes('website');
+    }
+    if (filter === 'char') {
+      return svc._categoriaNorm.includes('person') || svc._titleNorm.includes('mascote') || svc._titleNorm.includes('personagem') || svc._tagsNorm.includes('mascot');
+    }
+
+    return true;
+  }, [filter]);
+
+  const filteredCategories = useMemo(() => {
+    const cats = catalog.categorias
+      .map((cat) => {
+        const servicos = cat.servicos.filter((s) => {
+          if (q && !s._searchNorm.includes(q)) return false;
+          if (!servicePassesFilter(s)) return false;
+          return true;
+        });
+        return { ...cat, servicos };
+      })
+      .filter((c) => c.servicos.length > 0);
+
+    return cats;
+  }, [catalog.categorias, q, servicePassesFilter]);
+
+  /* ------------------------------------------------------------------------
+     Default open categories
+     ------------------------------------------------------------------------ */
+  useEffect(() => {
+    if (Object.keys(openCats).length) return;
+    const initial = {};
+    catalog.categorias.forEach((c) => {
+      initial[c.nome] = true;
+    });
+    setOpenCats(initial);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalog.categorias.length]);
+
+  const toggleCat = useCallback((name) => {
+    setOpenCats((p) => ({ ...p, [name]: !p[name] }));
+  }, []);
+
+  const toggleDetails = useCallback((id) => {
+    setOpenDetails((p) => ({ ...p, [id]: !p[id] }));
+  }, []);
+
+  const isCatOpen = useCallback((name) => !!openCats[name], [openCats]);
+  const isDetailsOpen = useCallback((id) => !!openDetails[id], [openDetails]);
+
+  /* ------------------------------------------------------------------------
+     Bundles
+     ------------------------------------------------------------------------ */
+  const bundles = useMemo(() => buildBundles(catalog, lang === 'pt'), [catalog, lang]);
+  const bundlePrice = useCallback((items) => items.reduce((sum, s) => sum + (Number(s.price) || 0), 0), []);
+
+  const addBundle = useCallback((bundle) => {
+    setSelected((prev) => {
+      const next = { ...prev };
+      bundle.items.forEach((svc) => {
+        if (next[svc.id]) return;
+        const entry = buildSelectionEntry(svc);
+        if (entry) next[svc.id] = entry;
+      });
+      return next;
+    });
+    scrollToServices();
+  }, [buildSelectionEntry, scrollToServices]);
+
+  /* ------------------------------------------------------------------------
+     Quiz handlers
+     ------------------------------------------------------------------------ */
+  const resetQuiz = useCallback(() => {
     setQuizStep(0);
     setQuizAnswers({ goal: '', channel: '', deadline: '', budget: '' });
     setQuizResult(null);
-  };
+  }, []);
 
-  const setQuizAnswer = (stepId, value) => {
+  const setQuizAnswer = useCallback((stepId, value) => {
     setQuizAnswers((p) => ({ ...p, [stepId]: value }));
-  };
+  }, []);
 
-  const canGoNext = () => {
+  const canGoNext = useMemo(() => {
     const step = steps[quizStep];
     if (!step) return false;
     return !!quizAnswers[step.id];
-  };
+  }, [quizAnswers, quizStep, steps]);
 
-  const onQuizNext = () => {
-    if (!canGoNext()) return;
-    if (quizStep < steps.length - 1) setQuizStep((s) => s + 1);
-  };
+  const onQuizNext = useCallback(() => {
+    if (!canGoNext) return;
+    setQuizStep((s) => Math.min(steps.length - 1, s + 1));
+  }, [canGoNext, steps.length]);
 
-  const onQuizBack = () => setQuizStep((s) => Math.max(0, s - 1));
+  const onQuizBack = useCallback(() => {
+    setQuizStep((s) => Math.max(0, s - 1));
+  }, []);
 
-  const onQuizFinish = () => {
+  const onQuizFinish = useCallback(() => {
     const rec = buildRecommendation(catalog, quizAnswers);
     setQuizResult(rec);
-  };
+  }, [catalog, quizAnswers]);
 
-  const applyRecommendation = () => {
+  const applyRecommendation = useCallback(() => {
     if (!quizResult?.length) return;
 
     setSelected((prev) => {
       const next = { ...prev };
       quizResult.forEach((svc) => {
         if (next[svc.id]) return;
-
-        if (svc.hasPeriods && svc.periods?.length) {
-          const best = [...svc.periods].sort((a, b) => Number(a.price) - Number(b.price))[0];
-          next[svc.id] = {
-            id: svc.id,
-            categoria: svc.categoria,
-            tituloVenda: svc.tituloVenda,
-            price: Number(best.price) || svc.price,
-            periodName: best.name || '',
-          };
-        } else {
-          next[svc.id] = {
-            id: svc.id,
-            categoria: svc.categoria,
-            tituloVenda: svc.tituloVenda,
-            price: svc.price,
-            periodName: '',
-          };
-        }
+        const entry = buildSelectionEntry(svc);
+        if (entry) next[svc.id] = entry;
       });
       return next;
     });
 
     setShowQuiz(false);
     scrollToServices();
-  };
+  }, [buildSelectionEntry, quizResult, scrollToServices]);
 
-  // ===== UI helpers =====
+  /* ------------------------------------------------------------------------
+     UI components
+     ------------------------------------------------------------------------ */
   const FilterChip = ({ id, label, icon }) => (
     <button
       type="button"
@@ -931,11 +1020,9 @@ export default function OrcamentoPage() {
   );
 
   const renderPrice = (svc) => {
-    // if selected with period override:
     const sel = selected[svc.id];
     const price = sel ? Number(sel.price) : Number(svc.price);
 
-    // show “old” and “off” when present (for base) or for selected period (if it has one)
     let old = svc.old;
     let off = svc.off;
 
@@ -998,6 +1085,7 @@ export default function OrcamentoPage() {
                   ) : null}
                 </div>
               </div>
+
               {svc.descricao ? <div className="orc-svcDesc">{svc.descricao}</div> : null}
             </div>
           </div>
@@ -1014,12 +1102,12 @@ export default function OrcamentoPage() {
           {isSelected ? (
             <Badge bg="success" className="orc-badge">
               <FontAwesomeIcon icon={faCircleCheck} className="me-1" />
-              {lang === 'en' ? 'Added' : 'Adicionado'}
+              {copy.added}
             </Badge>
           ) : (
             <Badge bg="secondary" className="orc-badge">
               <FontAwesomeIcon icon={faCircleXmark} className="me-1" />
-              {lang === 'en' ? 'Not selected' : 'Não selecionado'}
+              {copy.notSelected}
             </Badge>
           )}
         </div>
@@ -1045,7 +1133,11 @@ export default function OrcamentoPage() {
                     <div className="orc-periodRow">
                       <div>
                         <div className="orc-periodName">{p.name}</div>
-                        {p.old ? <div className="orc-muted" style={{ textDecoration: 'line-through' }}>{fmt.format(Number(p.old) || 0)}</div> : null}
+                        {p.old ? (
+                          <div className="orc-muted" style={{ textDecoration: 'line-through' }}>
+                            {fmt.format(Number(p.old) || 0)}
+                          </div>
+                        ) : null}
                       </div>
                       <div className="text-end">
                         <div className="orc-periodPrice">{fmt.format(Number(p.price) || 0)}</div>
@@ -1072,9 +1164,14 @@ export default function OrcamentoPage() {
                     ))}
                   </ul>
                 ) : (
-                  <div className="orc-muted">{lang === 'en' ? 'Included items will be defined in the proposal.' : 'Itens inclusos serão definidos na proposta.'}</div>
+                  <div className="orc-muted">
+                    {lang === 'en'
+                      ? 'Included items will be defined in the proposal.'
+                      : 'Itens inclusos serão definidos na proposta.'}
+                  </div>
                 )}
               </div>
+
               <div>
                 <div className="orc-detailsTitle">{copy.benefits}</div>
                 {svc.beneficios?.length ? (
@@ -1084,7 +1181,11 @@ export default function OrcamentoPage() {
                     ))}
                   </ul>
                 ) : (
-                  <div className="orc-muted">{lang === 'en' ? 'Benefits depend on your goal and scope.' : 'Benefícios dependem do objetivo e do escopo.'}</div>
+                  <div className="orc-muted">
+                    {lang === 'en'
+                      ? 'Benefits depend on your goal and scope.'
+                      : 'Benefícios dependem do objetivo e do escopo.'}
+                  </div>
                 )}
               </div>
             </div>
@@ -1096,16 +1197,22 @@ export default function OrcamentoPage() {
                   {copy.delivery}: <strong>{svc.prazo}</strong>
                 </span>
               ) : null}
+
               {svc.revisoes !== null ? (
                 <span>
                   <FontAwesomeIcon icon={faRotateRight} className="me-2" />
                   {copy.revisions}: <strong>{svc.revisoes}</strong>
                 </span>
               ) : null}
+
               {svc.formato?.length ? (
                 <span>
                   <FontAwesomeIcon icon={faListCheck} className="me-2" />
-                  {copy.formats}: <strong>{svc.formato.slice(0, 2).join(' • ')}{svc.formato.length > 2 ? '…' : ''}</strong>
+                  {copy.formats}:{' '}
+                  <strong>
+                    {svc.formato.slice(0, 2).join(' • ')}
+                    {svc.formato.length > 2 ? '…' : ''}
+                  </strong>
                 </span>
               ) : null}
             </div>
@@ -1115,19 +1222,9 @@ export default function OrcamentoPage() {
     );
   };
 
-  // default open categories (first render)
-  useEffect(() => {
-    if (Object.keys(openCats).length) return;
-    const initial = {};
-    catalog.categorias.forEach((c) => {
-      initial[c.nome] = true;
-    });
-    setOpenCats(initial);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalog.categorias.length]);
-
-  const selectedCount = selectedList.length;
-
+  /* ------------------------------------------------------------------------
+     Main render
+     ------------------------------------------------------------------------ */
   return (
     <div className="orcamento-page">
       <SEO title={copy.seoTitle} description={copy.seoDesc} />
@@ -1163,7 +1260,7 @@ export default function OrcamentoPage() {
                 <div className="orc-ctaTop">
                   <div>
                     <div className="orc-ctaTotalLabel">{copy.ctaTotalLabel}</div>
-                    <div className="orc-ctaTotal">{fmt.format(subtotal || 0)}</div>
+                    <div className="orc-ctaTotal">{fmt.format(total || 0)}</div>
                   </div>
 
                   <div className="orc-ctaMeta">
@@ -1210,7 +1307,7 @@ export default function OrcamentoPage() {
           </div>
         </div>
 
-        {/* Combos (optional but premium) */}
+        {/* Bundles */}
         {bundles?.length ? (
           <Card className="orc-card mt-3">
             <Card.Body className="orc-card-body">
@@ -1225,17 +1322,17 @@ export default function OrcamentoPage() {
               <Row className="g-3">
                 {bundles.map((b) => (
                   <Col key={b.id} md={4}>
-                    <div className="orc-svc" style={{ marginTop: 0, cursor: 'default' }}>
+                    <div className="orc-svc" style={{ cursor: 'default' }}>
                       <div className="orc-svcTop">
                         <div style={{ minWidth: 0 }}>
                           <h4 className="orc-svcTitle">{b.name}</h4>
-                          <div className="orc-svcDesc" style={{ marginBottom: 8 }}>{b.hint}</div>
+                          <div className="orc-svcDesc">{b.hint}</div>
                           <div className="orc-muted" style={{ fontWeight: 900 }}>
                             {b.items.map((x) => x.tituloVenda).join(' + ')}
                           </div>
                         </div>
 
-                        <div className="orc-svcPrice" style={{ minWidth: 0 }}>
+                        <div className="orc-svcPrice">
                           <div className="orc-svcNew">{fmt.format(bundlePrice(b.items))}</div>
                         </div>
                       </div>
@@ -1305,23 +1402,23 @@ export default function OrcamentoPage() {
                           </div>
 
                           <div className="orc-catRight">
-                            <span>{isCatOpen(cat.nome) ? (lang === 'en' ? 'Hide' : 'Ocultar') : (lang === 'en' ? 'Show' : 'Mostrar')}</span>
+                            <span>
+                              {isCatOpen(cat.nome)
+                                ? (lang === 'en' ? 'Hide' : 'Ocultar')
+                                : (lang === 'en' ? 'Show' : 'Mostrar')}
+                            </span>
                             <FontAwesomeIcon icon={isCatOpen(cat.nome) ? faChevronUp : faChevronDown} />
                           </div>
                         </button>
 
                         <Collapse in={isCatOpen(cat.nome)}>
-                          <div>
-                            {cat.servicos.map(renderService)}
-                          </div>
+                          <div>{cat.servicos.map(renderService)}</div>
                         </Collapse>
                       </div>
                     ))
                   ) : (
                     <Alert variant="light" className="mb-0">
-                      {lang === 'en'
-                        ? 'No services found. Try a different search.'
-                        : 'Nenhum serviço encontrado. Tente outra busca.'}
+                      {copy.emptySearch}
                     </Alert>
                   )}
                 </div>
@@ -1352,12 +1449,12 @@ export default function OrcamentoPage() {
 
                 <div className="orc-asideLine">
                   <span>{copy.subtotal}</span>
-                  <strong>{fmt.format(subtotal || 0)}</strong>
+                  <strong>{fmt.format(total || 0)}</strong>
                 </div>
 
                 <div className="orc-asideLine">
                   <span>{copy.total}</span>
-                  <strong>{fmt.format(subtotal || 0)}</strong>
+                  <strong>{fmt.format(total || 0)}</strong>
                 </div>
 
                 {potentialDiscount ? (
@@ -1374,19 +1471,12 @@ export default function OrcamentoPage() {
                 )}
 
                 <div className="orc-asideBtns">
-                  <Button
-                    className="orc-btn orc-btn-primary"
-                    onClick={goWhatsApp}
-                    disabled={!selectedCount}
-                  >
+                  <Button className="orc-btn orc-btn-primary" onClick={goWhatsApp} disabled={!selectedCount}>
                     <FontAwesomeIcon icon={faPaperPlane} />
                     <span>{copy.whatsapp}</span>
                   </Button>
 
-                  <Button
-                    className="orc-btn orc-btn-ghost"
-                    onClick={() => setWantsProposal((v) => !v)}
-                  >
+                  <Button className="orc-btn orc-btn-ghost" onClick={() => setWantsProposal((v) => !v)}>
                     <FontAwesomeIcon icon={faWandMagicSparkles} />
                     <span>{copy.proposal}</span>
                   </Button>
@@ -1394,7 +1484,8 @@ export default function OrcamentoPage() {
 
                 {selectedCount ? (
                   <div className="mt-3">
-                    <div className="orc-detailsTitle mb-2">{lang === 'en' ? 'Selected items' : 'Itens selecionados'}</div>
+                    <div className="orc-detailsTitle mb-2">{copy.itemsSelectedTitle}</div>
+
                     <div style={{ display: 'grid', gap: 10 }}>
                       {selectedList
                         .slice()
@@ -1411,12 +1502,11 @@ export default function OrcamentoPage() {
                             }}
                           >
                             <div style={{ minWidth: 0 }}>
-                              <div style={{ fontWeight: 950, color: '#071a2d' }}>{it.tituloVenda}</div>
-                              {it.periodName ? (
-                                <div className="orc-muted" style={{ fontWeight: 900 }}>{it.periodName}</div>
-                              ) : null}
+                              <div style={{ fontWeight: 950 }}>{it.tituloVenda}</div>
+                              {it.periodName ? <div className="orc-muted" style={{ fontWeight: 900 }}>{it.periodName}</div> : null}
                               <div className="orc-muted" style={{ fontWeight: 900 }}>{fmt.format(Number(it.price) || 0)}</div>
                             </div>
+
                             <button
                               type="button"
                               className="orc-miniLink"
@@ -1485,11 +1575,7 @@ export default function OrcamentoPage() {
                         />
                       </Form.Group>
 
-                      <Button
-                        className="orc-btn orc-btn-primary w-100 mt-2"
-                        onClick={sendProposal}
-                        disabled={!selectedCount}
-                      >
+                      <Button className="orc-btn orc-btn-primary w-100 mt-2" onClick={goWhatsApp} disabled={!selectedCount}>
                         <FontAwesomeIcon icon={faPaperPlane} />
                         <span>{copy.send}</span>
                       </Button>
@@ -1506,8 +1592,11 @@ export default function OrcamentoPage() {
           <Modal.Header closeButton>
             <Modal.Title>{copy.quizTitle}</Modal.Title>
           </Modal.Header>
+
           <Modal.Body>
-            <p className="orc-muted" style={{ fontWeight: 900 }}>{copy.quizDesc}</p>
+            <p className="orc-muted" style={{ fontWeight: 900 }}>
+              {copy.quizDesc}
+            </p>
 
             {!quizResult ? (
               <>
@@ -1543,11 +1632,11 @@ export default function OrcamentoPage() {
                   </Button>
 
                   {quizStep < steps.length - 1 ? (
-                    <Button className="orc-btn orc-btn-primary" onClick={onQuizNext} disabled={!canGoNext()}>
+                    <Button className="orc-btn orc-btn-primary" onClick={onQuizNext} disabled={!canGoNext}>
                       {copy.next}
                     </Button>
                   ) : (
-                    <Button className="orc-btn orc-btn-primary" onClick={onQuizFinish} disabled={!canGoNext()}>
+                    <Button className="orc-btn orc-btn-primary" onClick={onQuizFinish} disabled={!canGoNext}>
                       {copy.finish}
                     </Button>
                   )}
@@ -1557,7 +1646,9 @@ export default function OrcamentoPage() {
               <>
                 <Alert variant="light" className="mb-3">
                   <div style={{ fontWeight: 950, marginBottom: 6 }}>{copy.recTitle}</div>
-                  <div className="orc-muted" style={{ fontWeight: 900 }}>{copy.recSub}</div>
+                  <div className="orc-muted" style={{ fontWeight: 900 }}>
+                    {copy.recSub}
+                  </div>
                 </Alert>
 
                 <div style={{ display: 'grid', gap: 10 }}>
@@ -1574,7 +1665,9 @@ export default function OrcamentoPage() {
                       <div className="d-flex justify-content-between align-items-start gap-2">
                         <div style={{ minWidth: 0 }}>
                           <div style={{ fontWeight: 950 }}>{svc.tituloVenda}</div>
-                          <div className="orc-muted" style={{ fontWeight: 900 }}>{svc.categoria}</div>
+                          <div className="orc-muted" style={{ fontWeight: 900 }}>
+                            {svc.categoria}
+                          </div>
                         </div>
                         <div style={{ fontWeight: 950 }}>{fmt.format(svc.price || 0)}</div>
                       </div>
@@ -1584,7 +1677,9 @@ export default function OrcamentoPage() {
 
                 <Alert variant="light" className="mt-3 mb-0">
                   <div style={{ fontWeight: 950 }}>{copy.why}</div>
-                  <div className="orc-muted" style={{ fontWeight: 900 }}>{copy.whySub}</div>
+                  <div className="orc-muted" style={{ fontWeight: 900 }}>
+                    {copy.whySub}
+                  </div>
                 </Alert>
 
                 <div className="d-grid gap-2 mt-3">
@@ -1592,6 +1687,7 @@ export default function OrcamentoPage() {
                     <FontAwesomeIcon icon={faCircleCheck} />
                     <span>{copy.apply}</span>
                   </Button>
+
                   <Button className="orc-btn orc-btn-ghost" onClick={resetQuiz}>
                     <span>{copy.restart}</span>
                   </Button>
@@ -1599,8 +1695,9 @@ export default function OrcamentoPage() {
               </>
             )}
           </Modal.Body>
+
           <Modal.Footer>
-            <Button className="orc-btn orc-btn-ghost" onClick={() => { setShowQuiz(false); }}>
+            <Button className="orc-btn orc-btn-ghost" onClick={() => setShowQuiz(false)}>
               {copy.close}
             </Button>
           </Modal.Footer>
@@ -1611,8 +1708,11 @@ export default function OrcamentoPage() {
           <Modal.Header closeButton>
             <Modal.Title>{copy.shareTitle}</Modal.Title>
           </Modal.Header>
+
           <Modal.Body>
-            <p className="orc-muted" style={{ fontWeight: 900 }}>{copy.shareDesc}</p>
+            <p className="orc-muted" style={{ fontWeight: 900 }}>
+              {copy.shareDesc}
+            </p>
 
             <Form.Control value={shareUrl} readOnly />
 
