@@ -271,9 +271,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  max-width: 100%;
 }
 
 .orc-filterChip{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  white-space: nowrap;
   border-radius: 999px;
   padding: 8px 12px;
   border: 1px solid rgba(2, 8, 23, 0.10);
@@ -712,6 +718,12 @@
   .orcamento-page{ padding: 5.2rem 0 3.2rem; }
   .orc-card-body{ padding: 18px 16px; }
   .orc-proofRow{ grid-template-columns: 1fr; }
+  .orc-filterChips{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
 }
 
 /* ===== New compact service card (cleaner, conversion-first) ===== */

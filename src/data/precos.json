@@ -299,7 +299,10 @@
                 "desconto_perc": 0,
                 "preco_total_sem_desc": 400,
                 "preco_total_com_desc": 400,
-                "preco_mensal_efetivo": 400
+                "preco_mensal_efetivo": 400,
+                "preco": 400.0,
+                "preco_original": 400.0,
+                "desconto_percentual": 0
               },
               {
                 "periodo": "Trimestral",
@@ -307,7 +310,10 @@
                 "desconto_perc": 5,
                 "preco_total_sem_desc": 1200.0,
                 "preco_total_com_desc": 1140.0,
-                "preco_mensal_efetivo": 380.0
+                "preco_mensal_efetivo": 380.0,
+                "preco": 380.0,
+                "preco_original": 400.0,
+                "desconto_percentual": 5
               },
               {
                 "periodo": "Semestral",
@@ -315,7 +321,10 @@
                 "desconto_perc": 10,
                 "preco_total_sem_desc": 2400.0,
                 "preco_total_com_desc": 2160.0,
-                "preco_mensal_efetivo": 360.0
+                "preco_mensal_efetivo": 360.0,
+                "preco": 360.0,
+                "preco_original": 400.0,
+                "desconto_percentual": 10
               },
               {
                 "periodo": "Anual",
@@ -323,7 +332,10 @@
                 "desconto_perc": 15,
                 "preco_total_sem_desc": 4800.0,
                 "preco_total_com_desc": 4080.0,
-                "preco_mensal_efetivo": 340.0
+                "preco_mensal_efetivo": 340.0,
+                "preco": 340.0,
+                "preco_original": 400.0,
+                "desconto_percentual": 15
               }
             ],
             "id": "planos-de-social-media-conteudo-mensal__plano-conteudo-basico",
@@ -363,7 +375,10 @@
                 "desconto_perc": 0,
                 "preco_total_sem_desc": 800,
                 "preco_total_com_desc": 800,
-                "preco_mensal_efetivo": 800
+                "preco_mensal_efetivo": 800,
+                "preco": 800.0,
+                "preco_original": 800.0,
+                "desconto_percentual": 0
               },
               {
                 "periodo": "Trimestral",
@@ -371,7 +386,10 @@
                 "desconto_perc": 5,
                 "preco_total_sem_desc": 2400.0,
                 "preco_total_com_desc": 2280.0,
-                "preco_mensal_efetivo": 760.0
+                "preco_mensal_efetivo": 760.0,
+                "preco": 760.0,
+                "preco_original": 800.0,
+                "desconto_percentual": 5
               },
               {
                 "periodo": "Semestral",
@@ -379,7 +397,10 @@
                 "desconto_perc": 10,
                 "preco_total_sem_desc": 4800.0,
                 "preco_total_com_desc": 4320.0,
-                "preco_mensal_efetivo": 720.0
+                "preco_mensal_efetivo": 720.0,
+                "preco": 720.0,
+                "preco_original": 800.0,
+                "desconto_percentual": 10
               },
               {
                 "periodo": "Anual",
@@ -387,7 +408,10 @@
                 "desconto_perc": 15,
                 "preco_total_sem_desc": 9600.0,
                 "preco_total_com_desc": 8160.0,
-                "preco_mensal_efetivo": 680.0
+                "preco_mensal_efetivo": 680.0,
+                "preco": 680.0,
+                "preco_original": 800.0,
+                "desconto_percentual": 15
               }
             ],
             "id": "planos-de-social-media-conteudo-mensal__plano-conteudo-standart",
@@ -427,7 +451,10 @@
                 "desconto_perc": 0,
                 "preco_total_sem_desc": 1200,
                 "preco_total_com_desc": 1200,
-                "preco_mensal_efetivo": 1200
+                "preco_mensal_efetivo": 1200,
+                "preco": 1200.0,
+                "preco_original": 1200.0,
+                "desconto_percentual": 0
               },
               {
                 "periodo": "Trimestral",
@@ -435,7 +462,10 @@
                 "desconto_perc": 5,
                 "preco_total_sem_desc": 3600.0,
                 "preco_total_com_desc": 3420.0,
-                "preco_mensal_efetivo": 1140.0
+                "preco_mensal_efetivo": 1140.0,
+                "preco": 1140.0,
+                "preco_original": 1200.0,
+                "desconto_percentual": 5
               },
               {
                 "periodo": "Semestral",
@@ -443,7 +473,10 @@
                 "desconto_perc": 10,
                 "preco_total_sem_desc": 7200.0,
                 "preco_total_com_desc": 6480.0,
-                "preco_mensal_efetivo": 1080.0
+                "preco_mensal_efetivo": 1080.0,
+                "preco": 1080.0,
+                "preco_original": 1200.0,
+                "desconto_percentual": 10
               },
               {
                 "periodo": "Anual",
@@ -451,7 +484,10 @@
                 "desconto_perc": 15,
                 "preco_total_sem_desc": 14400.0,
                 "preco_total_com_desc": 12240.0,
-                "preco_mensal_efetivo": 1020.0
+                "preco_mensal_efetivo": 1020.0,
+                "preco": 1020.0,
+                "preco_original": 1200.0,
+                "desconto_percentual": 15
               }
             ],
             "id": "planos-de-social-media-conteudo-mensal__plano-conteudo-premium",
@@ -460,6 +496,702 @@
               "plano",
               "social",
               "content"
+            ],
+            "popular": false
+          }
+        ]
+      },
+      {
+        "nome": "Automação (WhatsApp & Processos)",
+        "servicos": [
+          {
+            "titulo": "WhatsApp Oficial — Menu Estático",
+            "titulo_venda": "WhatsApp Oficial — Menu Estático (sem IA)",
+            "descricao": "Atendimento automatizado com menu interativo (botões/lista), fluxos fechados e coleta de dados — sem IA.",
+            "inclui": [
+              "Menu principal + até 2 submenus",
+              "Até 20 perguntas/respostas (fluxo fechado)",
+              "Mensagens fora do horário (configurável)",
+              "Encaminhamento para humano no horário (configurável)",
+              "Custos do WhatsApp Oficial (provedor/BSP) e taxas da plataforma não estão inclusos."
+            ],
+            "beneficios": [
+              "Atendimento profissional e previsível",
+              "Menos trabalho manual no WhatsApp",
+              "Setup rápido"
+            ],
+            "prazo_entrega": "7–14 dias úteis",
+            "tempo_estimado_horas_min": 12,
+            "tempo_estimado_horas_max": 24,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Configuração e testes",
+              "Documentação curta do fluxo"
+            ],
+            "preco_original": 1490,
+            "preco": 1290,
+            "id": "automacao-wpp__menu-estatico-oficial",
+            "tags": [
+              "whatsapp",
+              "automacao",
+              "menu",
+              "wpp",
+              "oficial"
+            ],
+            "popular": true
+          },
+          {
+            "titulo": "WhatsApp Oficial — Agente IA (Atendimento)",
+            "titulo_venda": "WhatsApp Oficial — Agente IA de Atendimento",
+            "descricao": "Agente de conversação para atendimento: responde dúvidas e conduz o cliente com o tom da empresa, com opção de chamar humano no horário.",
+            "inclui": [
+              "Base de conhecimento (FAQ/serviços/políticas)",
+              "Tom/idioma configuráveis por empresa",
+              "Escalonamento para humano apenas no horário (configurável)",
+              "Relatório simples de ajustes pós-ativação",
+              "Custos do WhatsApp Oficial (provedor/BSP) e taxas da plataforma não estão inclusos.",
+              "Custos de IA (API/modelo) não estão inclusos."
+            ],
+            "beneficios": [
+              "Atendimento 24/7 com regras",
+              "Menos perguntas repetidas",
+              "Melhor experiência do cliente"
+            ],
+            "prazo_entrega": "10–20 dias úteis",
+            "tempo_estimado_horas_min": 18,
+            "tempo_estimado_horas_max": 35,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Configuração, testes e publicação",
+              "Documento com regras do agente"
+            ],
+            "preco_original": 2990,
+            "preco": 2490,
+            "id": "automacao-wpp__agente-ia-atendimento",
+            "tags": [
+              "whatsapp",
+              "automacao",
+              "ia",
+              "atendimento",
+              "funil"
+            ],
+            "popular": false
+          },
+          {
+            "titulo": "WhatsApp Oficial — Agente IA (Funil)",
+            "titulo_venda": "WhatsApp Oficial — Agente IA Funil de Leads",
+            "descricao": "Agente de conversação focado em conversão: qualifica o lead, recomenda serviço e encaminha para fechamento no horário.",
+            "inclui": [
+              "Roteiro de qualificação (perguntas + tags)",
+              "Tom/idioma configuráveis por empresa",
+              "Registro de lead (planilha/CRM) — básico",
+              "Escalonamento para humano apenas no horário (configurável)",
+              "Custos do WhatsApp Oficial (provedor/BSP) e taxas da plataforma não estão inclusos.",
+              "Custos de IA (API/modelo) não estão inclusos."
+            ],
+            "beneficios": [
+              "Mais leads qualificados",
+              "Resposta rápida aumenta conversão",
+              "Processo comercial consistente"
+            ],
+            "prazo_entrega": "12–25 dias úteis",
+            "tempo_estimado_horas_min": 22,
+            "tempo_estimado_horas_max": 45,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Configuração, testes e publicação",
+              "Checklist de funil + campos capturados"
+            ],
+            "preco_original": 3990,
+            "preco": 3490,
+            "id": "automacao-wpp__agente-ia-funil-leads",
+            "tags": [
+              "whatsapp",
+              "automacao",
+              "ia",
+              "leads",
+              "vendas"
+            ],
+            "popular": false
+          },
+          {
+            "titulo": "Integrações & Automações",
+            "titulo_venda": "Integrações & Automações — 1 fluxo (n8n/Make)",
+            "descricao": "Automação de processos: quando acontece X, executa Y (ex.: lead → planilha/CRM → alerta Telegram → e-mail).",
+            "inclui": [
+              "1 fluxo ponta a ponta",
+              "Até 3 sistemas conectados (ex.: WhatsApp/Forms/Sheets/CRM/Telegram)",
+              "Logs básicos + testes",
+              "Documentação curta do fluxo",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Reduz tarefas manuais",
+              "Organiza leads e dados",
+              "Automação reaproveitável"
+            ],
+            "prazo_entrega": "3–7 dias úteis",
+            "tempo_estimado_horas_min": 4,
+            "tempo_estimado_horas_max": 10,
+            "revisoes_incluidas": 1,
+            "formato_entrega": [
+              "Workflow documentado",
+              "Entrega + instruções"
+            ],
+            "preco_original": 790,
+            "preco": 690,
+            "id": "automacao__integracoes-1-fluxo",
+            "tags": [
+              "automacao",
+              "integracao",
+              "n8n",
+              "make",
+              "zapier",
+              "telegram"
+            ],
+            "popular": false
+          },
+          {
+            "titulo": "Combo WhatsApp Menu + Integração",
+            "titulo_venda": "Combo — Menu Estático + 1 Integração",
+            "descricao": "Pacote com menu estático (sem IA) + 1 integração para organizar leads/atendimento.",
+            "inclui": [
+              "WhatsApp Oficial — Menu Estático (sem IA)",
+              "Integrações & Automações — 1 fluxo",
+              "Custos do WhatsApp Oficial (provedor/BSP) e taxas da plataforma não estão inclusos.",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Melhor custo-benefício",
+              "Atendimento + organização automática",
+              "Entrega mais rápida em conjunto"
+            ],
+            "prazo_entrega": "10–18 dias úteis",
+            "tempo_estimado_horas_min": 16,
+            "tempo_estimado_horas_max": 30,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Configuração completa",
+              "Fluxo + integração funcionando"
+            ],
+            "preco_original": 1980,
+            "preco": 1790,
+            "id": "automacao__combo-menu-integracao",
+            "tags": [
+              "combo",
+              "whatsapp",
+              "automacao",
+              "integracao"
+            ],
+            "popular": true
+          },
+          {
+            "titulo": "Combo IA Atendimento + Integração",
+            "titulo_venda": "Combo — IA Atendimento + 1 Integração",
+            "descricao": "Pacote com agente IA de atendimento + 1 integração para registrar e acionar processos.",
+            "inclui": [
+              "WhatsApp Oficial — Agente IA de Atendimento",
+              "Integrações & Automações — 1 fluxo",
+              "Custos do WhatsApp Oficial (provedor/BSP) e taxas da plataforma não estão inclusos.",
+              "Custos de IA (API/modelo) não estão inclusos.",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Atendimento inteligente + dados organizados",
+              "Menos trabalho manual",
+              "Maior velocidade de resposta"
+            ],
+            "prazo_entrega": "12–22 dias úteis",
+            "tempo_estimado_horas_min": 20,
+            "tempo_estimado_horas_max": 40,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Configuração completa",
+              "Integração + testes finais"
+            ],
+            "preco_original": 3180,
+            "preco": 2990,
+            "id": "automacao__combo-ia-atendimento-integracao",
+            "tags": [
+              "combo",
+              "whatsapp",
+              "ia",
+              "integracao"
+            ],
+            "popular": false
+          },
+          {
+            "titulo": "Combo IA Funil + Integração",
+            "titulo_venda": "Combo — IA Funil de Leads + 1 Integração",
+            "descricao": "Pacote com agente IA de vendas (funil) + 1 integração para capturar e nutrir leads.",
+            "inclui": [
+              "WhatsApp Oficial — Agente IA Funil de Leads",
+              "Integrações & Automações — 1 fluxo",
+              "Custos do WhatsApp Oficial (provedor/BSP) e taxas da plataforma não estão inclusos.",
+              "Custos de IA (API/modelo) não estão inclusos.",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Mais conversão e previsibilidade",
+              "Leads registrados automaticamente",
+              "Funil padronizado"
+            ],
+            "prazo_entrega": "14–28 dias úteis",
+            "tempo_estimado_horas_min": 24,
+            "tempo_estimado_horas_max": 50,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Configuração completa",
+              "Funil + integração funcionando"
+            ],
+            "preco_original": 4180,
+            "preco": 3990,
+            "id": "automacao__combo-ia-funil-integracao",
+            "tags": [
+              "combo",
+              "whatsapp",
+              "ia",
+              "leads",
+              "integracao"
+            ],
+            "popular": false
+          }
+        ]
+      },
+      {
+        "nome": "Chatbots IA (Site & Atendimento)",
+        "servicos": [
+          {
+            "titulo": "Chatbot IA no Site",
+            "titulo_venda": "Chatbot IA no Site — Essencial",
+            "descricao": "Chat com IA integrado ao site, no tom da empresa, com captura de lead e opção de chamar humano no horário.",
+            "inclui": [
+              "Widget de chat embutido no site",
+              "IA com tom/idioma configuráveis",
+              "Captura de lead (nome/contato/necessidade)",
+              "Handoff para humano somente no horário (configurável)",
+              "Histórico por 90 dias",
+              "Alerta Telegram (básico) quando pedir humano",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos.",
+              "Custos de IA (API/modelo) não estão inclusos."
+            ],
+            "beneficios": [
+              "Atendimento 24/7",
+              "Captação de leads",
+              "Menos abandono no site"
+            ],
+            "prazo_entrega": "7–15 dias úteis",
+            "tempo_estimado_horas_min": 16,
+            "tempo_estimado_horas_max": 35,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Widget + configuração",
+              "Documento de prompts/regras do bot"
+            ],
+            "preco_original": 1790,
+            "preco": 1490,
+            "id": "chatbot-site__essencial",
+            "tags": [
+              "chatbot",
+              "ia",
+              "site",
+              "atendimento",
+              "telegram"
+            ],
+            "popular": false
+          },
+          {
+            "titulo": "Chatbot IA no Site",
+            "titulo_venda": "Chatbot IA no Site — Profissional (Dashboard + Telegram)",
+            "descricao": "Chat com IA no site + dashboard admin/operador. Cliente conversa com IA e pode chamar humano; operador recebe alerta no Telegram e responde no painel, respeitando horários configuráveis.",
+            "inclui": [
+              "Tudo do Essencial",
+              "Dashboard admin/operador (responder no painel)",
+              "Fila/tickets simples + status",
+              "Notificações Telegram (grupo/canal/DM)",
+              "Horários configuráveis por empresa (não transfere fora do horário)",
+              "Histórico por 90 dias",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos.",
+              "Custos de IA (API/modelo) não estão inclusos."
+            ],
+            "beneficios": [
+              "Sistema completo de atendimento",
+              "Operador assume quando necessário",
+              "Experiência premium no site"
+            ],
+            "prazo_entrega": "10–20 dias úteis",
+            "tempo_estimado_horas_min": 28,
+            "tempo_estimado_horas_max": 60,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Dashboard + widget",
+              "Configuração + testes"
+            ],
+            "preco_original": 3490,
+            "preco": 2990,
+            "id": "chatbot-site__profissional-dashboard-telegram",
+            "tags": [
+              "chatbot",
+              "ia",
+              "site",
+              "dashboard",
+              "telegram",
+              "suporte"
+            ],
+            "popular": true
+          },
+          {
+            "titulo": "Chatbot IA no Site",
+            "titulo_venda": "Chatbot IA no Site — Enterprise (Multioperador)",
+            "descricao": "Versão com multioperador e permissões (admin/operador), indicada para equipes e maior volume de conversas.",
+            "inclui": [
+              "Tudo do Profissional",
+              "Multioperador + permissões (admin/operador)",
+              "Fila/tickets avançados (básico)",
+              "Logs e auditoria simples",
+              "Histórico por 90 dias",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos.",
+              "Custos de IA (API/modelo) não estão inclusos."
+            ],
+            "beneficios": [
+              "Atendimento escalável",
+              "Controle por permissões",
+              "Mais confiabilidade para operação"
+            ],
+            "prazo_entrega": "15–30 dias úteis",
+            "tempo_estimado_horas_min": 45,
+            "tempo_estimado_horas_max": 110,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Dashboard + widget",
+              "Configuração + testes"
+            ],
+            "preco_original": 5490,
+            "preco": 4990,
+            "id": "chatbot-site__enterprise-multioperador",
+            "tags": [
+              "chatbot",
+              "ia",
+              "site",
+              "multioperador",
+              "enterprise"
+            ],
+            "popular": false
+          }
+        ]
+      },
+      {
+        "nome": "Sites & Sistemas Web",
+        "servicos": [
+          {
+            "titulo": "Site com Login",
+            "titulo_venda": "Site com Login (Área do Cliente)",
+            "descricao": "Site com autenticação para área restrita (painel simples / downloads / status / conteúdos).",
+            "inclui": [
+              "Login/cadastro/recuperação de senha",
+              "Área restrita com 2–4 telas internas",
+              "Integração inicial com banco de dados",
+              "Publicação (deploy) e orientações",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Melhor experiência para clientes",
+              "Área restrita profissional",
+              "Base para evoluir para SaaS"
+            ],
+            "prazo_entrega": "15–25 dias úteis",
+            "tempo_estimado_horas_min": 25,
+            "tempo_estimado_horas_max": 55,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Deploy + arquivos do projeto",
+              "Documentação curta de acesso/admin"
+            ],
+            "preco_original": 2990,
+            "preco": 2490,
+            "id": "sites__site-com-login-area-do-cliente",
+            "tags": [
+              "site",
+              "login",
+              "dashboard",
+              "web",
+              "sistema"
+            ],
+            "popular": false
+          },
+          {
+            "titulo": "Site com Login + Pagamento",
+            "titulo_venda": "Site com Login + Pagamento Integrado",
+            "descricao": "Área do cliente com checkout e pagamento integrado (produtos/planos/assinaturas).",
+            "inclui": [
+              "Tudo do Site com Login",
+              "Checkout integrado (gateway)",
+              "Cadastro de até 10 produtos/planos",
+              "Registro básico de pedidos/assinaturas",
+              "Taxas do gateway e antifraude não inclusas",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Monetização direta no site",
+              "Experiência profissional de compra",
+              "Base para negócio escalável"
+            ],
+            "prazo_entrega": "20–35 dias úteis",
+            "tempo_estimado_horas_min": 40,
+            "tempo_estimado_horas_max": 90,
+            "revisoes_incluidas": 2,
+            "formato_entrega": [
+              "Deploy + arquivos do projeto",
+              "Documento de configurações do gateway"
+            ],
+            "preco_original": 4490,
+            "preco": 3990,
+            "id": "sites__site-login-pagamento-integrado",
+            "tags": [
+              "site",
+              "login",
+              "pagamento",
+              "checkout",
+              "assinatura"
+            ],
+            "popular": false
+          }
+        ]
+      },
+      {
+        "nome": "Suporte & Monitoramento (Mensal)",
+        "servicos": [
+          {
+            "titulo": "Suporte mensal",
+            "titulo_venda": "Suporte Basic — até 2h/mês",
+            "descricao": "Manutenção contínua para automações, chatbots e integrações, com prioridade conforme o plano.",
+            "inclui": [
+              "Monitoramento básico + correções de bugs",
+              "Pequenos ajustes e melhorias (por hora inclusa/mês)",
+              "Apoio em incidentes e dúvidas",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Evita paradas",
+              "Evolução contínua",
+              "Atendimento prioritário conforme plano"
+            ],
+            "prazo_entrega": "Recorrente (mensal)",
+            "revisoes_incluidas": 0,
+            "tempo_estimado_horas_min": 0,
+            "tempo_estimado_horas_max": 0,
+            "formato_entrega": [
+              "Suporte via WhatsApp/Telegram",
+              "Registro mensal do que foi feito (resumo)"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Mensal",
+                "meses": 1,
+                "desconto_perc": 0,
+                "desconto_percentual": 0,
+                "preco_total_sem_desc": 690,
+                "preco_total_com_desc": 690.0,
+                "preco_mensal_efetivo": 690.0,
+                "preco": 690.0,
+                "preco_original": 690.0
+              },
+              {
+                "periodo": "Trimestral",
+                "meses": 3,
+                "desconto_perc": 5,
+                "desconto_percentual": 5,
+                "preco_total_sem_desc": 2070,
+                "preco_total_com_desc": 1966.5,
+                "preco_mensal_efetivo": 655.5,
+                "preco": 655.5,
+                "preco_original": 690.0
+              },
+              {
+                "periodo": "Semestral",
+                "meses": 6,
+                "desconto_perc": 10,
+                "desconto_percentual": 10,
+                "preco_total_sem_desc": 4140,
+                "preco_total_com_desc": 3726.0,
+                "preco_mensal_efetivo": 621.0,
+                "preco": 621.0,
+                "preco_original": 690.0
+              },
+              {
+                "periodo": "Anual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "desconto_percentual": 15,
+                "preco_total_sem_desc": 8280,
+                "preco_total_com_desc": 7038.0,
+                "preco_mensal_efetivo": 586.5,
+                "preco": 586.5,
+                "preco_original": 690.0
+              }
+            ],
+            "id": "suporte__basic",
+            "tags": [
+              "suporte",
+              "mensal",
+              "automacao",
+              "manutencao"
+            ],
+            "popular": false
+          },
+          {
+            "titulo": "Suporte mensal",
+            "titulo_venda": "Suporte Standard — até 4h/mês",
+            "descricao": "Manutenção contínua para automações, chatbots e integrações, com prioridade conforme o plano.",
+            "inclui": [
+              "Monitoramento básico + correções de bugs",
+              "Pequenos ajustes e melhorias (por hora inclusa/mês)",
+              "Apoio em incidentes e dúvidas",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Evita paradas",
+              "Evolução contínua",
+              "Atendimento prioritário conforme plano"
+            ],
+            "prazo_entrega": "Recorrente (mensal)",
+            "revisoes_incluidas": 0,
+            "tempo_estimado_horas_min": 0,
+            "tempo_estimado_horas_max": 0,
+            "formato_entrega": [
+              "Suporte via WhatsApp/Telegram",
+              "Registro mensal do que foi feito (resumo)"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Mensal",
+                "meses": 1,
+                "desconto_perc": 0,
+                "desconto_percentual": 0,
+                "preco_total_sem_desc": 990,
+                "preco_total_com_desc": 990.0,
+                "preco_mensal_efetivo": 990.0,
+                "preco": 990.0,
+                "preco_original": 990.0
+              },
+              {
+                "periodo": "Trimestral",
+                "meses": 3,
+                "desconto_perc": 5,
+                "desconto_percentual": 5,
+                "preco_total_sem_desc": 2970,
+                "preco_total_com_desc": 2821.5,
+                "preco_mensal_efetivo": 940.5,
+                "preco": 940.5,
+                "preco_original": 990.0
+              },
+              {
+                "periodo": "Semestral",
+                "meses": 6,
+                "desconto_perc": 10,
+                "desconto_percentual": 10,
+                "preco_total_sem_desc": 5940,
+                "preco_total_com_desc": 5346.0,
+                "preco_mensal_efetivo": 891.0,
+                "preco": 891.0,
+                "preco_original": 990.0
+              },
+              {
+                "periodo": "Anual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "desconto_percentual": 15,
+                "preco_total_sem_desc": 11880,
+                "preco_total_com_desc": 10098.0,
+                "preco_mensal_efetivo": 841.5,
+                "preco": 841.5,
+                "preco_original": 990.0
+              }
+            ],
+            "id": "suporte__standard",
+            "tags": [
+              "suporte",
+              "mensal",
+              "automacao",
+              "manutencao"
+            ],
+            "popular": true
+          },
+          {
+            "titulo": "Suporte mensal",
+            "titulo_venda": "Suporte Priority — até 6h/mês",
+            "descricao": "Manutenção contínua para automações, chatbots e integrações, com prioridade conforme o plano.",
+            "inclui": [
+              "Monitoramento básico + correções de bugs",
+              "Pequenos ajustes e melhorias (por hora inclusa/mês)",
+              "Apoio em incidentes e dúvidas",
+              "Domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos."
+            ],
+            "beneficios": [
+              "Evita paradas",
+              "Evolução contínua",
+              "Atendimento prioritário conforme plano"
+            ],
+            "prazo_entrega": "Recorrente (mensal)",
+            "revisoes_incluidas": 0,
+            "tempo_estimado_horas_min": 0,
+            "tempo_estimado_horas_max": 0,
+            "formato_entrega": [
+              "Suporte via WhatsApp/Telegram",
+              "Registro mensal do que foi feito (resumo)"
+            ],
+            "precos_por_periodo": [
+              {
+                "periodo": "Mensal",
+                "meses": 1,
+                "desconto_perc": 0,
+                "desconto_percentual": 0,
+                "preco_total_sem_desc": 1490,
+                "preco_total_com_desc": 1490.0,
+                "preco_mensal_efetivo": 1490.0,
+                "preco": 1490.0,
+                "preco_original": 1490.0
+              },
+              {
+                "periodo": "Trimestral",
+                "meses": 3,
+                "desconto_perc": 5,
+                "desconto_percentual": 5,
+                "preco_total_sem_desc": 4470,
+                "preco_total_com_desc": 4246.5,
+                "preco_mensal_efetivo": 1415.5,
+                "preco": 1415.5,
+                "preco_original": 1490.0
+              },
+              {
+                "periodo": "Semestral",
+                "meses": 6,
+                "desconto_perc": 10,
+                "desconto_percentual": 10,
+                "preco_total_sem_desc": 8940,
+                "preco_total_com_desc": 8046.0,
+                "preco_mensal_efetivo": 1341.0,
+                "preco": 1341.0,
+                "preco_original": 1490.0
+              },
+              {
+                "periodo": "Anual",
+                "meses": 12,
+                "desconto_perc": 15,
+                "desconto_percentual": 15,
+                "preco_total_sem_desc": 17880,
+                "preco_total_com_desc": 15198.0,
+                "preco_mensal_efetivo": 1266.5,
+                "preco": 1266.5,
+                "preco_original": 1490.0
+              }
+            ],
+            "id": "suporte__priority",
+            "tags": [
+              "suporte",
+              "mensal",
+              "automacao",
+              "manutencao"
             ],
             "popular": false
           }
@@ -681,33 +1413,37 @@
             "popular": false
           },
           {
-            "titulo": "Site empresarial personalizado",
-            "titulo_venda": "Website Corporativo Básico",
-            "descricao": "Website institucional com design personalizado, páginas principais, e integração básica. Conteúdos e artes otimizados para apresentação profissional online.",
+            "titulo": "Website Landing",
+            "titulo_venda": "Website Landing — até 7 páginas",
+            "descricao": "Landing/website institucional para apresentar sua empresa e captar leads, com até 7 páginas/seções.",
             "inclui": [
-              "Página inicial + até 4 páginas internas",
-              "Design responsivo",
-              "Artes e banners inclusos",
-              "Entrega com orientações para hospedagem"
+              "Até 7 páginas/seções",
+              "Design responsivo (mobile/desktop)",
+              "Botão de WhatsApp + formulário de contato",
+              "SEO básico (títulos, descrições e performance)",
+              "Publicação (deploy) e orientações",
+              "Domínio, hospedagem/servidor e banco de dados não inclusos"
             ],
             "beneficios": [
               "Presença profissional online",
-              "Entrega rápida para lançamento"
+              "Página pensada para conversão",
+              "Entrega rápida"
             ],
-            "prazo_entrega": "5 dias úteis (Prazo Acelerado)",
-            "tempo_estimado_horas_min": 20,
-            "tempo_estimado_horas_max": 40,
-            "revisoes_incluidas": 4,
+            "prazo_entrega": "5–10 dias úteis",
+            "tempo_estimado_horas_min": 10,
+            "tempo_estimado_horas_max": 18,
+            "revisoes_incluidas": 2,
             "formato_entrega": [
-              "HTML/CSS/JS prontos",
-              "Arquivos e instruções para hospedagem"
+              "Deploy + arquivos do projeto",
+              "HTML/CSS/JS ou React (conforme projeto)"
             ],
-            "preco_original": 650,
-            "preco": 590,
+            "preco_original": 790,
+            "preco": 690,
             "id": "servicos-avulsos__website-corporativo-basico",
             "tags": [
               "website",
               "landing",
+              "site",
               "conversao"
             ],
             "popular": true
@@ -957,7 +1693,7 @@
         ]
       }
     ],
-    "observacoes": "Descontos progressivos em combos e em parcerias mensais, semestrais ou anuais. Conte sua ideia para a gente!",
+    "observacoes": "Descontos progressivos em combos e em parcerias mensais, semestrais ou anuais. Conte sua ideia para a gente! Nota: custos de domínio, hospedagem/servidor, banco de dados e serviços de terceiros não estão inclusos quando aplicável.",
     "hero": {
       "badge": "Orçamento Instantâneo",
       "titulo": "Monte seu orçamento em 2 minutos",

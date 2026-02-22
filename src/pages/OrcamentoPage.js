@@ -135,6 +135,10 @@ const COPY = {
     searchPh: 'Buscar por serviço (ex: reels, site, personagem...)',
     filterAll: 'Todos',
     filterPopular: 'Mais vendidos',
+    filterAutomation: 'Automação',
+    filterChatbots: 'Chatbots IA',
+    filterSites: 'Sites & Sistemas',
+    filterSupport: 'Suporte mensal',
     filterVideo: 'Vídeos',
     filterImages: 'Imagens',
     filterPlans: 'Planos mensais',
@@ -231,6 +235,10 @@ const COPY = {
     searchPh: 'Search services (e.g., reels, website, character...)',
     filterAll: 'All',
     filterPopular: 'Best sellers',
+    filterAutomation: 'Automation',
+    filterChatbots: 'AI Chatbots',
+    filterSites: 'Websites & Systems',
+    filterSupport: 'Monthly support',
     filterVideo: 'Video',
     filterImages: 'Images',
     filterPlans: 'Monthly plans',
@@ -328,16 +336,29 @@ const normalizeCatalog = (raw) => {
 
       const hasPeriods = Array.isArray(svc?.precos_por_periodo) && svc.precos_por_periodo.length > 0;
       const periods = hasPeriods
-        ? svc.precos_por_periodo.map((p) => ({
-            name: p?.periodo || '',
-            price: Number(p?.preco) || 0,
-            old: p?.preco_original ?? null,
-            off: p?.desconto_percentual ?? null,
-          }))
+        ? svc.precos_por_periodo.map((p) => {
+            const meses = Number(p?.meses || 0) || null;
+            const monthly =
+              Number(p?.preco) ||
+              Number(p?.preco_mensal_efetivo) ||
+              (Number(p?.preco_total_com_desc) && meses ? Number(p?.preco_total_com_desc) / meses : 0);
+            const oldMonthly =
+              Number(p?.preco_original) ||
+              (Number(p?.preco_total_sem_desc) && meses ? Number(p?.preco_total_sem_desc) / meses : null);
+
+            return {
+              name: p?.periodo || '',
+              // Resilience for mixed catalog schemas (monthly or term-total based plans).
+              price: Number.isFinite(monthly) ? monthly : 0,
+              old: oldMonthly,
+              off: p?.desconto_percentual ?? p?.desconto_perc ?? null,
+            };
+          })
         : [];
 
-      const price = Number(svc?.preco) || 0;
-      const old = svc?.preco_original ?? null;
+      const fallbackPeriod = periods?.[0] || null;
+      const price = Number(svc?.preco) || Number(fallbackPeriod?.price) || 0;
+      const old = svc?.preco_original ?? fallbackPeriod?.old ?? null;
       const off =
         svc?.desconto_percentual ??
         (old && price ? Math.round((1 - Number(price) / Number(old)) * 100) : null);
@@ -827,22 +848,44 @@ const [showShare, setShowShare] = useState(false);
   const servicePassesFilter = useCallback((svc) => {
     if (filter === 'all') return true;
 
+    const normalizedBag = `${svc?._categoriaNorm || ''} ${svc?._tagsNorm || ''} ${svc?._titleNorm || ''}`;
+    const hasAny = (tokens) => tokens.some((t) => normalizedBag.includes(t));
+    const hasWord = (word) => new RegExp(`(^|[^a-z0-9])${word}([^a-z0-9]|$)`).test(normalizedBag);
+
     if (filter === 'popular') return svc.popular || (svc.off && Number(svc.off) >= 10);
 
     if (filter === 'video') {
-      return svc._categoriaNorm.includes('video') || svc._categoriaNorm.includes('vídeo') || svc._tagsNorm.includes('video');
+      return hasAny(['video', 'reels', 'short']);
     }
     if (filter === 'images') {
-      return svc._categoriaNorm.includes('imagem') || svc._tagsNorm.includes('imagens') || svc._tagsNorm.includes('images');
+      return hasAny(['imagem', 'imagens', 'images', 'design']);
     }
     if (filter === 'plans') {
-      return svc._categoriaNorm.includes('plano') || svc._tagsNorm.includes('mensal') || svc._tagsNorm.includes('monthly');
+      return hasAny(['plano', 'plan', 'mensal', 'monthly']);
     }
-    if (filter === 'web') {
-      return svc._titleNorm.includes('website') || svc._titleNorm.includes('site') || svc._titleNorm.includes('landing') || svc._tagsNorm.includes('website');
+
+    // New catalog groups: keep legacy filters and add robust matching by category/tags/title.
+    if (filter === 'automation') {
+      return hasAny(['automacao', 'automation', 'whatsapp', 'process']);
+    }
+    if (filter === 'chatbots') {
+      // Keep chatbot match strict to avoid false positives from generic substrings like "ia"/"ai".
+      return (
+        svc._categoriaNorm.includes('chatbot') ||
+        hasWord('chatbot') ||
+        hasWord('chatbots') ||
+        normalizedBag.includes('ai chatbot') ||
+        normalizedBag.includes('ia chatbot')
+      );
+    }
+    if (filter === 'sites' || filter === 'web') {
+      return hasAny(['site', 'sites', 'website', 'landing', 'login', 'pagamento', 'payment', 'web system', 'sistema']);
+    }
+    if (filter === 'support') {
+      return hasAny(['suporte', 'support', 'monitor', 'manutenc', 'maintenance']);
     }
     if (filter === 'char') {
-      return svc._categoriaNorm.includes('person') || svc._titleNorm.includes('mascote') || svc._titleNorm.includes('personagem') || svc._tagsNorm.includes('mascot');
+      return hasAny(['person', 'mascote', 'personagem', 'mascot', 'character']);
     }
 
     return true;
@@ -1309,6 +1352,10 @@ const [showShare, setShowShare] = useState(false);
                   <div className="orc-filterChips">
                     <FilterChip id="all" label={copy.filterAll} icon={faMagnifyingGlass} />
                     <FilterChip id="popular" label={copy.filterPopular} icon={faFire} />
+                    <FilterChip id="automation" label={copy.filterAutomation} icon={faBolt} />
+                    <FilterChip id="chatbots" label={copy.filterChatbots} icon={faWandMagicSparkles} />
+                    <FilterChip id="sites" label={copy.filterSites} icon={faListCheck} />
+                    <FilterChip id="support" label={copy.filterSupport} icon={faRotateRight} />
                     <FilterChip id="video" label={copy.filterVideo} icon={faBolt} />
                     <FilterChip id="images" label={copy.filterImages} icon={faTag} />
                     <FilterChip id="plans" label={copy.filterPlans} icon={faListCheck} />

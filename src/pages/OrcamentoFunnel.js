@@ -186,6 +186,10 @@ const COPY = {
     need_images: 'Artes e imagens',
     need_videos: 'Vídeos (Reels/Ads)',
     need_plan: 'Plano mensal de conteúdo',
+    need_automation: 'Automação (WhatsApp)',
+    need_chatbots: 'Chatbot IA no site',
+    need_sites: 'Sites & sistemas web',
+    need_support: 'Suporte / manutenção',
     need_oneoff: 'Serviços avulsos (logo, site, etc.)',
     need_mascot: 'Personagem / mascote',
     need_unsure: 'Não tenho certeza',
@@ -197,7 +201,7 @@ const COPY = {
     inv_300: 'Até R$300',
     inv_600: 'Até R$600',
     inv_1000: 'Até R$1.000',
-    inv_2000: 'Até R$2.000',
+    inv_2000: 'Mais de R$1.000',
     d1: 'Urgente (até 2 dias)',
     d2: 'Até 7 dias',
     d3: 'Flexível',
@@ -252,6 +256,10 @@ const COPY = {
     need_images: 'Designs & images',
     need_videos: 'Videos (Reels/Ads)',
     need_plan: 'Monthly content plan',
+    need_automation: 'Automation (WhatsApp)',
+    need_chatbots: 'AI chatbot on website',
+    need_sites: 'Websites & web systems',
+    need_support: 'Support / maintenance',
     need_oneoff: 'One-off services (logo, website, etc.)',
     need_mascot: 'Character / mascot',
     need_unsure: 'Not sure yet',
@@ -277,18 +285,25 @@ const findService = (catalog, { catIncludes = [], titleIncludes = [], titleAny =
   const titleNeed = titleIncludes.map(norm);
   const titleAnyNeed = titleAny.map(norm);
 
-  for (const cat of catalog.categorias) {
-    const cn = norm(cat.nome);
-    if (catNeed.length && !catNeed.some((x) => cn.includes(x))) continue;
+  const findWithMode = (strictCategory) => {
+    for (const cat of catalog.categorias) {
+      const cn = norm(cat.nome);
 
-    for (const s of cat.servicos) {
-      const tn = norm(s.tituloVenda || s.titulo);
-      if (titleNeed.length && !titleNeed.every((x) => tn.includes(x))) continue;
-      if (titleAnyNeed.length && !titleAnyNeed.some((x) => tn.includes(x))) continue;
-      return s;
+      for (const s of cat.servicos) {
+        const searchable = norm(
+          `${cn} ${s.tituloVenda || ''} ${s.titulo || ''} ${s.descricao || ''} ${(s.tags || []).join(' ')} ${s.id || ''}`
+        );
+        if (strictCategory && catNeed.length && !catNeed.some((x) => cn.includes(x))) continue;
+        if (titleNeed.length && !titleNeed.every((x) => searchable.includes(x))) continue;
+        if (titleAnyNeed.length && !titleAnyNeed.some((x) => searchable.includes(x))) continue;
+        return s;
+      }
     }
-  }
-  return null;
+    return null;
+  };
+
+  // Keep old behavior first, then fallback to broader match for new categories.
+  return findWithMode(true) || findWithMode(false);
 };
 
 const uniquePush = (arr, svc) => {
@@ -341,10 +356,74 @@ const calcTotals = (items, discountPerc, periodById) => {
 
 const pickCore = (catalog, answers, tier) => {
   const pick = (a, b, c) => (tier === 'simple' ? a : tier === 'value' ? b : c);
+  const byId = (id) => catalog.byId?.[id] || null;
 
   const need = answers.need;
   const vol = answers.volume;
   const goal = answers.goal;
+  const invest = typeof answers.invest === 'number' ? answers.invest : null;
+
+  // New "need" rules mapped to the new catalog IDs (with fallback search for legacy data).
+  if (need === 'automation') {
+    const menu = byId('automacao-wpp__menu-estatico-oficial')
+      || findService(catalog, { catIncludes: ['automacao', 'automation'], titleAny: ['menu', 'static'] });
+    const iaSupport = byId('automacao-wpp__agente-ia-atendimento')
+      || findService(catalog, { catIncludes: ['automacao', 'automation'], titleAny: ['atendimento', 'support'] });
+    const iaLeads = byId('automacao-wpp__agente-ia-funil-leads')
+      || findService(catalog, { catIncludes: ['automacao', 'automation'], titleAny: ['funil', 'funnel', 'lead'] });
+    const comboMenu = byId('automacao__combo-menu-integracao');
+    const comboSupport = byId('automacao__combo-ia-atendimento-integracao');
+    const comboLeads = byId('automacao__combo-ia-funil-integracao');
+
+    if (goal === 'sales' || vol === 'high' || vol === 'mega') {
+      return pick(iaSupport || menu, iaLeads || iaSupport || menu, comboLeads || iaLeads || iaSupport || menu);
+    }
+    if (vol === 'mid') {
+      return pick(menu || iaSupport, iaSupport || menu, comboSupport || iaSupport || menu);
+    }
+    return pick(menu, menu || iaSupport, comboMenu || menu || iaSupport);
+  }
+
+  if (need === 'chatbots') {
+    const essential = byId('chatbot-site__essencial')
+      || findService(catalog, { catIncludes: ['chatbot'], titleAny: ['essential', 'essencial'] });
+    const pro = byId('chatbot-site__profissional-dashboard-telegram')
+      || findService(catalog, { catIncludes: ['chatbot'], titleAny: ['profissional', 'professional', 'dashboard'] });
+    const enterprise = byId('chatbot-site__enterprise-multioperador')
+      || findService(catalog, { catIncludes: ['chatbot'], titleAny: ['enterprise', 'multioperador', 'multi-operator'] });
+
+    if (vol === 'mega') return pick(pro || essential, enterprise || pro || essential, enterprise || pro || essential);
+    if (vol === 'high') return pick(essential, pro || essential, enterprise || pro || essential);
+    if (vol === 'mid') return pick(essential, pro || essential, pro || essential);
+    return pick(essential, essential, pro || essential);
+  }
+
+  if (need === 'sites') {
+    const landing = byId('servicos-avulsos__website-corporativo-basico')
+      || findService(catalog, { titleAny: ['landing', '7 paginas', '7 pages'] });
+    const withLogin = byId('sites__site-com-login-area-do-cliente')
+      || findService(catalog, { catIncludes: ['sites', 'website', 'web system', 'sistema'], titleAny: ['login', 'client area', 'cliente'] });
+    const withPayment = byId('sites__site-login-pagamento-integrado')
+      || findService(catalog, { catIncludes: ['sites', 'website', 'web system', 'sistema'], titleAny: ['pagamento', 'payment', 'checkout'] });
+
+    if (vol === 'high' || vol === 'mega') return pick(withLogin || landing, withPayment || withLogin || landing, withPayment || withLogin || landing);
+    if (vol === 'mid') return pick(landing, withLogin || landing, withPayment || withLogin || landing);
+    return pick(landing, landing, withLogin || landing);
+  }
+
+  if (need === 'support') {
+    const basic = byId('suporte__basic') || findService(catalog, { catIncludes: ['suporte', 'support'], titleAny: ['basic'] });
+    const standard = byId('suporte__standard') || findService(catalog, { catIncludes: ['suporte', 'support'], titleAny: ['standard'] });
+    const priority = byId('suporte__priority') || findService(catalog, { catIncludes: ['suporte', 'support'], titleAny: ['priority'] });
+
+    const lowBudget = invest !== null && invest <= 300;
+    const highDemand = vol === 'high' || vol === 'mega' || (invest !== null && invest >= 1000);
+
+    if (highDemand) return pick(standard || basic, standard || basic, priority || standard || basic);
+    if (vol === 'low' || lowBudget) return pick(basic || standard, standard || basic, standard || priority || basic);
+    // Default recommendation keeps Standard as baseline.
+    return pick(standard || basic, standard || basic, priority || standard || basic);
+  }
 
   // Images packs
   if (need === 'images') {
@@ -428,6 +507,9 @@ const suggestExtras = (catalog, answers, tier, core) => {
   const extras = [];
   const goal = answers.goal;
   const need = answers.need;
+  const vol = answers.volume;
+  const invest = typeof answers.invest === 'number' ? answers.invest : null;
+  const byId = (id) => catalog.byId?.[id] || null;
 
   const add = (svc) => uniquePush(extras, svc);
 
@@ -437,6 +519,40 @@ const suggestExtras = (catalog, answers, tier, core) => {
   }
   if (core && (norm(core.categoria).includes('imagens') || norm(core.categoria).includes('images'))) {
     add(findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['30'] }));
+  }
+
+  // New upsells for the new needs (automation/chatbots/sites/support).
+  if (need === 'automation') {
+    const integration = byId('automacao__integracoes-1-fluxo');
+    const comboMenu = byId('automacao__combo-menu-integracao');
+    const comboSupport = byId('automacao__combo-ia-atendimento-integracao');
+    const comboLeads = byId('automacao__combo-ia-funil-integracao');
+    const supportStd = byId('suporte__standard');
+
+    if (core?.id === 'automacao-wpp__menu-estatico-oficial') add(comboMenu);
+    if (core?.id === 'automacao-wpp__agente-ia-atendimento') add(comboSupport);
+    if (core?.id === 'automacao-wpp__agente-ia-funil-leads') add(comboLeads);
+    add(integration);
+    if (tier !== 'simple') add(supportStd);
+  }
+
+  if (need === 'chatbots') {
+    add(byId('suporte__standard'));
+    add(byId(vol === 'mega' ? 'chatbot-site__enterprise-multioperador' : 'chatbot-site__profissional-dashboard-telegram'));
+  }
+
+  if (need === 'sites') {
+    add(byId('suporte__standard'));
+    add(byId('chatbot-site__essencial'));
+    if (tier === 'advanced') add(byId('sites__site-login-pagamento-integrado'));
+  }
+
+  if (need === 'support') {
+    const isLow = vol === 'low' || (invest !== null && invest <= 300);
+    const isHigh = vol === 'high' || vol === 'mega' || (invest !== null && invest >= 1000);
+    if (isLow) add(byId('suporte__basic'));
+    if (isHigh || tier === 'advanced') add(byId('suporte__priority'));
+    if (tier !== 'simple') add(byId('automacao__integracoes-1-fluxo'));
   }
 
   if (goal === 'sales' || goal === 'launch') {
@@ -557,6 +673,10 @@ export default function OrcamentoFunnel() {
           { v: 'images', label: copy.need_images },
           { v: 'videos', label: copy.need_videos },
           { v: 'plan', label: copy.need_plan },
+          { v: 'automation', label: copy.need_automation },
+          { v: 'chatbots', label: copy.need_chatbots },
+          { v: 'sites', label: copy.need_sites },
+          { v: 'support', label: copy.need_support },
           { v: 'oneoff', label: copy.need_oneoff },
           { v: 'mascot', label: copy.need_mascot },
           { v: 'unsure', label: copy.need_unsure },
@@ -663,6 +783,7 @@ export default function OrcamentoFunnel() {
     // Reuse suggestion logic but allow up to 6 extra options
     const core = chosenOffer.items[0] || null;
     const base = suggestExtras(catalog, answers, chosenOffer.tier, core);
+    const byId = (id) => catalog.byId?.[id] || null;
 
     // Expand pool with common add-ons (safe duplicates are removed by uniquePush)
     const pool = [];
@@ -672,6 +793,13 @@ export default function OrcamentoFunnel() {
     uniquePush(pool, findService(catalog, { catIncludes: ['serviços', 'services', 'avuls'], titleAny: ['website', 'site'] }));
     uniquePush(pool, findService(catalog, { catIncludes: ['vídeos', 'videos', 'video'], titleAny: ['30'] }));
     uniquePush(pool, findService(catalog, { catIncludes: ['imagens', 'images'], titleAny: ['10'] }));
+    uniquePush(pool, byId('automacao__integracoes-1-fluxo'));
+    uniquePush(pool, byId('automacao__combo-menu-integracao'));
+    uniquePush(pool, byId('automacao__combo-ia-atendimento-integracao'));
+    uniquePush(pool, byId('automacao__combo-ia-funil-integracao'));
+    uniquePush(pool, byId('chatbot-site__essencial'));
+    uniquePush(pool, byId('sites__site-com-login-area-do-cliente'));
+    uniquePush(pool, byId('suporte__standard'));
 
     // Remove already included
     const includedIds = new Set((chosenOffer.items || []).map((s) => s.id));
