@@ -6,7 +6,6 @@ import {
   faBolt,
   faChevronLeft,
   faCircleCheck,
-  faCircleXmark,
   faListCheck,
   faPaperPlane,
   faRotateRight,
@@ -433,7 +432,7 @@ const suggestExtras = (catalog, answers, tier, core) => {
   const add = (svc) => uniquePush(extras, svc);
 
   // Cross-sell: video + images
-  if (core && norm(core.categoria).includes('vídeo') || norm(core.categoria).includes('video')) {
+  if (core && (norm(core.categoria).includes('vídeo') || norm(core.categoria).includes('video'))) {
     add(findService(catalog, { catIncludes: ['imagens', 'images'], titleAny: ['10'] }));
   }
   if (core && (norm(core.categoria).includes('imagens') || norm(core.categoria).includes('images'))) {

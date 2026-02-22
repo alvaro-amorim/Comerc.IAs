@@ -58,8 +58,6 @@ const slug = (s) =>
     .replace(/-{2,}/g, '-')
     .replace(/(^-|-$)/g, '') || 'item';
 
-const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
-
 const pickLang = (i18n) => ((i18n?.language || 'pt').toLowerCase().startsWith('en') ? 'en' : 'pt');
 const getDataByLang = (lang) => (lang === 'en' ? precosEN : precosPT);
 
