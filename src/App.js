@@ -8,6 +8,8 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import SEO from './components/SEO';
 import StructuredData from './components/StructuredData';
+import AnalyticsRouteTracker from './analytics/AnalyticsRouteTracker';
+import { initAnalytics, stopAnalytics } from './analytics/analyticsClient';
 
 // Componentes de Contato
 import ContactModal from './components/forms/ContactModal';
@@ -20,6 +22,7 @@ import PortfolioMaintenancePage from './pages/PortfolioMaintenancePage';
 import OrcamentoPage from './pages/OrcamentoPage';
 import OrcamentoFunnel from './pages/OrcamentoFunnel';
 import ContactPage from './pages/ContactPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 
 import './App.css';
 
@@ -78,10 +81,18 @@ export default function App() {
   const openContact = () => setShowContact(true);
   const closeContact = () => setShowContact(false);
 
+  useEffect(() => {
+    initAnalytics();
+    return () => stopAnalytics();
+  }, []);
+
   return (
     <>
+      <AnalyticsRouteTracker />
+
       <Routes>
         <Route path="/" element={<Navigate to="/pt" replace />} />
+        <Route path="/pt/loginadm" element={<AdminDashboardPage />} />
 
         <Route path="/:lang" element={<LanguageGate onChatClick={openContact} />}>
           <Route index element={<HomePage />} />
@@ -92,6 +103,8 @@ export default function App() {
           <Route path="contact" element={<ContactPage />} />
           <Route path="*" element={<Navigate to="/pt" replace />} />
         </Route>
+
+        <Route path="*" element={<Navigate to="/pt" replace />} />
       </Routes>
 
       <ContactModal show={showContact} handleClose={closeContact}>
