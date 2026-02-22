@@ -1,6 +1,6 @@
 .custom-footer {
   background-color: #06243d;
-  color: white;
+  color: #ffffff;
   padding: 1.2rem 0;
   margin-top: 2.25rem;
   width: 100%;
@@ -19,7 +19,11 @@
   margin: 6px 0;
 }
 
-/* Ícones */
+.footer-col--legal {
+  display: flex;
+  justify-content: center;
+}
+
 .footer-socials {
   display: flex;
   gap: 16px;
@@ -38,7 +42,6 @@
   transform: translateY(-2px);
 }
 
-/* Chat */
 .footer-chat {
   display: inline-flex;
   align-items: center;
@@ -55,7 +58,29 @@
   transform: translateY(-2px);
 }
 
-/* Mobile */
+.footer-legalLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.footer-legalLink,
+.footer-legalBtn {
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  font-size: 0.9rem;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.footer-legalLink:hover,
+.footer-legalBtn:hover {
+  color: #0dcaf0;
+}
+
 @media (max-width: 767px) {
   .footer-row {
     flex-direction: column;

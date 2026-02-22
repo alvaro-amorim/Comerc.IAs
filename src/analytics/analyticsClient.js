@@ -3,6 +3,7 @@ const MAX_QUEUE_SIZE = 250;
 const FLUSH_BATCH_SIZE = 20;
 const FLUSH_INTERVAL_MS = 10_000;
 const MIN_DURATION_MS = 250;
+const EXCLUDED_PATH_PREFIXES = ['/pt/loginadm'];
 
 let initialized = false;
 let sessionId = null;
@@ -34,7 +35,13 @@ function getOrCreateSessionId() {
 function normalizePath(pathValue) {
   if (typeof pathValue !== 'string' || !pathValue.trim()) return '/';
   const trimmed = pathValue.trim().slice(0, 1024);
-  return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  try {
+    const parsed = new URL(trimmed, window.location.origin);
+    return parsed.pathname || '/';
+  } catch (error) {
+    if (!trimmed.startsWith('/')) return `/${trimmed}`;
+    return trimmed.split('?')[0].split('#')[0] || '/';
+  }
 }
 
 function isEditableElement(element) {
@@ -42,13 +49,6 @@ function isEditableElement(element) {
   const tag = element.tagName ? element.tagName.toLowerCase() : '';
   if (tag === 'input' || tag === 'textarea') return true;
   return Boolean(element.isContentEditable);
-}
-
-function sanitizeTextSnippet(value) {
-  if (typeof value !== 'string') return null;
-  const normalized = value.replace(/\s+/g, ' ').trim();
-  if (!normalized) return null;
-  return normalized.slice(0, 60);
 }
 
 function getClasses(element) {
@@ -114,9 +114,6 @@ function buildElementPayload(target) {
   const dataTrack = typeof dataTrackRaw === 'string' ? dataTrackRaw.trim().slice(0, 120) : null;
   const selector = dataTrack ? `[data-track="${dataTrack}"]` : buildFallbackSelector(node);
 
-  const textSource = node.innerText || node.textContent || '';
-  const textSnippet = sanitizeTextSnippet(textSource);
-
   const payload = {
     selector,
     tag,
@@ -125,14 +122,17 @@ function buildElementPayload(target) {
   };
 
   if (dataTrack) payload.dataTrack = dataTrack;
-  if (textSnippet) payload.textSnippet = textSnippet;
 
   return payload;
 }
 
 function getCurrentPath() {
   if (typeof window === 'undefined') return '/';
-  return normalizePath(`${window.location.pathname}${window.location.search}`);
+  return normalizePath(window.location.pathname);
+}
+
+function isTrackablePath(pathValue) {
+  return !EXCLUDED_PATH_PREFIXES.some((prefix) => pathValue.startsWith(prefix));
 }
 
 function enqueueEvent(event) {
@@ -183,6 +183,10 @@ async function flushQueue(options = {}) {
 
 function emitDurationIfNeeded() {
   if (!currentPath || !currentPathStartedAt) return;
+  if (!isTrackablePath(currentPath)) {
+    currentPathStartedAt = Date.now();
+    return;
+  }
 
   // Duration: fecha o tempo da rota atual ao trocar rota/ocultar aba/sair.
   const durationMs = Date.now() - currentPathStartedAt;
@@ -204,12 +208,15 @@ function onDocumentClick(event) {
   const target = event.target;
   if (!(target instanceof Element)) return;
 
+  const path = getCurrentPath();
+  if (!isTrackablePath(path)) return;
+
   const element = buildElementPayload(target);
   if (!element) return;
 
   enqueueEvent({
     type: 'click',
-    path: getCurrentPath(),
+    path,
     session_id: sessionId,
     element,
   });
@@ -240,11 +247,13 @@ function initAnalytics() {
   currentPath = getCurrentPath();
   currentPathStartedAt = Date.now();
 
-  enqueueEvent({
-    type: 'pageview',
-    path: currentPath,
-    session_id: sessionId,
-  });
+  if (isTrackablePath(currentPath)) {
+    enqueueEvent({
+      type: 'pageview',
+      path: currentPath,
+      session_id: sessionId,
+    });
+  }
 
   window.addEventListener('click', onDocumentClick, true);
   document.addEventListener('visibilitychange', onVisibilityChange, true);
@@ -256,7 +265,7 @@ function initAnalytics() {
   }, FLUSH_INTERVAL_MS);
 }
 
-function stopAnalytics() {
+function stopAnalytics(options = {}) {
   if (!initialized || typeof window === 'undefined') return;
 
   window.removeEventListener('click', onDocumentClick, true);
@@ -269,8 +278,13 @@ function stopAnalytics() {
     flushIntervalId = null;
   }
 
-  emitDurationIfNeeded();
-  void flushQueue({ useBeacon: true });
+  const discardQueuedEvents = Boolean(options.discardQueuedEvents);
+  if (!discardQueuedEvents) {
+    emitDurationIfNeeded();
+    void flushQueue({ useBeacon: true });
+  } else {
+    queue = [];
+  }
 
   initialized = false;
   currentPath = '';
@@ -284,7 +298,9 @@ function trackRouteChange(pathValue) {
   if (!currentPath) {
     currentPath = nextPath;
     currentPathStartedAt = Date.now();
-    enqueueEvent({ type: 'pageview', path: currentPath, session_id: sessionId });
+    if (isTrackablePath(currentPath)) {
+      enqueueEvent({ type: 'pageview', path: currentPath, session_id: sessionId });
+    }
     return;
   }
 
@@ -292,7 +308,9 @@ function trackRouteChange(pathValue) {
     emitDurationIfNeeded();
     currentPath = nextPath;
     currentPathStartedAt = Date.now();
-    enqueueEvent({ type: 'pageview', path: currentPath, session_id: sessionId });
+    if (isTrackablePath(currentPath)) {
+      enqueueEvent({ type: 'pageview', path: currentPath, session_id: sessionId });
+    }
   }
 }
 

@@ -1,15 +1,21 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faTiktok, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 
 import '../styles/Footer.css';
 
-const Footer = ({ onChatClick }) => {
-  const { t } = useTranslation();
+const Footer = ({ onChatClick, onOpenCookieSettings }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = (i18n.language || '').toLowerCase().startsWith('en') ? 'en' : 'pt';
+
   const chatLabel = t('footer_chat', { defaultValue: 'Fale conosco!' });
+  const privacyLabel = t('footer_privacy_policy', { defaultValue: 'Politica de Privacidade' });
+  const cookiesLabel = t('footer_cookies_policy', { defaultValue: 'Politica de Cookies' });
+  const settingsLabel = t('footer_cookie_settings', { defaultValue: 'Configurar cookies' });
 
   return (
     <footer className="custom-footer">
@@ -60,6 +66,24 @@ const Footer = ({ onChatClick }) => {
               <span>{chatLabel}</span>
               <FontAwesomeIcon icon={faComment} size="2x" />
             </button>
+          </Col>
+
+          <Col md={4} className="footer-col footer-col--legal">
+            <div className="footer-legalLinks">
+              <Link to={`/${currentLang}/privacy`} className="footer-legalLink">
+                {privacyLabel}
+              </Link>
+              <Link to={`/${currentLang}/cookies`} className="footer-legalLink">
+                {cookiesLabel}
+              </Link>
+              <button
+                type="button"
+                className="footer-legalBtn"
+                onClick={onOpenCookieSettings}
+              >
+                {settingsLabel}
+              </button>
+            </div>
           </Col>
         </Row>
       </Container>

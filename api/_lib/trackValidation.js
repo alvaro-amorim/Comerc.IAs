@@ -14,7 +14,13 @@ function sanitizeString(value, maxLength) {
 function sanitizePath(value) {
   const path = sanitizeString(value, 1024);
   if (!path) return null;
-  return path.startsWith('/') ? path : `/${path}`;
+  try {
+    const parsed = new URL(path, 'https://comercias.local');
+    return parsed.pathname || '/';
+  } catch (error) {
+    const normalized = path.startsWith('/') ? path : `/${path}`;
+    return normalized.split('?')[0].split('#')[0] || '/';
+  }
 }
 
 function sanitizeClasses(value) {
@@ -37,7 +43,6 @@ function sanitizeElement(value) {
   const tag = sanitizeString(value.tag, 40);
   const id = sanitizeString(value.id, 120);
   const dataTrack = sanitizeString(value.dataTrack, 120);
-  const textSnippet = sanitizeString(value.textSnippet, 60);
   const classes = sanitizeClasses(value.classes);
 
   const element = {};
@@ -46,7 +51,6 @@ function sanitizeElement(value) {
   if (id) element.id = id;
   if (classes.length > 0) element.classes = classes;
   if (dataTrack) element.dataTrack = dataTrack;
-  if (textSnippet) element.textSnippet = textSnippet;
 
   return Object.keys(element).length > 0 ? element : null;
 }

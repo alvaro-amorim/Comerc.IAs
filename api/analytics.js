@@ -45,6 +45,18 @@ function normalizeSelector(element) {
   return `${tag}${id}${classes}`.slice(0, 240);
 }
 
+function normalizePath(pathValue) {
+  if (typeof pathValue !== 'string' || !pathValue.trim()) return '/';
+  try {
+    const parsed = new URL(pathValue, 'https://comercias.local');
+    return parsed.pathname || '/';
+  } catch (error) {
+    const cleaned = pathValue.trim();
+    const prefixed = cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
+    return prefixed.split('?')[0].split('#')[0] || '/';
+  }
+}
+
 function normalizeDateInput(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return null;
@@ -123,7 +135,7 @@ function aggregateEvents(rows, bucket) {
 
   for (const row of rows) {
     const type = row && typeof row.type === 'string' ? row.type : '';
-    const path = row && typeof row.path === 'string' ? row.path : '/';
+    const path = normalizePath(row && typeof row.path === 'string' ? row.path : '/');
 
     if (type === 'click') {
       totalClicks += 1;

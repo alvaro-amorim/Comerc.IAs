@@ -19,10 +19,15 @@ function hashIp(ip, secret) {
 
 module.exports = async function handler(req, res) {
   const allowedOrigin = getEnv('ALLOWED_ORIGIN');
+  const analyticsEnabled = getEnv('ANALYTICS_ENABLED');
 
   if (handleOptions(req, res, allowedOrigin)) return;
   if (!ensureMethod(req, res, ['POST', 'OPTIONS'])) return;
   if (!enforceAllowedOrigin(req, res, allowedOrigin)) return;
+
+  if (String(analyticsEnabled || 'true').toLowerCase() === 'false') {
+    return sendJson(res, 200, { ok: true, disabled: true });
+  }
 
   const ip = getClientIp(req);
   const rateLimitResult = takeRateLimitToken(`track:${ip}`, {

@@ -71,6 +71,10 @@ const resources = {
       "contact_title": "Fale Conosco",
       "contact_other_ways": "Canais de Atendimento",
       "contact_response_time": "(Respondemos geralmente em menos de 1 hora)",
+      "footer_chat": "Fale conosco!",
+      "footer_privacy_policy": "Politica de Privacidade",
+      "footer_cookies_policy": "Politica de Cookies",
+      "footer_cookie_settings": "Configurar cookies",
 
       // --- FORMS (Geral) ---
       "form_name": "Seu Nome:",
@@ -196,6 +200,10 @@ const resources = {
       "contact_title": "Contact Us",
       "contact_other_ways": "Support Channels",
       "contact_response_time": "(We usually respond in less than 1 hour)",
+      "footer_chat": "Contact us!",
+      "footer_privacy_policy": "Privacy Policy",
+      "footer_cookies_policy": "Cookies Policy",
+      "footer_cookie_settings": "Cookie settings",
 
       // --- FORMS (General) ---
       "form_name": "Your Name:",

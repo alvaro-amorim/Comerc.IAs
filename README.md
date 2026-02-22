@@ -1,45 +1,15 @@
-# Analytics Proprietario + Dashboard Admin (`/pt/loginadm`)
+# Analytics + Dashboard Admin + Compliance (LGPD / GDPR / ePrivacy)
 
-Este projeto agora possui:
+Este projeto possui:
 
-- Coleta de eventos de analytics no front (`click`, `pageview`, `duration`) com batching.
-- Backend serverless na Vercel (`/api/*`) para autenticacao e agregacoes.
-- Persistencia em Supabase (Postgres) via `service_role` apenas no backend.
-- Dashboard protegido por senha em `https://www.comercias.com.br/pt/loginadm`.
+- Tracking proprio de `click`, `pageview` e `duration` em SPA React.
+- Backend serverless em Vercel (`/api/*`) com Supabase (service role apenas no backend).
+- Dashboard admin protegido por cookie `HttpOnly` em `/pt/loginadm`.
+- Camada de consentimento e privacidade por padrao (analytics opcional e desativado ate opt-in).
 
-## 1) Supabase: criar tabela de eventos
+## 1) Arquitetura
 
-1. Crie um projeto no Supabase.
-2. Abra `SQL Editor`.
-3. Rode o script `supabase/schema.sql`.
-
-Esse script cria:
-
-- extensao `pgcrypto`
-- tabela `events`
-- indices por `created_at`, `(type, created_at)` e `(path, created_at)`
-
-## 2) Variaveis de ambiente (Vercel)
-
-Configure no painel da Vercel:
-
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `ADMIN_PASSWORD`
-- `JWT_SECRET`
-- `ALLOWED_ORIGIN=https://www.comercias.com.br`
-
-Referencias:
-
-- Arquivo de exemplo: `.env.example`
-- Caminho no painel: `Project -> Settings -> Environment Variables`
-
-Importante:
-
-- Nao use `REACT_APP_` para secrets.
-- `SUPABASE_SERVICE_ROLE_KEY` deve ficar somente no backend (`/api`).
-
-## 3) Endpoints criados (Vercel Functions)
+### Endpoints Vercel
 
 - `POST /api/track`
 - `POST /api/auth/login`
@@ -47,94 +17,155 @@ Importante:
 - `POST /api/auth/logout`
 - `GET /api/analytics`
 
+### Banco Supabase
+
+- Schema principal: `supabase/schema.sql`
+- Retencao: `supabase/retention.sql`
+
+## 2) Setup Supabase
+
+1. Crie o projeto no Supabase.
+2. No SQL Editor, rode:
+   - `supabase/schema.sql`
+3. (Opcional) Configure retencao automatica com:
+   - `supabase/retention.sql`
+
+## 3) Variaveis de ambiente (Vercel)
+
+Configure em `Project -> Settings -> Environment Variables`:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `ADMIN_PASSWORD`
+- `JWT_SECRET`
+- `ALLOWED_ORIGIN=https://www.comercias.com.br`
+- `ANALYTICS_ENABLED=true`
+
+Opcional no front:
+
+- `REACT_APP_DISABLE_ANALYTICS=false`
+
+Referencia:
+
+- `.env.example`
+
+Importante:
+
+- Nao use prefixo `REACT_APP_` para segredos.
+- `SUPABASE_SERVICE_ROLE_KEY` deve existir somente no backend.
+
+## 4) Compliance implementado
+
+### Politicas de transparencia
+
+Paginas criadas:
+
+- `/:lang/privacy` (`src/pages/PrivacyPolicyPage.js`)
+- `/:lang/cookies` (`src/pages/CookiesPolicyPage.js`)
+
+Conteudo coberto:
+
+- dados coletados (cliques, path, duracao, user-agent, session_id e ip_hash)
+- finalidade (medicao de audiencia e melhoria do site)
+- base legal (LGPD + consentimento para analytics opcional)
+- retencao (90 dias padrao)
+- canal para solicitacoes do titular
+
+Links para politicas e preferencia de cookies:
+
+- adicionados no rodape (`src/components/Footer.js`)
+
+### Consentimento / opt-out (modo seguro)
+
+Implementado em:
+
+- `src/context/ConsentContext.js`
+- `src/consent/consentStorage.js`
+- `src/components/CookieConsentManager.js`
+
 Regras:
 
-- Sessao admin por cookie `HttpOnly` com JWT assinado.
-- `/api/analytics` retorna `401` sem cookie valido.
-- `rate limit` basico em `/api/auth/login` e `/api/track`.
+- categoria `Necessarios` sempre ativa
+- categoria `Medicao/Analytics` desativada por padrao
+- analytics so inicia apos consentimento explicito
+- recusa nao bloqueia o uso do site
+- revogacao simples via link `Configurar cookies` no rodape
+- estado de consentimento armazenado em localStorage + cookie de 1a parte, com timestamp da decisao
+- DNT (`Do Not Track`) respeitado por padrao (analytics inicia desativado)
 
-## 4) Front-end
+### Minimizacao de dados
 
-### Tracking client
+- sem coleta de conteudo digitado
+- sem IP puro (somente `ip_hash` com sal no backend)
+- path enviado sem querystring/hash
+- `data-track` priorizado para elementos; fallback curto seguro
+- `textSnippet` removido para reduzir risco de capturar dado contextual sensivel
 
-Arquivo: `src/analytics/analyticsClient.js`
+### Dashboard sem dados pessoais diretos
 
-Implementado:
+- `GET /api/analytics` retorna apenas agregados:
+  - serie temporal de cliques
+  - top paginas
+  - media de duracao por pagina
+  - top elementos
 
-- `session_id` persistido em `localStorage`
-- captura global de clique (`addEventListener('click', ..., true)`)
-- ignorar `input`, `textarea`, `contenteditable`
-- payload seguro de elemento (`selector`, `tag`, `id`, ate 3 classes, `dataTrack`, `textSnippet` ate 60 chars)
-- batching com flush periodico e em `visibilitychange/beforeunload/pagehide`
-- pageview e duracao por rota SPA
+## 5) Retencao (90 dias)
 
-### Dashboard admin
+Script:
 
-Rota unica: `/pt/loginadm`
+- `supabase/retention.sql`
 
-Arquivo: `src/pages/AdminDashboardPage.js`
+Opcao manual:
 
-Fluxo:
+```sql
+DELETE FROM public.events
+WHERE created_at < now() - interval '90 days';
+```
 
-1. chama `/api/auth/me`
-2. se nao autenticado, mostra login
-3. se autenticado, mostra dashboard com:
-   - cards de resumo
-   - grafico de tendencia (Recharts)
-   - tabelas: top paginas, top elementos, tempo medio por pagina
+Opcao agendada:
 
-Filtros de tempo:
+- usar `pg_cron` (quando habilitado) conforme exemplo no arquivo `supabase/retention.sql`
 
-- preset: `24h`, `7d`, `30d`
-- custom: `from/to` (ISO via `datetime-local`)
+## 6) Desativar analytics globalmente (emergencial)
 
-Layout desktop:
+Backend:
 
-- `height: 100vh`
-- sem scroll no body
-- scroll apenas dentro dos blocos internos
+- `ANALYTICS_ENABLED=false`
+- efeito: `/api/track` responde `ok`, mas nao persiste eventos
 
-## 5) Rewrites na Vercel
+Frontend:
 
-Arquivo: `vercel.json`
+- `REACT_APP_DISABLE_ANALYTICS=true`
+- efeito: tracking client nao inicializa
 
-Ordem aplicada:
+## 7) Teste local
 
-1. `/api/(.*) -> /api/$1`
-2. `/(.*) -> /index.html`
-
-Assim as serverless functions nao sao reescritas para SPA.
-
-## 6) Rodar localmente
-
-1. Instale dependencias:
+1. Instale deps:
 
 ```bash
 npm install
 ```
 
-2. Crie `.env.local` com as variaveis de `.env.example`.
+2. Preencha `.env.local` com base em `.env.example`.
 3. Rode:
 
 ```bash
 npm start
 ```
 
-4. Teste:
+4. Valide:
 
-- Navegue no site e gere cliques/pageviews.
-- Acesse `http://localhost:3000/pt/loginadm`.
-- Login com `ADMIN_PASSWORD`.
-- Verifique dados chegando no dashboard e na tabela `events` do Supabase.
+- banner de cookies aparece no primeiro acesso
+- recusando analytics, o site continua normal e sem envio de tracking
+- aceitando analytics, eventos entram no Supabase
+- `GET /api/analytics` retorna `401` sem sessao admin
+- `/pt/loginadm` autentica e mostra dashboard
 
-## 7) Deploy e validacao em producao
+## 8) Deploy / producao
 
-1. Confirme variaveis no projeto da Vercel.
-2. Faça deploy (ou redeploy).
-3. Acesse `https://www.comercias.com.br/pt/loginadm`.
-4. Criterios esperados:
-
-- eventos `click/pageview/duration` sendo inseridos no Supabase
-- `/api/analytics` com `401` sem cookie valido
-- login OK com senha correta
-- dashboard em uma tela desktop (100vh)
+1. Configure env vars na Vercel.
+2. Rode deploy/redeploy.
+3. Acesse:
+   - `https://www.comercias.com.br/pt/loginadm`
+   - `https://www.comercias.com.br/pt/privacy`
+   - `https://www.comercias.com.br/pt/cookies`

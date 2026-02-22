@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import './i18n';
 import App from './App';
+import { ConsentProvider } from './context/ConsentContext';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
@@ -29,9 +30,11 @@ const container = document.getElementById('root');
 const app = (
   <React.StrictMode>
     <HelmetProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ConsentProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ConsentProvider>
     </HelmetProvider>
   </React.StrictMode>
 );

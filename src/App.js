@@ -8,8 +8,10 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import SEO from './components/SEO';
 import StructuredData from './components/StructuredData';
+import CookieConsentManager from './components/CookieConsentManager';
 import AnalyticsRouteTracker from './analytics/AnalyticsRouteTracker';
 import { initAnalytics, stopAnalytics } from './analytics/analyticsClient';
+import { useConsent } from './context/ConsentContext';
 
 // Componentes de Contato
 import ContactModal from './components/forms/ContactModal';
@@ -23,10 +25,12 @@ import OrcamentoPage from './pages/OrcamentoPage';
 import OrcamentoFunnel from './pages/OrcamentoFunnel';
 import ContactPage from './pages/ContactPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import CookiesPolicyPage from './pages/CookiesPolicyPage';
 
 import './App.css';
 
-function LanguageGate({ onChatClick }) {
+function LanguageGate({ onChatClick, onOpenCookieSettings }) {
   const { i18n, t } = useTranslation();
   const { lang } = useParams();
 
@@ -70,21 +74,34 @@ function LanguageGate({ onChatClick }) {
         <Outlet />
       </main>
 
-      <Footer onChatClick={onChatClick} />
+      <Footer onChatClick={onChatClick} onOpenCookieSettings={onOpenCookieSettings} />
+      <CookieConsentManager />
     </>
   );
 }
 
 export default function App() {
   const [showContact, setShowContact] = useState(false);
+  const { analyticsAllowed, openPanel: openCookieSettings } = useConsent();
+  const analyticsHardDisabled = process.env.REACT_APP_DISABLE_ANALYTICS === 'true';
 
   const openContact = () => setShowContact(true);
   const closeContact = () => setShowContact(false);
 
   useEffect(() => {
+    if (analyticsHardDisabled) {
+      stopAnalytics({ discardQueuedEvents: true });
+      return undefined;
+    }
+
+    if (!analyticsAllowed) {
+      stopAnalytics({ discardQueuedEvents: true });
+      return undefined;
+    }
+
     initAnalytics();
-    return () => stopAnalytics();
-  }, []);
+    return () => stopAnalytics({ discardQueuedEvents: true });
+  }, [analyticsAllowed, analyticsHardDisabled]);
 
   return (
     <>
@@ -94,13 +111,20 @@ export default function App() {
         <Route path="/" element={<Navigate to="/pt" replace />} />
         <Route path="/pt/loginadm" element={<AdminDashboardPage />} />
 
-        <Route path="/:lang" element={<LanguageGate onChatClick={openContact} />}>
+        <Route
+          path="/:lang"
+          element={
+            <LanguageGate onChatClick={openContact} onOpenCookieSettings={openCookieSettings} />
+          }
+        >
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="portfolio" element={<PortfolioMaintenancePage />} />
           <Route path="orcamento/funil" element={<OrcamentoFunnel />} />
           <Route path="orcamento" element={<OrcamentoPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="privacy" element={<PrivacyPolicyPage />} />
+          <Route path="cookies" element={<CookiesPolicyPage />} />
           <Route path="*" element={<Navigate to="/pt" replace />} />
         </Route>
 
