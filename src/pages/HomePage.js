@@ -848,7 +848,7 @@ const HomePage = () => {
         <Modal.Body>
           <div className="video-embed">
             <iframe
-              src="https://youtube.com/embed/ZgXP3sqBH7Q"
+              src="https://youtube.com/embed/U8pQeJ2wIuI"
               title="Vídeo Institucional"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
