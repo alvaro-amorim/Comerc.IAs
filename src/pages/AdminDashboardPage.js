@@ -43,12 +43,16 @@ function formatDuration(durationMs) {
 function formatBucketLabel(rawValue, bucket) {
   if (!rawValue) return '-';
 
-  const date = bucket === 'day' ? new Date(`${rawValue}T00:00:00.000Z`) : new Date(rawValue);
-  if (Number.isNaN(date.getTime())) return String(rawValue);
-
   if (bucket === 'day') {
-    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    if (typeof rawValue === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(rawValue)) {
+      const [, month, day] = rawValue.split('-');
+      return `${day}/${month}`;
+    }
+    return String(rawValue);
   }
+
+  const date = new Date(rawValue);
+  if (Number.isNaN(date.getTime())) return String(rawValue);
 
   return date.toLocaleString('pt-BR', {
     day: '2-digit',
@@ -339,13 +343,13 @@ export default function AdminDashboardPage() {
       <main className="adm-grid">
         <section className="adm-metrics">
           <article className="adm-card adm-metricCard">
-            <h2>Total de cliques</h2>
-            <strong>{numberFormatter.format(summary.total_clicks || 0)}</strong>
+            <h2>Total de acessos</h2>
+            <strong>{numberFormatter.format(summary.total_accesses || summary.total_pageviews || 0)}</strong>
           </article>
 
           <article className="adm-card adm-metricCard">
-            <h2>Total de pageviews</h2>
-            <strong>{numberFormatter.format(summary.total_pageviews || 0)}</strong>
+            <h2>Sessoes unicas (aprox.)</h2>
+            <strong>{numberFormatter.format(summary.unique_sessions || 0)}</strong>
           </article>
 
           <article className="adm-card adm-metricCard">
@@ -356,7 +360,7 @@ export default function AdminDashboardPage() {
 
         <section className="adm-card adm-chartCard">
           <div className="adm-cardHeader">
-            <h2>Tendencia de cliques</h2>
+            <h2>Tendencia de acessos</h2>
             <span>{isLoadingAnalytics ? 'Atualizando...' : `${summary.total_events || 0} eventos`}</span>
           </div>
           <div className="adm-chartWrap">
@@ -377,12 +381,12 @@ export default function AdminDashboardPage() {
                 />
                 <YAxis allowDecimals={false} tick={{ fill: '#385270', fontSize: 12 }} />
                 <Tooltip
-                  formatter={(value) => [numberFormatter.format(value), 'Cliques']}
+                  formatter={(value) => [numberFormatter.format(value), 'Acessos']}
                   labelFormatter={(label) => formatBucketLabel(label, range.bucket)}
                 />
                 <Area
                   type="monotone"
-                  dataKey="clicks"
+                  dataKey="accesses"
                   stroke="#0b5ed7"
                   strokeWidth={2}
                   fill="url(#admAreaGradient)"
@@ -394,14 +398,14 @@ export default function AdminDashboardPage() {
 
         <section className="adm-card adm-tableCard adm-topPagesCard">
           <div className="adm-cardHeader">
-            <h2>Top paginas (cliques)</h2>
+            <h2>Top paginas (acessos)</h2>
           </div>
           <div className="adm-tableWrap">
             <table>
               <thead>
                 <tr>
                   <th>Pagina</th>
-                  <th>Cliques</th>
+                  <th>Acessos</th>
                 </tr>
               </thead>
               <tbody>
@@ -409,7 +413,7 @@ export default function AdminDashboardPage() {
                   analytics.top_pages.map((row) => (
                     <tr key={row.path}>
                       <td title={row.path}>{row.path}</td>
-                      <td>{numberFormatter.format(row.clicks || 0)}</td>
+                      <td>{numberFormatter.format(row.accesses || 0)}</td>
                     </tr>
                   ))
                 ) : (

@@ -12,13 +12,13 @@ function getContent(lang) {
       seoTitle: "Cookies Policy | Comerc IA's",
       seoDescription:
         'Learn about cookie categories, consent control, Do Not Track, and how to revoke analytics tracking.',
-      lastUpdated: 'Last updated: February 22, 2026',
+      lastUpdated: 'Last updated: March 1, 2026',
       sections: [
         {
           heading: '1. Categories',
           body: [
-            'Necessary: always active for security and core navigation.',
-            'Measurement / Analytics: optional, disabled by default, and only activated after user consent.',
+            'Necessary: always active for security, core navigation, and basic access counting.',
+            'Measurement / Analytics: optional detailed metrics (such as clicks and page duration), disabled by default and activated only after user consent.',
           ],
         },
         {
@@ -31,7 +31,7 @@ function getContent(lang) {
         {
           heading: '3. Do Not Track',
           body: [
-            'If the browser sends DNT=1, analytics remains disabled by default unless you actively change preferences.',
+            'If the browser sends DNT=1, detailed analytics remains disabled by default unless you actively change preferences.',
           ],
         },
         {
@@ -56,13 +56,13 @@ function getContent(lang) {
     seoTitle: "Politica de Cookies | Comerc IA's",
     seoDescription:
       'Saiba quais categorias de cookies usamos, como revogar consentimento e como funciona o modo com DNT.',
-    lastUpdated: 'Ultima atualizacao: 22 de fevereiro de 2026',
+    lastUpdated: 'Ultima atualizacao: 1 de marco de 2026',
     sections: [
       {
         heading: '1. Categorias',
         body: [
-          'Necessarios: sempre ativos para seguranca e navegacao essencial.',
-          'Medicao / Analytics: opcionais, desativados por padrao e ativados somente apos consentimento do usuario.',
+          'Necessarios: sempre ativos para seguranca, navegacao essencial e contagem basica de acessos.',
+          'Medicao / Analytics: metricas detalhadas (como cliques e tempo por pagina), opcionais, desativadas por padrao e ativadas somente apos consentimento do usuario.',
         ],
       },
       {
@@ -75,7 +75,7 @@ function getContent(lang) {
       {
         heading: '3. Do Not Track',
         body: [
-          'Se o navegador enviar DNT=1, analytics permanece desativado por padrao, salvo mudanca ativa da sua preferencia.',
+          'Se o navegador enviar DNT=1, analytics detalhado permanece desativado por padrao, salvo mudanca ativa da sua preferencia.',
         ],
       },
       {

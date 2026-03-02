@@ -11,6 +11,7 @@ let queue = [];
 let flushIntervalId = null;
 let currentPath = '';
 let currentPathStartedAt = 0;
+let optionalTrackingEnabled = false;
 
 function createSessionId() {
   const nativeCrypto = typeof window !== 'undefined' ? window.crypto : null;
@@ -20,7 +21,12 @@ function createSessionId() {
   return `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function getOrCreateSessionId() {
+function getOrCreateSessionId(options = {}) {
+  const persistSession = Boolean(options.persistSession);
+  if (!persistSession) {
+    return createSessionId();
+  }
+
   try {
     const existing = window.localStorage.getItem(SESSION_STORAGE_KEY);
     if (existing) return existing;
@@ -29,6 +35,20 @@ function getOrCreateSessionId() {
     return generated;
   } catch (error) {
     return createSessionId();
+  }
+}
+
+function ensurePersistentSessionId() {
+  if (!sessionId) return;
+  try {
+    const existing = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    if (existing) {
+      sessionId = existing;
+      return;
+    }
+    window.localStorage.setItem(SESSION_STORAGE_KEY, sessionId);
+  } catch (error) {
+    // Mantem session em memoria caso localStorage esteja indisponivel.
   }
 }
 
@@ -183,6 +203,11 @@ async function flushQueue(options = {}) {
 
 function emitDurationIfNeeded() {
   if (!currentPath || !currentPathStartedAt) return;
+  if (!optionalTrackingEnabled) {
+    currentPathStartedAt = Date.now();
+    return;
+  }
+
   if (!isTrackablePath(currentPath)) {
     currentPathStartedAt = Date.now();
     return;
@@ -204,6 +229,7 @@ function emitDurationIfNeeded() {
 
 function onDocumentClick(event) {
   if (!initialized) return;
+  if (!optionalTrackingEnabled) return;
 
   const target = event.target;
   if (!(target instanceof Element)) return;
@@ -239,11 +265,21 @@ function onPageHide() {
   void flushQueue({ useBeacon: true });
 }
 
-function initAnalytics() {
-  if (initialized || typeof window === 'undefined') return;
+function initAnalytics(options = {}) {
+  if (typeof window === 'undefined') return;
+  const enableOptionalTracking = Boolean(options.enableOptionalTracking);
 
-  sessionId = getOrCreateSessionId();
+  if (initialized) {
+    optionalTrackingEnabled = enableOptionalTracking;
+    if (optionalTrackingEnabled) {
+      ensurePersistentSessionId();
+    }
+    return;
+  }
+
+  sessionId = getOrCreateSessionId({ persistSession: enableOptionalTracking });
   initialized = true;
+  optionalTrackingEnabled = enableOptionalTracking;
   currentPath = getCurrentPath();
   currentPathStartedAt = Date.now();
 
@@ -287,6 +323,7 @@ function stopAnalytics(options = {}) {
   }
 
   initialized = false;
+  optionalTrackingEnabled = false;
   currentPath = '';
   currentPathStartedAt = 0;
 }

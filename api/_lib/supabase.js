@@ -67,7 +67,7 @@ async function fetchEventsForRange(params) {
   while (offset < maxRows) {
     const upperBound = offset + pageSize - 1;
     const query = [
-      'select=type,path,created_at,duration_ms,element',
+      'select=type,path,session_id,created_at,duration_ms,element',
       buildRangeQuery(fromIso, toIso),
       'order=created_at.asc',
     ].join('&');

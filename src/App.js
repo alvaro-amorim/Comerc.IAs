@@ -94,14 +94,13 @@ export default function App() {
       return undefined;
     }
 
-    if (!analyticsAllowed) {
-      stopAnalytics({ discardQueuedEvents: true });
-      return undefined;
-    }
-
-    initAnalytics();
-    return () => stopAnalytics({ discardQueuedEvents: true });
+    initAnalytics({ enableOptionalTracking: analyticsAllowed });
+    return undefined;
   }, [analyticsAllowed, analyticsHardDisabled]);
+
+  useEffect(() => {
+    return () => stopAnalytics({ discardQueuedEvents: true });
+  }, []);
 
   return (
     <>

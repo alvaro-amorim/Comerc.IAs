@@ -127,6 +127,7 @@ function aggregateEvents(rows, bucket) {
   const topPagesMap = new Map();
   const topElementsMap = new Map();
   const durationByPageMap = new Map();
+  const uniquePageviewSessions = new Set();
 
   let totalClicks = 0;
   let totalPageviews = 0;
@@ -140,13 +141,6 @@ function aggregateEvents(rows, bucket) {
     if (type === 'click') {
       totalClicks += 1;
 
-      const bucketLabel = getBucketLabel(row.created_at, bucket);
-      if (bucketLabel) {
-        timeseriesMap.set(bucketLabel, (timeseriesMap.get(bucketLabel) || 0) + 1);
-      }
-
-      topPagesMap.set(path, (topPagesMap.get(path) || 0) + 1);
-
       const selector = normalizeSelector(row.element);
       const elementKey = `${selector}|||${path}`;
       const current = topElementsMap.get(elementKey) || { selector, path, count: 0 };
@@ -156,6 +150,17 @@ function aggregateEvents(rows, bucket) {
 
     if (type === 'pageview') {
       totalPageviews += 1;
+
+      const bucketLabel = getBucketLabel(row.created_at, bucket);
+      if (bucketLabel) {
+        timeseriesMap.set(bucketLabel, (timeseriesMap.get(bucketLabel) || 0) + 1);
+      }
+
+      topPagesMap.set(path, (topPagesMap.get(path) || 0) + 1);
+
+      if (typeof row.session_id === 'string' && row.session_id.trim()) {
+        uniquePageviewSessions.add(row.session_id.trim());
+      }
     }
 
     if (type === 'duration') {
@@ -174,12 +179,12 @@ function aggregateEvents(rows, bucket) {
 
   const timeseries = Array.from(timeseriesMap.entries())
     .sort(([left], [right]) => left.localeCompare(right))
-    .map(([time, clicks]) => ({ time, clicks }));
+    .map(([time, accesses]) => ({ time, accesses }));
 
   const topPages = Array.from(topPagesMap.entries())
     .sort((left, right) => right[1] - left[1])
     .slice(0, 20)
-    .map(([path, clicks]) => ({ path, clicks }));
+    .map(([path, accesses]) => ({ path, accesses }));
 
   const avgDurationByPage = Array.from(durationByPageMap.entries())
     .map(([path, data]) => ({
@@ -196,8 +201,10 @@ function aggregateEvents(rows, bucket) {
 
   return {
     summary: {
+      total_accesses: totalPageviews,
       total_clicks: totalClicks,
       total_pageviews: totalPageviews,
+      unique_sessions: uniquePageviewSessions.size,
       avg_duration_ms: durationSamples > 0 ? Math.round(durationSum / durationSamples) : 0,
       duration_samples: durationSamples,
       total_events: rows.length,

@@ -13,9 +13,9 @@ function getCopy(lang) {
     return {
       bannerTitle: 'Cookies and Trackers',
       bannerBody:
-        'We use only necessary cookies by default. Analytics is optional and disabled until you allow it.',
+        'We use necessary storage and basic access measurement by default. Detailed analytics is optional and disabled until you allow it.',
       dntNotice:
-        'Your browser sent Do Not Track (DNT=1). Analytics remains disabled by default.',
+        'Your browser sent Do Not Track (DNT=1). Detailed analytics remains disabled by default.',
       reject: 'Reject analytics',
       accept: 'Accept analytics',
       settings: 'Cookie settings',
@@ -23,9 +23,9 @@ function getCopy(lang) {
       panelBody:
         'Choose which categories can be used. Necessary is always enabled for site operation.',
       necessaryLabel: 'Necessary',
-      necessaryDesc: 'Required for navigation and security. It cannot be disabled.',
+      necessaryDesc: 'Required for navigation, security, and basic access counting. It cannot be disabled.',
       analyticsLabel: 'Measurement / Analytics',
-      analyticsDesc: 'Audience metrics to improve pages, UX, and site performance.',
+      analyticsDesc: 'Detailed metrics such as clicks and page duration to improve UX and performance.',
       save: 'Save preferences',
       close: 'Close',
       policyPrefix: 'Read:',
@@ -39,9 +39,9 @@ function getCopy(lang) {
   return {
     bannerTitle: 'Cookies e Trackers',
     bannerBody:
-      'Usamos apenas cookies necessarios por padrao. Analytics e opcional e fica desativado ate voce permitir.',
+      'Usamos armazenamento necessario e medicao basica de acessos por padrao. Analytics detalhado e opcional e fica desativado ate voce permitir.',
     dntNotice:
-      'Seu navegador enviou Do Not Track (DNT=1). Analytics permanece desativado por padrao.',
+      'Seu navegador enviou Do Not Track (DNT=1). Analytics detalhado permanece desativado por padrao.',
     reject: 'Recusar analytics',
     accept: 'Aceitar analytics',
     settings: 'Configurar cookies',
@@ -49,9 +49,9 @@ function getCopy(lang) {
     panelBody:
       'Escolha quais categorias podem ser usadas. Necessarios ficam sempre ativos para o funcionamento do site.',
     necessaryLabel: 'Necessarios',
-    necessaryDesc: 'Obrigatorios para navegacao e seguranca. Nao podem ser desativados.',
+    necessaryDesc: 'Obrigatorios para navegacao, seguranca e contagem basica de acessos. Nao podem ser desativados.',
     analyticsLabel: 'Medicao / Analytics',
-    analyticsDesc: 'Metricas de audiencia para melhorar paginas, UX e desempenho do site.',
+    analyticsDesc: 'Metricas detalhadas como cliques e tempo por pagina para melhorar UX e desempenho.',
     save: 'Salvar preferencias',
     close: 'Fechar',
     policyPrefix: 'Leia:',
